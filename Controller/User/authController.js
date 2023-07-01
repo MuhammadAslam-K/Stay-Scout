@@ -76,11 +76,8 @@ const loginVerify = (async (req, res) => {
 
 const signUp = ((req, res) => {
     try {
-        if (req.session.user) {
-            res.redirect("/")
-        } else {
-            res.render("register")
-        }
+        res.render("register")
+
     } catch (error) {
         console.log(error);
     }
@@ -94,6 +91,7 @@ const sendOtp = async (req, res) => {
 
         const emailExist = await User.findOne({ email: req.body.email })
         const phoneExist = await User.findOne({ phone: req.body.phone })
+
         if (emailExist) {
             res.render("register", { message: "The user already Exists please Login" })
         } else if (phoneExist) {
@@ -102,16 +100,24 @@ const sendOtp = async (req, res) => {
         else {
             const generateOtp = generateOTP()
             saveOtp.push(generateOtp)
+
+            // res.cookie("email", req.body.email)
+
             req.session.userDetails = {
                 name: req.body.name,
                 email: req.body.email,
                 phone: req.body.phone,
                 password: req.body.password
             }
+            // const email = req.cookies.email
             const email = req.session.userDetails.email
-
+            // console.log(req.cookies)
+            console.log(117);
+            // console.log(email)
+            console.log(119);
             sendOTP(email, generateOtp)
             res.redirect("/otp")
+
         }
     } catch (error) {
         console.log(error);
@@ -131,9 +137,7 @@ function generateOTP() {
 }
 
 async function sendOTP(email, otp) {
-    // console.log(109);
-    console.log(email);
-    console.log(saveOtp)
+
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -141,8 +145,8 @@ async function sendOTP(email, otp) {
                 user: process.env.EMAIL,
                 pass: process.env.PASS,
             },
-        });
-        console.log(118);
+        })
+
         const mailOptions = {
             from: process.env.EMAIL,
             to: email,
@@ -150,7 +154,7 @@ async function sendOTP(email, otp) {
             text: `Your OTP is ${otp}. Please enter this code to verify your Email Account`,
         };
         const result = await transporter.sendMail(mailOptions);
-        // console.log(result);
+        console.log(result)
     } catch (error) {
         console.log(error.message);
     }
@@ -202,6 +206,7 @@ const verifyOtp = (async (req, res) => {
                     password: hashedPassword,
                 })
                 delete req.session.userDetails
+
                 try {
                     await user.save()
                     res.redirect("/login")
@@ -232,7 +237,9 @@ const enterEmail = ((req, res) => {
 const emailValidation = (async (req, res) => {
 
     try {
-        email = req.body.email
+        const email = req.body.email
+        req.session.userEmail = email
+
         const emailExits = await User.findOne({ email: email })
 
         if (emailExits) {
@@ -240,7 +247,6 @@ const emailValidation = (async (req, res) => {
             const generateOtp = generateOTP()
             saveOtp.push(generateOtp)
             sendOTP(email, generateOtp)
-
             res.render("otp", { passwordRecovery: true })
 
         } else {
@@ -283,11 +289,13 @@ const passwordUpdation = (async (req, res) => {
     const password = req.body.password
 
     try {
-        console.log(244)
+
         const hashedPassword = await passwordHash(password)
-        console.log(hashedPassword);
+
+        const email = req.session.userEmail
         await User.findOneAndUpdate({ email: email }, { password: hashedPassword })
         res.redirect("/login")
+
     } catch (error) {
         console.log(248)
         console.log(error)

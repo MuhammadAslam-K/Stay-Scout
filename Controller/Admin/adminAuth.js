@@ -29,8 +29,8 @@ const loginVerify = ((req, res) => {
                 expiresIn: "1h",
             })
 
-            req.session.superadmintoken = token
-            res.redirect("/superadmin/dashboard")
+            req.session.admintoken = token
+            res.redirect("/admin/dashboard")
         }
     } catch (error) {
         console.log(error)
@@ -41,8 +41,8 @@ const loginVerify = ((req, res) => {
 const logout = ((req, res) => {
 
     try {
-        delete req.session.superadmintoken
-        res.redirect("/superadmin")
+        delete req.session.admintoken
+        res.redirect("/admin")
     } catch (error) {
         console.log(error)
     }
@@ -56,7 +56,7 @@ const dashboard = (async (req, res) => {
         const No_of_owners = await Owner.find().count()
         const No_of_hotels = await Hotel.find().count()
         const No_of_rooms = await Rooms.find().count()
-        res.render("superAdminDashboard", {
+        res.render("adminDashboard", {
             users: No_of_users,
             owners: No_of_owners,
             hotels: No_of_hotels,

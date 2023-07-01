@@ -11,6 +11,28 @@ const viewUser = (async (req, res) => {
 
 })
 
+const searchUser = (async (req, res) => {
+
+    try {
+        const value = req.body.search
+
+        const regexValue = new RegExp(value, "i")
+
+        const users = await User.find({
+            $or: [
+                { name: { $regex: regexValue } },
+                { email: { $regex: regexValue } }
+            ]
+        });
+
+        res.render("viewUser", { users: users })
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
 const updateUser = (async (req, res) => {
 
     try {
@@ -20,14 +42,19 @@ const updateUser = (async (req, res) => {
         user.is_block = !user.is_block
         await user.save()
 
-        res.redirect("/superadmin/users")
+        res.redirect("/admin/users")
     } catch (error) {
         console.log(error)
     }
 
 })
 
+
+
+
+
 export default {
     viewUser,
+    searchUser,
     updateUser,
 }

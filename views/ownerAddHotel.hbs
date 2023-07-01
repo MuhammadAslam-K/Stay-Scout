@@ -11,7 +11,7 @@
 
             <!-- Main Content -->
             <div id="content">
-                <form accept="/admin/addhotel" method="post">
+                <form accept="/owner/addhotel" method="post" enctype="multipart/form-data">
                     <div class="form-row m-4 ">
                         <div class="form-group col-md-6">
                             <label>Name of the Hotel</label>
@@ -28,15 +28,19 @@
                             <input type="tel" class="form-control" name="startingprice">
                         </div>
                         <div class="form-group col-md-6">
+                            <label>Starting Price of the Room</label>
+                            <input type="text" class="form-control" name="type">
+                        </div>
+                        {{!-- <div class="form-group col-md-6">
                             <label>Type</label>
-                            <select id="inputState" class="form-control">
+                            <select id="inputState" class="form-control" name="type">
                                 <option selected>Choose...</option>
                                 <option>5 Stare</option>
                                 <option>Luxury</option>
                                 <option>Mid Range</option>
                                 <option>Budget</option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="form-row m-4">
                         <div class="form-group col-md-6">
@@ -45,7 +49,7 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label>Description....</label>
+                            <label>Images....</label>
                             <input type="file" class=" form-control" style="height: 150px;" name="image">
                         </div>
                     </div>

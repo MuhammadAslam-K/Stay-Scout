@@ -35,7 +35,7 @@
                         </div>
                     </form>
 
-                    <a href="/admin/addhotel" class="h3 mb-0 text-gray-800 text-light m-3 btn btn-primary">
+                    <a href="/owner/addhotel" class="h3 mb-0 text-gray-800 text-light m-3 btn btn-primary">
                         Add Hotel</a>
                 </nav>
 
@@ -70,14 +70,14 @@
                                             <td>{{this.phone}}</td>
                                             {{#if this.is_block}}
                                             <td>
-                                                <form action="/superadmin/admins/edit?id={{this._id}}" method="post">
+                                                <form action="/admin/admins/edit?id={{this._id}}" method="post">
                                                     <button class="btn btn-primary btn-block" type="submit"
                                                         name="false">Unblock</button>
                                                 </form>
                                             </td>
                                             {{else}}
                                             <td>
-                                                <form action="/superadmin/admins/edit?id={{this._id}}" method="post">
+                                                <form action="/admin/admins/edit?id={{this._id}}" method="post">
                                                     <button class="btn btn-warning  btn-block" type="submit"
                                                         name="true">Block</button>
                                                 </form>

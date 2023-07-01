@@ -12,6 +12,29 @@ const viewowner = (async (req, res) => {
 
 })
 
+const searchOwner = (async (req, res) => {
+
+    try {
+        const value = req.body.search
+
+        const regexValue = new RegExp(value, "i")
+
+        const users = await Owner.find({
+            $or: [
+                { name: { $regex: regexValue } },
+                { email: { $regex: regexValue } }
+            ]
+        });
+
+        res.render("viewUser", { users: users })
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
+
 const updateowner = (async (req, res) => {
 
     try {
@@ -21,7 +44,7 @@ const updateowner = (async (req, res) => {
         owner.is_block = !owner.is_block
         await owner.save()
 
-        res.redirect("/superadmin/owners")
+        res.redirect("/admin/owners")
     } catch (error) {
         console.log(error)
     }
@@ -30,5 +53,6 @@ const updateowner = (async (req, res) => {
 
 export default {
     viewowner,
+    searchOwner,
     updateowner,
 }

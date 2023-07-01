@@ -1,4 +1,4 @@
-{{>userHeader}}
+{{!-- {{>userHeader}}
 
 <body class="bg-gradient-light">
     <div class="container">
@@ -50,4 +50,95 @@
     span {
         font-size: small
     }
+</style> --}}
+
+
+{{>userHeader}}
+
+<body class="bg-gradient-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-password-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-2"></h1>
+                                        <h1>Verify email</h1>
+                                        <p>Please enter the one-time password<br>sent to your email</p>
+                                    </div>
+                                    {{#if passwordRecovery }}
+                                    <form class="user" method="post" action="/verifyotp">
+                                        {{else if owner}}
+                                        <form class="user" method="post" action="/owner/submitOtp">
+                                            {{else}}
+                                            <form class="user" method="post" action="/submitOtp">
+                                                {{/if}}
+                                                <div class="form-group">
+                                                    <input id="otp" type="tel" class="form-control form-control-user"
+                                                        name="OTP" placeholder="Enter OTP..." required>
+                                                    <span id="otpError" class="text-danger"></span>
+                                                </div>
+                                                {{#if message }}
+                                                <p>
+                                                    {{ message }}
+                                                </p>
+                                                {{/if}}
+                                                <button type="submit" class="btn btn-primary btn-user btn-block"
+                                                    onclick="return otpValidation()">Submit</button>
+                                            </form>
+                                            {{!-- <div class="text-center mt-3">
+                                                <form action="/otp" method="post">
+                                                    <span id="countdown"></span>
+                                                    <button id="resendOtpBtn" class="btn btn-primary">Resend
+                                                        OTP</button>
+                                                </form>
+                                            </div> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{{>userFooter}}
+
+<style>
+    span {
+        font-size: small;
+    }
 </style>
+
+{{!--
+<script>
+    // Countdown timer logic
+    const countdownElement = document.getElementById("countdown");
+    const resendOtpBtn = document.getElementById("resendOtpBtn");
+    let countdown = 30;
+    let countdownInterval;
+
+    function startCountdown() {
+        countdownElement.textContent = countdown;
+        countdown--;
+
+        if (countdown < 0) {
+            countdownElement.textContent = "";
+            resendOtpBtn.style.display = "inline-block";
+            clearInterval(countdownInterval);
+            return;
+        }
+    }
+
+    countdownInterval = setInterval(startCountdown, 1000);
+
+    // Hide the resend OTP button initially
+    resendOtpBtn.style.display = "none";
+
+
+</script> --}}

@@ -17,20 +17,20 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    adddress: {
-        place: {
-            type: String,
-            required: true
-        },
-        city: {
-            type: String,
-            require: true,
-        },
-        pincode: {
-            type: Number,
-            required: true
-        },
-    },
+    // adddress: {
+    //     place: {
+    //         type: String,
+    //         required: true
+    //     },
+    //     city: {
+    //         type: String,
+    //         require: true,
+    //     },
+    //     pincode: {
+    //         type: Number,
+    //         required: true
+    //     },
+    // },
     images: [{
         public_id: {
             type: String,
@@ -53,30 +53,17 @@ const hotelSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Owner',
-        required: true
-    },
-    type: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Types',
-        required: true
-    },
+    // owner: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Owner',
+    //     required: true
+    // },
+    // type: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Types',
+    //     required: true
+    // },
 })
 const Hotel = mongoose.model("Hotels", hotelSchema)
 
 export default Hotel
-
-
-
-    // images: [{
-    //     public_id: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     url: {
-    //         type: String,
-    //         required: true
-    //     }
-    // }],

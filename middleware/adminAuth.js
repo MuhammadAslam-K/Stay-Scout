@@ -4,10 +4,10 @@
 function isLogged(req, res, next) {
 
     try {
-        if (req.session.superadmintoken) {
+        if (req.session.admintoken) {
             next()
         } else {
-            res.redirect("/superadmin")
+            res.redirect("/admin")
         }
     } catch (error) {
         console.log(error)

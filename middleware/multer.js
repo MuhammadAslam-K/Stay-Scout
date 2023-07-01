@@ -1,27 +1,45 @@
-import multer from "multer"
-import path from "path"
+// import multer from "multer"
+// import path from "path"
 
-// const storage = multer.diskStorage({});
 
 // const upload = multer({
-//     storage: storage,
-//     limits: {
-//         fileSize: 1024 * 1024 * 5
-//     }
-// });
+//     storage: multer.diskStorage({}),
+//     fileFilter: (req, file, cb) => {
 
-// export default upload;
+//         let ext = path.extname(file.originalname)
+
+//         if (ext != ".jpg" && ext != ".jpeg" && ext != ".png") {
+//             cb(new Error("file type is not supported"), false)
+//             return
+//         }
+//         cb(null, true)
+//     }
+// })
+
+// export default upload
+
+import multer from "multer";
+import path from "path";
 
 const upload = multer({
-    storage: multer.diskStorage({}),
+    storage: multer.diskStorage({
+        destination: "uploads/", // Specify the desired destination folder
+        filename: (req, file, cb) => {
+            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+            const extension = path.extname(file.originalname);
+            cb(null, file.fieldname + "-" + uniqueSuffix + extension);
+        },
+    }),
     fileFilter: (req, file, cb) => {
-        let ext = path.extname(file.originalname)
-        if (ext != ".jpg" && ext != ".jpeg" && ext != ".png") {
-            cb(new Error("file type is not supported"), false)
-            return
-        }
-        cb(null, true)
-    }
-})
+        const allowedExtensions = [".jpg", ".jpeg", ".png"];
+        const ext = path.extname(file.originalname);
 
-export default upload
+        if (!allowedExtensions.includes(ext)) {
+            cb(new Error("File type is not supported"), false);
+            return;
+        }
+        cb(null, true);
+    },
+});
+
+export default upload;

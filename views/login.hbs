@@ -13,8 +13,8 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    {{!-- {{#if superadmin}}
-                                    <form class="user" action="/superadmin" method="post">
+                                    {{!-- {{#if admin}}
+                                    <form class="user" action="/admin" method="post">
                                         {{/if}} --}}
 
                                         {{#if owner}}
@@ -50,7 +50,7 @@
                                     </form> --}}
 
                                     <hr>
-                                    {{#unless superAdmin}}
+                                    {{#unless admin}}
                                     {{#unless owner}}
                                     <div class="text-center">
                                         <a class="small" href="/passwordRecovery">Forgot Password?</a>

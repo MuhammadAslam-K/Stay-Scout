@@ -2,6 +2,7 @@ import express from "express"
 import morgan from "morgan"
 import dotenv from "dotenv"
 import session from "express-session"
+import cookieParser from "cookie-parser"
 import { v4 as uuidv4 } from 'uuid'
 import path from "path"
 import { fileURLToPath } from 'url'
@@ -10,7 +11,7 @@ import hbs from "hbs"
 
 import user_route from "./Routers/userRoute.js"
 import owner_route from "./Routers/ownerRoute.js"
-import superAdmin_route from "./Routers/superAdminRoute.js"
+import admin_route from "./Routers/adminRoute.js"
 import connect from "./config/mongodbConnection.js"
 
 
@@ -26,6 +27,7 @@ const __dirname = path.dirname(__filename);
 app.set("view engine", "hbs")
 // app.use(morgan("dev"))
 app.use(express.json())
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }))
 
 
@@ -34,7 +36,6 @@ app.use("/js", express.static(path.join(__dirname, "public/js")))
 app.use("/plugins", express.static(path.join(__dirname, "public/plugins")))
 app.use("/styles", express.static(path.join(__dirname, "public/styles")))
 app.use("/images", express.static(path.join(__dirname, "public/images")))
-
 
 app.use(session({
     secret: uuidv4(),
@@ -47,7 +48,7 @@ hbs.registerPartials(path.join(__dirname, '/views/partials'))
 
 app.use("/", user_route)
 app.use("/owner", owner_route)
-app.use("/superadmin", superAdmin_route)
+app.use("/admin", admin_route)
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'))
 
