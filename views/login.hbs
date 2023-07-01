@@ -1,0 +1,88 @@
+{{>userHeader}}
+
+<body class="bg-gradient-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                    </div>
+                                    {{!-- {{#if superadmin}}
+                                    <form class="user" action="/superadmin" method="post">
+                                        {{/if}} --}}
+
+                                        {{#if owner}}
+                                        <form class="user" action="/owner" method="post">
+                                            {{/if}}
+                                            {{#if user}}
+                                            {{!-- {{else}} --}}
+                                            <form class="user" action="/login" method="post">
+                                                {{/if}}
+                                                <div class="form-group">
+                                                    <input type="email" class="form-control form-control-user"
+                                                        aria-describedby="emailHelp" placeholder="Email Address..."
+                                                        name="email" id="userEmail" required>
+                                                    <span id="emailError" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control form-control-user"
+                                                        id="exampleInputPassword" placeholder="Password" name="password"
+                                                        required>
+                                                </div>
+
+                                                {{#if message }}
+                                                <p>
+                                                    {{ message }}
+                                                </p>
+                                                {{/if}}
+
+                                                <button class="btn btn-primary btn-user btn-block" type="submit"
+                                                    onclick="return emailValidation()">Login</button>
+                                            </form>
+                                        </form>
+                                        {{!--
+                                    </form> --}}
+
+                                    <hr>
+                                    {{#unless superAdmin}}
+                                    {{#unless owner}}
+                                    <div class="text-center">
+                                        <a class="small" href="/passwordRecovery">Forgot Password?</a>
+                                    </div>
+                                    {{/unless}}
+
+                                    {{#if owner}}
+                                    <div class="text-center">
+                                        <a class="small" href="/owner/signup">Create an Account!</a>
+                                    </div>
+                                    {{else}}
+                                    <div class="text-center">
+                                        <a class="small" href="/signup">Create an Account!</a>
+                                    </div>
+                                    {{/if}}
+                                    {{/unless}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+{{>userFooter}}
+<style>
+    span {
+        font-size: small
+    }
+</style>

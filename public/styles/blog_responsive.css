@@ -1,0 +1,368 @@
+@charset "utf-8";
+/* CSS Document */
+
+/******************************
+
+[Table of Contents]
+
+1. 1600px
+2. 1440px
+3. 1280px
+4. 1199px
+5. 1024px
+6. 991px
+7. 959px
+8. 880px
+9. 768px
+10. 767px
+11. 539px
+12. 479px
+13. 400px
+
+******************************/
+
+/************
+1. 1600px
+************/
+
+@media only screen and (max-width: 1600px)
+{
+	
+}
+
+/************
+2. 1440px
+************/
+
+@media only screen and (max-width: 1440px)
+{
+	
+}
+
+/************
+3. 1380px
+************/
+
+@media only screen and (max-width: 1380px)
+{
+	
+}
+
+/************
+3. 1280px
+************/
+
+@media only screen and (max-width: 1280px)
+{
+	
+}
+
+/************
+4. 1199px
+************/
+
+@media only screen and (max-width: 1199px)
+{
+	.container_custom .container
+	{
+		padding-left: 15px;
+		padding-right: 15px;
+		max-width: 960px;
+	}
+	.container_custom .container .row
+	{
+		margin-left: -15px;
+		margin-right: -15px;
+	}
+	.container_custom .container .row > div[class^='col']
+	{
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.header_phone
+	{
+		width: 175px;
+		height: 52px;
+	}
+	.book_button
+	{
+		width: 132px;
+		height: 52px;
+		margin-left: 25px;
+	}
+	.book_button a
+	{
+		line-height: 52px;
+	}
+	.main_nav ul li:not(:last-of-type)
+	{
+		margin-right: 30px;
+	}
+	.booking_form > div > div:last-child
+	{
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 15px;
+	}
+}
+
+/************
+4. 1100px
+************/
+
+@media only screen and (max-width: 1100px)
+{
+	
+}
+
+/************
+5. 1024px
+************/
+
+@media only screen and (max-width: 1024px)
+{
+	
+}
+
+/************
+6. 991px
+************/
+
+@media only screen and (max-width: 991px)
+{
+	.container_custom .container
+	{
+		max-width: 720px;
+	}
+	.main_nav
+	{
+		display: none;
+	}
+	.hamburger
+	{
+		display: block;
+	}
+	.home_title
+	{
+		font-size: 72px;
+	}
+	.booking_input_container > div
+	{
+		
+	}
+	.booking_input_container > div:first-child,
+	.booking_input_container > div:nth-child(2)
+	{
+		width: 50%;
+	}
+	.booking_input_container > div:nth-child(3),
+	.booking_input_container > div:nth-child(4)
+	{
+		width: 50%;
+	}
+	.booking_input_container > div:not(:last-of-type)
+	{
+		margin-bottom: 10px;
+	}
+	.blog_post_content
+	{
+		padding-left: 42px;
+		padding-right: 45px;
+	}
+	.sidebar
+	{
+		margin-top: 90px;
+	}
+	.footer_row > div[class^='col']:not(:last-child)
+	{
+		margin-bottom: 60px;
+	}
+	.footer_content
+	{
+		padding-bottom: 22px;
+	}
+	.cert:not(:last-child)
+	{
+		margin-right: 15px;
+	}
+}
+
+/************
+7. 959px
+************/
+
+@media only screen and (max-width: 959px)
+{
+	
+}
+
+/************
+8. 880px
+************/
+
+@media only screen and (max-width: 880px)
+{
+	
+}
+
+/************
+9. 768px
+************/
+
+@media only screen and (max-width: 768px)
+{
+	
+}
+
+/************
+10. 767px
+************/
+
+@media only screen and (max-width: 767px)
+{
+	.container_custom .container
+	{
+		max-width: 540px;
+	}
+	.header_content
+	{
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	.home_title
+	{
+		font-size: 56px;
+	}
+	.home_slider_dots_container
+	{
+		left: 30px;
+	}
+	.book_button
+	{
+		display: none;
+	}
+	.header_phone
+	{
+		display: none !important;
+	}
+	.menu_book
+	{
+		display: block;
+	}
+	.booking_form_container
+	{
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
+/************
+11. 575px
+************/
+
+@media only screen and (max-width: 575px)
+{
+	.container_custom .container
+	{
+		max-width: 100%;
+	}
+	h2
+	{
+		font-size: 24px;
+	}
+	p
+	{
+		font-size: 14px;
+	}
+	.header_content
+	{
+		padding-left: 15px;
+		padding-right: 15px;
+		height: 90px;
+	}
+	.header.scrolled .header_content
+	{
+		height: 70px;
+	}
+	.logo
+	{
+		width: 107px;
+		height: 36px;
+	}
+	.logo a
+	{
+		font-size: 18px;
+		line-height: 32px;
+	}
+	.home
+	{
+		height: 480px;
+	}
+	.home_title
+	{
+		font-size: 40px;
+	}
+	.booking_input
+	{
+		height: 40px;
+	}
+	.home_container
+	{
+		top: 55%;
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	.booking_button
+	{
+		width: 125px;
+		height: 44px;
+	}
+	.blog_post_info ul li a
+	{
+		font-size: 13px;
+	}
+	.blog_post_content
+	{
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+}
+
+/************
+11. 539px
+************/
+
+@media only screen and (max-width: 539px)
+{
+	
+}
+
+/************
+12. 480px
+************/
+
+@media only screen and (max-width: 480px)
+{
+	
+}
+
+/************
+13. 479px
+************/
+
+@media only screen and (max-width: 479px)
+{
+	
+}
+
+/************
+14. 400px
+************/
+
+@media only screen and (max-width: 400px)
+{
+	
+}

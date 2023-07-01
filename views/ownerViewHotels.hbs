@@ -1,0 +1,109 @@
+{{>userHeader}}
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {{>adminDashboardSide}}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+
+
+                <!-- Topbar Search -->
+
+
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+                    <form action="">
+
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <a href="/admin/addhotel" class="h3 mb-0 text-gray-800 text-light m-3 btn btn-primary">
+                        Add Hotel</a>
+                </nav>
+
+
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">HOTELS</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Total Revenu</th>
+                                            <th>No of Visitors</th>
+                                            <th>IS Available</th>
+                                            {{!-- <th>Hotels</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{!-- {{#each admin}} --}}
+                                        {{!-- <tr>
+                                            <td>{{this.name}}</td>
+                                            <td>{{this.email}}</td>
+                                            <td>{{this.phone}}</td>
+                                            {{#if this.is_block}}
+                                            <td>
+                                                <form action="/superadmin/admins/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-primary btn-block" type="submit"
+                                                        name="false">Unblock</button>
+                                                </form>
+                                            </td>
+                                            {{else}}
+                                            <td>
+                                                <form action="/superadmin/admins/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-warning  btn-block" type="submit"
+                                                        name="true">Block</button>
+                                                </form>
+                                            </td>
+                                            {{/if}}
+                                        </tr>
+                                        {{/each}} --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+
+
+</body>
+
+</html>
+
+
+{{>userFooter}}
