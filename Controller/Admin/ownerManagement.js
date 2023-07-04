@@ -1,12 +1,14 @@
-// import Owner from "../../model/OwnerModel.js"
 import Owner from "../../model/ownerModel.js"
 
 const viewowner = (async (req, res) => {
 
     try {
+
         const ownerDetails = await Owner.find()
         res.render("viewowners", { owner: ownerDetails })
+
     } catch (error) {
+
         console.log(error)
     }
 
@@ -15,6 +17,7 @@ const viewowner = (async (req, res) => {
 const searchOwner = (async (req, res) => {
 
     try {
+
         const value = req.body.search
 
         const regexValue = new RegExp(value, "i")

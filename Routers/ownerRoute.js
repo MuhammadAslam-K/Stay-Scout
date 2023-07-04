@@ -1,33 +1,37 @@
 import express from "express"
-import ownerAuth from "../Controller/Owner/ownerAuthController.js"
 import upload from "../middleware/multer.js"
 import hotelManagment from "../Controller/owner/hotelManagment.js"
+import ownerLogin from "../Controller/Owner/ownerLogin.js"
+import ownerSignup from "../Controller/Owner/ownerSignup.js"
+import Auth from "../middleware/ownerAuthentication.js"
+const { isLogged, islogout } = Auth
 
 
-const owner_route = express.Router()
+const owner_route = express()
+owner_route.set("views", "./views/owner");
 
 
 ///////////////LOGIN//////////
-owner_route.get("/", ownerAuth.login)
-owner_route.post("/", ownerAuth.loginVerify)
-owner_route.get("/logout", ownerAuth.logout)
+owner_route.get("/", islogout, ownerLogin.login)
+owner_route.post("/", islogout, ownerLogin.loginVerify)
+owner_route.get("/logout", isLogged, ownerLogin.logout)
 
 
 ///////////SIGNUP//////////
-owner_route.get('/signup', ownerAuth.signUp)
-owner_route.post('/otp', ownerAuth.sendOtp)
-owner_route.get("/otp", ownerAuth.enterOtp)
-owner_route.post("/submitOtp", ownerAuth.verifyOtp)
+owner_route.get('/signup', islogout, ownerSignup.signUp)
+owner_route.post('/otp', islogout, ownerSignup.sendOtp)
+owner_route.get("/otp", islogout, ownerSignup.enterOtp)
+owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 
 
 /////////////////DASHBOARD////////////////
-owner_route.get("/dashboard", ownerAuth.dashboard)
+owner_route.get("/dashboard", isLogged, ownerLogin.dashboard)
 
 /////////////////HOTEL MANAGEMENT////////////
-owner_route.get("/addhotel", hotelManagment.addHotel)
-// owner_route.post("/addhotel", hotelManagment.addHotel)
-owner_route.post("/addhotel", upload.single("image"), hotelManagment.submitHotel)
-owner_route.get("/hotels", hotelManagment.viewHotels)
+// owner_route.get("/addhotel", hotelManagment.addHotel)
+// // owner_route.post("/addhotel", hotelManagment.addHotel)
+// owner_route.post("/addhotel", upload.single("image"), hotelManagment.submitHotel)
+// owner_route.get("/hotels", hotelManagment.viewHotels)
 
 
 

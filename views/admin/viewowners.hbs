@@ -2,22 +2,15 @@
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
         {{>dashbordSide}}
-        <!-- End of Sidebar -->
 
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
-            <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
 
                     <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -25,13 +18,13 @@
                         </button>
                     </form>
 
-                    <form action="/admin/user" method="post"
+                    <form action="/admin/owner" method="post"
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 name="search">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit">
                                     search
                                 </button>
                             </div>
@@ -41,9 +34,10 @@
                 </nav>
 
                 <div class="container-fluid">
+
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">USERS</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">ADMINS</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -54,29 +48,33 @@
                                             <th>Email</th>
                                             <th>Phone No</th>
                                             <th>Blocked</th>
+                                            <th>Hotels</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{#each users}}
+                                        {{#each owner}}
                                         <tr>
                                             <td>{{this.name}}</td>
                                             <td>{{this.email}}</td>
                                             <td>{{this.phone}}</td>
                                             {{#if this.is_block}}
                                             <td>
-                                                <form action="/admin/users/edit?id={{this._id}}" method="post">
+                                                <form action="/admin/owners/edit?id={{this._id}}" method="post">
                                                     <button class="btn btn-primary btn-block" type="submit"
                                                         name="false">Unblock</button>
                                                 </form>
                                             </td>
                                             {{else}}
                                             <td>
-                                                <form action="/admin/users/edit?id={{this._id}}" method="post">
+                                                <form action="/admin/owners/edit?id={{this._id}}" method="post">
                                                     <button class="btn btn-warning  btn-block" type="submit"
                                                         name="true">Block</button>
                                                 </form>
                                             </td>
                                             {{/if}}
+                                            <td>
+                                                <a href="#" class="btn btn-primary btn-block">view</a>
+                                            </td>
                                         </tr>
                                         {{/each}}
                                     </tbody>

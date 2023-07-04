@@ -1,29 +1,9 @@
-// import multer from "multer"
-// import path from "path"
-
-
-// const upload = multer({
-//     storage: multer.diskStorage({}),
-//     fileFilter: (req, file, cb) => {
-
-//         let ext = path.extname(file.originalname)
-
-//         if (ext != ".jpg" && ext != ".jpeg" && ext != ".png") {
-//             cb(new Error("file type is not supported"), false)
-//             return
-//         }
-//         cb(null, true)
-//     }
-// })
-
-// export default upload
-
 import multer from "multer";
 import path from "path";
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination: "uploads/", // Specify the desired destination folder
+        // destination: "uploads/", // Specify the desired destination folder
         filename: (req, file, cb) => {
             const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
             const extension = path.extname(file.originalname);

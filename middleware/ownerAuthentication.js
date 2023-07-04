@@ -1,6 +1,7 @@
 
 
-function isLoged(req, res, next) {
+
+function isLogged(req, res, next) {
 
     try {
         if (req.session.ownertoken) {
@@ -14,7 +15,22 @@ function isLoged(req, res, next) {
 
 }
 
+const islogout = ((req, res, next) => {
+
+    try {
+        if (!req.session.ownertoken) {
+            next()
+        } else {
+            res.redirect("/owner/dashboard")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
 
 export default {
-    isLoged,
+    islogout,
+    isLogged,
 }

@@ -3,7 +3,7 @@
 <body class="bg-gradient-light">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="col-xl-10 col-lg-12 col-md-9" style="margin-top: 100px;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <div class="row">
@@ -15,7 +15,7 @@
                                         <h1>Verify email</h1>
                                         <p>Please Enter Your Registered Email<br>for the Verification</p>
                                     </div>
-                                    <form class="user" method="post" action="/emailValidate">
+                                    <form class="user" id="enterEmailForm">
                                         <div class="form-group">
                                             <input type="tel" class="form-control form-control-user" name="email"
                                                 placeholder="Email Address" id="userEmail">
@@ -49,3 +49,37 @@
         font-size: small
     }
 </style>
+
+
+<script src="/js/axios.min.js"></script>
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+
+        try {
+            const response = await axios.post('/emailValidate', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status === 200) {
+                window.location.href = '/recovertotp'
+            }
+        } catch (error) {
+
+            if (error.response.status == 400) {
+                document.getElementById('otpError').textContent = error.response.data.error;
+            }
+            else {
+                alert("something went wrong");
+            }
+
+        }
+    };
+
+    document.getElementById('enterEmailForm').addEventListener('submit', handleSubmit);
+</script>

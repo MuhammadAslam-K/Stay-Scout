@@ -1,13 +1,10 @@
-import User from "../../model/userModel.js"
-import Owner from "../../model/ownerModel.js"
-import Hotel from "../../model/hotelModel.js"
-import Rooms from "../../model/roomsModel.js"
+import jwt from "jsonwebtoken"
 
 
 const login = ((req, res) => {
 
     try {
-        res.render("login")
+        res.render("adminLogin", { admin: true })
     } catch (error) {
         console.log(error)
     }
@@ -16,16 +13,27 @@ const login = ((req, res) => {
 
 const loginVerify = ((req, res) => {
 
+    const admin = {
+        email: "admin@gmail.com",
+        password: "Admin1234"
+    }
+
     try {
         const { email, password } = req.body
 
-        if (email != "admin@gmail.com") {
-            res.render("login", { message: "Invalid EmailID" })
-        } else if (password != "Admin1234") {
-            res.render("login", { messsage: "Wrong Password" })
-        } else {
+        if (email != admin.email) {
 
-            const token = jwt.sign(email, process.env.SECRET_TOKEN, {
+            return res.status(401).json({ error: "Unauthorized Admin" })
+        }
+        else if (password != admin.password) {
+
+            return res.status(400).json({ error: "Wrong Password" })
+
+        }
+        else {
+
+            const payload = { email: email }
+            const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
                 expiresIn: "1h",
             })
 
@@ -49,28 +57,10 @@ const logout = ((req, res) => {
 
 })
 
-const dashboard = (async (req, res) => {
 
-    try {
-        const No_of_users = await User.find().count()
-        const No_of_owners = await Owner.find().count()
-        const No_of_hotels = await Hotel.find().count()
-        const No_of_rooms = await Rooms.find().count()
-        res.render("adminDashboard", {
-            users: No_of_users,
-            owners: No_of_owners,
-            hotels: No_of_hotels,
-            rooms: No_of_rooms
-        })
-    } catch (error) {
-        console.log(error)
-    }
-
-})
 
 export default {
     login,
     loginVerify,
     logout,
-    dashboard,
 }

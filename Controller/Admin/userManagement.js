@@ -3,9 +3,12 @@ import User from "../../model/userModel.js"
 const viewUser = (async (req, res) => {
 
     try {
+
         const userDetails = await User.find()
         res.render("viewUser", { users: userDetails })
+
     } catch (error) {
+
         console.log(error)
     }
 
@@ -14,6 +17,7 @@ const viewUser = (async (req, res) => {
 const searchUser = (async (req, res) => {
 
     try {
+
         const value = req.body.search
 
         const regexValue = new RegExp(value, "i")
@@ -28,6 +32,7 @@ const searchUser = (async (req, res) => {
         res.render("viewUser", { users: users })
 
     } catch (error) {
+
         console.log(error)
     }
 
@@ -36,6 +41,7 @@ const searchUser = (async (req, res) => {
 const updateUser = (async (req, res) => {
 
     try {
+
         const id = req.query.id
 
         const user = await User.findById(id)
@@ -43,7 +49,9 @@ const updateUser = (async (req, res) => {
         await user.save()
 
         res.redirect("/admin/users")
+
     } catch (error) {
+
         console.log(error)
     }
 

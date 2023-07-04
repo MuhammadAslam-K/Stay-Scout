@@ -58,11 +58,11 @@ const hotelSchema = new mongoose.Schema({
     //     ref: 'Owner',
     //     required: true
     // },
-    // type: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Types',
-    //     required: true
-    // },
+    type: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Types',
+        required: true
+    },
 })
 const Hotel = mongoose.model("Hotels", hotelSchema)
 

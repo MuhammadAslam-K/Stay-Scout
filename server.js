@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid'
 import path from "path"
 import { fileURLToPath } from 'url'
 import hbs from "hbs"
+import passport from "passport"
+import nocache from "nocache"
 
 
 import user_route from "./Routers/userRoute.js"
@@ -19,13 +21,13 @@ dotenv.config({ path: "config.env" })
 const app = express()
 const port = process.env.PORT || 3000
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename);
-
+const __dirname = path.dirname(__filename)
 
 
 /** Middleware */
 app.set("view engine", "hbs")
 // app.use(morgan("dev"))
+app.use(nocache());
 app.use(express.json())
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }))
@@ -37,14 +39,21 @@ app.use("/plugins", express.static(path.join(__dirname, "public/plugins")))
 app.use("/styles", express.static(path.join(__dirname, "public/styles")))
 app.use("/images", express.static(path.join(__dirname, "public/images")))
 
+
 app.use(session({
     secret: uuidv4(),
     saveUninitialized: true,
     resave: false
 }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'))
+
 
 app.use("/", user_route)
 app.use("/owner", owner_route)
