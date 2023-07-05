@@ -26,13 +26,8 @@
                                                 id="userPassword" placeholder="Password" name="password" required>
                                             <span id="passwordError" class="text-danger"></span>
                                         </div>
-
-                                        {{#if message }}
-                                        <p>
-                                            {{ message }}
-                                        </p>
-                                        {{/if}}
-
+                                        <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
+                                            Password</span>
                                         <button class="btn btn-primary btn-user btn-block" type="submit">Login</button>
                                     </form>
                                     <a href="/auth/google" class="btn btn-google btn-user btn-block ">
@@ -91,12 +86,22 @@
             if (error.response.status === 400) {
                 document.getElementById('passwordError').textContent = error.response.data.error;
             }
-            else if (error.response.status === 404) {
-                document.getElementById('emailError').textContent = error.response.data.error;
-
-            }
         }
     };
 
     document.getElementById('loginForm').addEventListener('submit', handleSubmit);
+
+
+
+    function showPassword() {
+
+        var passwordInput = document.getElementById("userPassword")
+        var showPassCheckbox = document.getElementById("showPass")
+
+        if (showPassCheckbox.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
 </script>

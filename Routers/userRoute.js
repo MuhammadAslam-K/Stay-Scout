@@ -23,7 +23,7 @@ user_route.get("/logout", isLogged, loginController.logout)
 
 
 user_route.get('/signup', islogout, signupController.signUp)
-user_route.post('/otp', islogout, signupController.sendOtp)
+user_route.post('/signup', islogout, signupController.signupValidation)
 user_route.get("/otp", islogout, signupController.enterOtp)
 user_route.post("/submitOtp", islogout, signupController.verifyOtp)
 
@@ -31,7 +31,7 @@ user_route.post("/submitOtp", islogout, signupController.verifyOtp)
 
 user_route.get("/passwordRecovery", islogout, passwordUpdation.enterEmail)
 user_route.post("/emailValidate", islogout, passwordUpdation.emailValidation)
-user_route.get("/recovertotp", islogout, passwordUpdation.recoveryotp)
+user_route.get("/recoverotp", islogout, passwordUpdation.recoveryotp)
 user_route.post("/verifyotp", islogout, passwordUpdation.verifyOtp)
 user_route.get("/updatePassword", islogout, passwordUpdation.updatePassword)
 user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)

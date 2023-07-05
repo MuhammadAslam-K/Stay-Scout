@@ -2,13 +2,11 @@ import jwt from "jsonwebtoken"
 
 
 const login = ((req, res) => {
-
     try {
         res.render("adminLogin", { admin: true })
     } catch (error) {
         console.log(error)
     }
-
 })
 
 const loginVerify = ((req, res) => {
@@ -28,7 +26,6 @@ const loginVerify = ((req, res) => {
         else if (password != admin.password) {
 
             return res.status(400).json({ error: "Wrong Password" })
-
         }
         else {
 

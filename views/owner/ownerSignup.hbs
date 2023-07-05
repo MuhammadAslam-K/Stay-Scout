@@ -50,6 +50,8 @@
                                         placeholder="Re-enter Password" name="password2" required>
                                     <span id="password2Error" class="text-danger"></span>
                                 </div>
+                                <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
+                                    Password</span>
                                 <button class="btn btn-primary btn-user btn-block" type="submit">Submit</button>
 
                             </form>
@@ -81,28 +83,31 @@
             const formData = new FormData(event.target)
 
             try {
-                const response = await axios.post('/owner/otp', formData, {
+                const response = await axios.post('/owner/signup', formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
-                alert("ok")
 
                 if (response.status === 200) {
                     window.location.href = '/owner/otp'
                 }
             } catch (error) {
-                alert(error)
+
 
                 if (error.response.status == 400) {
+
                     const errors = error.response.data.error;
                     Object.keys(errors).forEach((key) => {
                         let element = document.getElementById(key).textContent = errors[key];
                     });
-                } else if (error.response.status == 401) {
+                }
+                else if (error.response.status == 401) {
+
                     document.getElementById('emailError').textContent = error.response.data.error;
                 }
                 else if (error.response.status == 409) {
+
                     document.getElementById('password2Error').textContent = error.response.data.error;
                 }
                 else {
@@ -113,4 +118,19 @@
         };
 
         document.getElementById('signupForm').addEventListener('submit', handleSubmit);
+
+        function showPassword() {
+
+            var passwordInput = document.getElementById("Password")
+            var showPassCheckbox = document.getElementById("showPass")
+
+            if (showPassCheckbox.checked) {
+
+                passwordInput.type = "text";
+            }
+            else {
+
+                passwordInput.type = "password";
+            }
+        }
     </script>

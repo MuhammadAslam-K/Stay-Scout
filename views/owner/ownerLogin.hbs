@@ -27,7 +27,8 @@
                                                 id="ownerPassword" placeholder="Password" name="password" required>
                                             <span id="passwordError" class="text-danger"></span>
                                         </div>
-
+                                        <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
+                                            Password</span>
                                         <button class="btn btn-primary btn-user btn-block" type="submit">Login</button>
                                     </form>
                                     <div class="text-center">
@@ -87,4 +88,16 @@
     };
 
     document.getElementById('loginForm').addEventListener('submit', handleSubmit);
+
+    function showPassword() {
+
+        var passwordInput = document.getElementById("ownerPassword")
+        var showPassCheckbox = document.getElementById("showPass")
+
+        if (showPassCheckbox.checked) {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
 </script>

@@ -11,20 +11,16 @@ dotenv.config({ path: "config.env" })
 /////////////owner LOGIN/////////
 
 const login = ((req, res) => {
-
     try {
         res.render("ownerLogin")
 
     } catch (error) {
         console.log(error);
     }
-
 })
 
 const loginVerify = (async (req, res) => {
-
     try {
-
         const { email, password } = req.body
         const ownerExistes = await Owner.findOne({ email: email })
 
@@ -51,7 +47,6 @@ const loginVerify = (async (req, res) => {
                 req.session.owner = ownerExistes
                 return res.status(200).end()
             }
-
         }
         else {
             return res.status(401).json({ error: "You dosen't have an Account Please Create one Now!!!" })
@@ -65,15 +60,12 @@ const loginVerify = (async (req, res) => {
 
 
 const logout = ((req, res) => {
-
     try {
-
         delete req.session.owner
         delete req.session.ownertoken
         res.redirect("/owner")
 
     } catch (error) {
-
         console.log(error);
     }
 })
@@ -81,9 +73,7 @@ const logout = ((req, res) => {
 /////////// owner SignUp /////////
 
 const dashboard = ((req, res) => {
-
     try {
-
         res.render("ownerDashboard")
 
     } catch (error) {

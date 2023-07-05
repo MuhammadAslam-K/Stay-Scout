@@ -21,11 +21,7 @@
                                                 placeholder="Email Address" id="userEmail">
                                             <span id="emailError" class="text-danger"></span>
                                         </div>
-                                        {{#if message }}
-                                        <p>
-                                            {{message}}
-                                        </p>
-                                        {{/if}}
+
                                         <button type="submit" class="btn btn-primary btn-user btn-block"
                                             onclick=" return emailValidation()">Submit</button>
                                     </form>
@@ -66,8 +62,8 @@
                 }
             })
 
-            if (response.status === 200) {
-                window.location.href = '/recovertotp'
+            if (response.status == 200) {
+                window.location.href = '/recoverotp'
             }
         } catch (error) {
 

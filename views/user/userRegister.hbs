@@ -42,13 +42,14 @@
                                     <input id="password2" class="form-control form-control-user" type="password"
                                         placeholder="Re-enter Password" name="password2" required>
                                     <span id="password2Error" class="text-danger"></span>
+
+                                    <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
+                                        Password</span>
                                 </div>
+                                <h5 id="Error"></h5>
                                 <button class="btn btn-primary btn-user btn-block" type="submit">Submit</button>
 
                             </form>
-                            {{#if messages.error}}
-                            <div class="text-danger">{{messages.error}}</div>
-                            {{/if}}
                             <hr>
                             <a class="small" href="/login">Already have an account? Login!</a>
 
@@ -68,6 +69,10 @@
         span {
             font-size: small
         }
+
+        h5 {
+            font-size: medium;
+        }
     </style>
 
     <script src="/js/axios.min.js"></script>
@@ -80,7 +85,7 @@
             const formData = new FormData(event.target);
 
             try {
-                const response = await axios.post('/otp', formData, {
+                const response = await axios.post('/signup', formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -100,18 +105,27 @@
                         let element = document.getElementById(key).textContent = errors[key];
                     });
                 }
-                else if (error.response.status == 401) {
-                    document.getElementById('emailError').textContent = error.response.data.error;
-                }
                 else if (error.response.status == 409) {
-                    document.getElementById('password2Error').textContent = error.response.data.error;
+                    document.getElementById('Error').textContent = error.response.data.error;
                 }
                 else {
                     alert("something went wrong");
                 }
-
             }
         };
         document.getElementById('signupForm').addEventListener('submit', handleSubmit);
 
+
+
+        function showPassword() {
+
+            var passwordInput = document.getElementById("Password")
+            var showPassCheckbox = document.getElementById("showPass")
+
+            if (showPassCheckbox.checked) {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
     </script>

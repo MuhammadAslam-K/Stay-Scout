@@ -16,10 +16,10 @@ const ownerSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    // upi: {
-    //     type: String,
-    //     require: true,
-    // },
+    upi: {
+        type: String,
+        require: true,
+    },
     password: {
         type: String,
         require: true

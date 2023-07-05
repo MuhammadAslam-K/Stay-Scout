@@ -1,5 +1,6 @@
 {{>userHeader}}
 
+
 <body class="bg-gradient-light">
     <div class="container">
         <div class="row justify-content-center">
@@ -24,6 +25,14 @@
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Submit</button>
                                     </form>
+                                    <div id="countdownContainer" class="text-center">
+                                        <span id="countdown"></span>
+                                    </div>
+
+                                    <div id="resendContainer" style="display: none;" class="text-center">
+                                        <a href="/otp" class="btn">Resend OTP</a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -33,6 +42,7 @@
         </div>
     </div>
 </body>
+
 
 {{>userFooter}}
 
@@ -74,4 +84,37 @@
     };
 
     document.getElementById('otpForm').addEventListener('submit', handleSubmit);
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let countdown = 30;
+        let countdownInterval;
+
+        function startCountdown() {
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            const countdownContainer = document.getElementById('countdownContainer');
+            const resendContainer = document.getElementById('resendContainer');
+            const countdownElement = document.getElementById('countdown');
+
+            countdown--;
+
+            if (countdown >= 0) {
+                countdownElement.textContent = countdown;
+            } else {
+                clearInterval(countdownInterval);
+                countdownContainer.style.display = 'none';
+                resendContainer.style.display = 'block';
+            }
+        }
+
+        document.getElementById('otpForm').addEventListener('reset', function (event) {
+            event.preventDefault();
+        });
+
+        startCountdown();
+    });
 </script>

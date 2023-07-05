@@ -19,7 +19,7 @@ owner_route.get("/logout", isLogged, ownerLogin.logout)
 
 ///////////SIGNUP//////////
 owner_route.get('/signup', islogout, ownerSignup.signUp)
-owner_route.post('/otp', islogout, ownerSignup.sendOtp)
+owner_route.post('/signup', islogout, ownerSignup.signupValidate)
 owner_route.get("/otp", islogout, ownerSignup.enterOtp)
 owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 

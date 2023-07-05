@@ -3,7 +3,7 @@
 <body class="bg-gradient-light">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="col-xl-10 col-lg-12 col-md-9" style="margin-top: 150px;">
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <div class="row">
@@ -24,6 +24,13 @@
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Submit</button>
                                     </form>
+                                    <div id="countdownContainer" class="text-center">
+                                        <span id="countdown"></span>
+                                    </div>
+
+                                    <div id="resendContainer" style="display: none;" class="text-center">
+                                        <a href="/owner/otp" class="btn">Resend OTP</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -32,46 +39,81 @@
             </div>
         </div>
     </div>
+
+
+    <style>
+        span {
+            font-size: small;
+        }
+    </style>
+
+    <script src="/js/axios.min.js"></script>
+    <script>
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+
+            try {
+                const response = await axios.post('/owner/submitOtp', formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                if (response.status === 200) {
+                    window.location.href = '/owner'
+                }
+            } catch (error) {
+
+                if (error.response.status == 400) {
+                    document.getElementById('otpError').textContent = error.response.data.error;
+                }
+                else {
+                    alert("something went wrong");
+                }
+
+            }
+        };
+
+        document.getElementById('otpForm').addEventListener('submit', handleSubmit);
+    </script>
+
+
+    <script>
+        let countdown = 30;
+        let countdownInterval;
+
+        function startCountdown() {
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            const countdownContainer = document.getElementById('countdownContainer');
+            const resendContainer = document.getElementById('resendContainer');
+            const countdownElement = document.getElementById('countdown');
+
+            countdown--;
+
+            if (countdown >= 0) {
+                countdownElement.textContent = countdown;
+            } else {
+                clearInterval(countdownInterval);
+                countdownContainer.style.display = 'none';
+                resendContainer.style.display = 'block';
+            }
+        }
+
+        document.getElementById('otpForm').addEventListener('reset', function (event) {
+            event.preventDefault();
+
+
+        });
+
+        startCountdown()
+    </script>
+
 </body>
 
 {{>userFooter}}
-
-<style>
-    span {
-        font-size: small;
-    }
-</style>
-
-
-<script src="/js/axios.min.js"></script>
-<script>
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-
-
-        try {
-            const response = await axios.post('/owner/submitOtp', formData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (response.status === 200) {
-                window.location.href = '/owner'
-            }
-        } catch (error) {
-
-            if (error.response.status == 400) {
-                document.getElementById('otpError').textContent = error.response.data.error;
-            }
-            else {
-                alert("something went wrong");
-            }
-
-        }
-    };
-
-    document.getElementById('otpForm').addEventListener('submit', handleSubmit);
-</script>
