@@ -25,13 +25,15 @@ owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 
 
 /////////////////DASHBOARD////////////////
-owner_route.get("/dashboard", isLogged, ownerLogin.dashboard)
+owner_route.get("/dashboard", ownerLogin.dashboard)
 
 /////////////////HOTEL MANAGEMENT////////////
-// owner_route.get("/addhotel", hotelManagment.addHotel)
-// // owner_route.post("/addhotel", hotelManagment.addHotel)
-// owner_route.post("/addhotel", upload.single("image"), hotelManagment.submitHotel)
-// owner_route.get("/hotels", hotelManagment.viewHotels)
+owner_route.get("/addhotel", hotelManagment.addHotel)
+// owner_route.post("/addhotel", hotelManagment.addHotel)
+// owner_route.post("/addhotel", upload.array("image", 4), hotelManagment.submitHotel);
+owner_route.post("/addhotel", upload.array('image', 4), hotelManagment.submitHotel);
+
+owner_route.get("/hotels", hotelManagment.viewHotels)
 
 
 

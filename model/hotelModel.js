@@ -5,11 +5,11 @@ const hotelSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    description: {
+    title: {
         type: String,
         require: true
     },
-    title: {
+    description: {
         type: String,
         require: true
     },
@@ -17,6 +17,11 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
+    // category: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Category',
+    //     required: true
+    // },
     // adddress: {
     //     place: {
     //         type: String,
@@ -58,11 +63,6 @@ const hotelSchema = new mongoose.Schema({
     //     ref: 'Owner',
     //     required: true
     // },
-    type: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Types',
-        required: true
-    },
 })
 const Hotel = mongoose.model("Hotels", hotelSchema)
 

@@ -1,4 +1,3 @@
-import fileUpload from "express-fileupload"
 import cloudenary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
 
@@ -26,23 +25,34 @@ const addHotel = ((req, res) => {
 
 const submitHotel = (async (req, res) => {
     try {
-        const result = await cloudenary.uploader.upload(req.file.path)
-        console.log(result)
-        console.log(31)
-        console.log(req.session.owner);
-        const hotel = new Hotel({
-            name: req.body.name,
-            description: req.body.description,
-            title: req.body.title,
-            startingPrice: req.body.startingprice,
 
-            images: [{
+        const files = req.files;
+        const hotelImages = [];
+
+        for (const file of files) {
+            const result = await cloudenary.uploader.upload(file.path, {
+                folder: "Hotels"
+            });
+
+            const image = {
                 public_id: result.public_id,
                 url: result.secure_url
-            }],
-            // owner: req.session.owner._id,
-            // type: req.body.type
+            };
+
+            hotelImages.push(image);
+        }
+
+        console.log(31)
+        const { name, title, startingPrice, category, description } = req.body
+        const hotel = new Hotel({
+            name,
+            title,
+            description,
+            startingPrice,
+            category,
+            images: hotelImages
         })
+
         console.log(hotel)
         await hotel.save()
         res.send("okkkkkkkk")

@@ -107,9 +107,9 @@ function validate(data, isowner = false) {
         if (!upi) {
             errors.upiError = "please Enter your upi Id";
         }
-        // else if (!upiIdPattern.test(upi)) {
-        //     errors.upiError = "please Enter Valid upi Id";
-        // }
+        else if (!upiIdPattern.test(upi)) {
+            errors.upiError = "please Enter Valid upi Id";
+        }
 
     }
 
