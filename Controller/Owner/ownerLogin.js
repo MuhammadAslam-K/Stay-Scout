@@ -72,14 +72,7 @@ const logout = ((req, res) => {
 
 /////////// owner SignUp /////////
 
-const dashboard = ((req, res) => {
-    try {
-        res.render("ownerDashboard")
 
-    } catch (error) {
-        console.log(error);
-    }
-})
 
 
 export default {
@@ -87,5 +80,4 @@ export default {
     login,
     loginVerify,
     logout,
-    dashboard,
 }

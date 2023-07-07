@@ -1,0 +1,232 @@
+{{>userHeader}}
+
+<style>
+    .image-preview-container {
+        display: flex;
+
+        margin-bottom: 20px;
+
+        width: 200px;
+        max-width: 400px;
+    }
+
+    .image-preview {
+        height: 200px;
+        width: 200px;
+        margin-bottom: 10px;
+        margin-left: 2rem;
+        border-radius: 5px;
+        object-fit: cover;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    #maps {
+        width: 100%;
+        height: 400px;
+    }
+
+    #mapss {
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+<body id="page-top">
+    <div id="wrapper">
+        {{>adminDashboardSide}}
+        <div id="content-wrapper" class="d-flex flex-column col-lg-9 justify-content-center m-5">
+            <div id="content">
+                <form id="registerForm" enctype="multipart/form-data">
+                    <input type="text" name="id" value="{{hotel._id}}" style="display: none;">
+                    <div class="form-row m-4 ">
+                        <div class="form-group col-md-6">
+                            <label>Name of the Hotel</label>
+                            <input type="text" class="form-control" name="name" value="{{hotel.name}}">
+                            <span id="nameError" class="text-danger error-msg"></span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Title (max 10 words)</label>
+                            <input type="text" class="form-control" name="title" value="{{hotel.title}}">
+                            <span id="titleError" class="text-danger error-msg"></span>
+                        </div>
+                    </div>
+                    <div class="form-row m-4">
+                        <div class="form-group col-md-6">
+                            <label>Starting Price of the Room</label>
+                            <input type="tel" class="form-control" name="startingprice" value="{{hotel.startingPrice}}">
+                            <span id="priceError" class="text-danger error-msg"></span>
+                        </div>
+
+                        {{!-- <div class="dropdown form-group col-md-6">
+                            <select id="dropdownSelect" class="form-group col-md-6" name="type">
+                                <option value="" disabled selected>Select Type</option>
+                                {{#each type}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                                {{/each}}
+                                <option value="new">New</option>
+                            </select>
+
+                            <div id="inputFieldContainer">
+                                <input type="text" id="newInputField" name="newtype" placeholder="Enter a new Type">
+                            </div>
+                        </div> --}}
+
+
+                    </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="city" value="{{hotel.city}}">
+                    <span id="cityError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Pincode</label>
+                    <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
+                    <span id="pincodeError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label for="description">Description....</label>
+                    <textarea id="description" class="form-control" name="description"
+                        style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
+                    <span id="descriptionError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="description">Address</label>
+                    <textarea id="description" class="form-control" name="address"
+                        style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
+                    <span id="addressError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+
+
+            <div id="images">
+                <span>1</span>
+                <input type="file" id="image1" name="image">
+                <span>2</span>
+                <input type="file" id="image2" name="image">
+                <br>
+                <span>3</span>
+                <input type="file" id="image3" name="image">
+                <span>4</span>
+                <input type="file" id="image4" name="image">
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div class="image-preview-container">
+                <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+
+
+                <div class="image-preview-container">
+                    <div>
+                        <p>Images</p>
+                    </div>
+                    {{#each hotel.images}}
+                    <img class="image-preview" src="{{this.url}}" alt="Image Preview">
+                    <span>{{@index}}</span>
+                    {{/each}}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+    {{!-- Image preview code --}}
+    <script>
+        function previewImage(event, imageNumber) {
+            var preview = document.getElementById(`preview${imageNumber}`);
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                preview.style.display = "none";
+            }
+        }
+
+        // Add event listeners for image previews
+        document.getElementById("image1").addEventListener("change", function (event) {
+            previewImage(event, 1);
+        });
+
+        document.getElementById("image2").addEventListener("change", function (event) {
+            previewImage(event, 2);
+        });
+
+        document.getElementById("image3").addEventListener("change", function (event) {
+            previewImage(event, 3);
+        });
+
+        document.getElementById("image4").addEventListener("change", function (event) {
+            previewImage(event, 4);
+        });
+    </script>
+
+    {{!-- AXIOS --}}
+    <script>
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            resetError()
+            try {
+                const response = await axios.post('/owner/update', formData)
+
+                if (response.status === 200) {
+                    window.location.href = '/owner/hotels'
+                }
+
+            } catch (error) {
+
+                if (error.response.status == 400) {
+
+                    const errors = error.response.data.error;
+
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+
+                }
+                else {
+                    alert("something went wrong");
+                }
+            }
+        };
+        document.getElementById('registerForm').addEventListener('submit', handleSubmit);
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
+        }
+
+
+    </script>
+
+
+    {{>userFooter}}

@@ -19,6 +19,16 @@
         object-fit: cover;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     }
+
+    #maps {
+        width: 100%;
+        height: 400px;
+    }
+
+    #mapss {
+        width: 100%;
+        height: 400px;
+    }
 </style>
 
 <body id="page-top">
@@ -27,63 +37,102 @@
 
         <div id="content-wrapper" class="d-flex flex-column col-lg-9 justify-content-center m-5">
             <div id="content">
-                <form action="/owner/addhotel" method="post" enctype="multipart/form-data">
+                <form id="registerForm" enctype="multipart/form-data">
                     <div class="form-row m-4 ">
                         <div class="form-group col-md-6">
                             <label>Name of the Hotel</label>
                             <input type="text" class="form-control" name="name">
+                            <span id="nameError" class="text-danger error-msg"></span>
                         </div>
+
                         <div class="form-group col-md-6">
                             <label>Title (max 10 words)</label>
                             <input type="text" class="form-control" name="title">
+                            <span id="titleError" class="text-danger error-msg"></span>
                         </div>
                     </div>
                     <div class="form-row m-4">
                         <div class="form-group col-md-6">
                             <label>Starting Price of the Room</label>
-                            <input type="tel" class="form-control" name="startingprice">
+                            <input type="tel" class="form-control" name="startingPrice">
+                            <span id="priceError" class="text-danger error-msg"></span>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label>Category</label>
-                            <input type="text" class="form-control" name="category">
+
+                        <div class="dropdown form-group col-md-6">
+                            <select id="dropdownSelect" class="form-group col-md-6" name="type">
+                                <option value="" disabled selected>Select Type</option>
+                                {{#each type}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                                {{/each}}
+                                <option value="new">New</option>
+                            </select>
+
+                            <div id="inputFieldContainer">
+                                <input type="text" id="newInputField" name="newtype" placeholder="Enter a new Type">
+                            </div>
                         </div>
+
+
                     </div>
+            </div>
 
-                    <div class="form-row m-4">
-                        <div class="form-group col-md-6">
-                            <label for="description">Description....</label>
-                            <textarea id="description" class="form-control" name="description"
-                                style="height: 150px; resize: vertical;"></textarea>
-                        </div>
-                    </div>
-
-
-                    <div id="images">
-                        <input type="file" id="image1" name="image" required>
-                        <input type="file" id="image2" name="image" required>
-                        <br>
-                        <input type="file" id="image3" name="image" required>
-                        <input type="file" id="image4" name="image" required>
-                    </div>
-
-
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <div class="image-preview-container">
-                    <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
-                    <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
-                    <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
-                    <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="city">
+                    <span id="cityError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Pincode</label>
+                    <input type="text" class="form-control" name="pincode">
+                    <span id="pincodeError" class="text-danger error-msg"></span>
                 </div>
             </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label for="description">Description....</label>
+                    <textarea id="description" class="form-control" name="description"
+                        style="height: 150px; resize: vertical;"></textarea>
+                    <span id="descriptionError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="description">Address</label>
+                    <textarea id="description" class="form-control" name="address"
+                        style="height: 150px; resize: vertical;"></textarea>
+                    <span id="addressError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+
+
+            <div id="images">
+                <input type="file" id="image1" name="image" required>
+                <input type="file" id="image2" name="image" required>
+                <br>
+                <input type="file" id="image3" name="image" required>
+                <input type="file" id="image4" name="image" required>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div class="image-preview-container">
+                <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            </div>
         </div>
+    </div>
     </div>
 
 
 
 
+    {{!-- Image preview code --}}
     <script>
-        // Image preview code
         function previewImage(event, imageNumber) {
             var preview = document.getElementById(`preview${imageNumber}`);
             var file = event.target.files[0];
@@ -120,6 +169,67 @@
         });
     </script>
 
+    {{!-- AXIOS --}}
+    <script>
+        const handleSubmit = async (event) => {
+            event.preventDefault();
 
+            const formData = new FormData(event.target);
+            resetError()
+            try {
+                const response = await axios.post('/owner/addhotel', formData)
+
+                if (response.status === 200) {
+                    window.location.href = '/owner/hotels'
+                }
+
+            } catch (error) {
+
+                if (error.response.status == 400) {
+
+                    const errors = error.response.data.error;
+
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+
+                }
+                else {
+                    alert("something went wrong");
+                }
+            }
+        };
+        document.getElementById('registerForm').addEventListener('submit', handleSubmit);
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
+        }
+
+
+    </script>
+
+    {{!-- new Type --}}
+    <script>
+
+        window.addEventListener('DOMContentLoaded', function () {
+            var inputFieldContainer = document.getElementById('inputFieldContainer');
+            inputFieldContainer.style.display = 'none';
+
+            document.getElementById('dropdownSelect').addEventListener('change', function () {
+                var selectedOption = this.value;
+
+                if (selectedOption === 'new') {
+                    inputFieldContainer.style.display = 'block';
+                } else {
+                    inputFieldContainer.style.display = 'none';
+                }
+            });
+        });
+
+
+    </script>
 
     {{>userFooter}}
