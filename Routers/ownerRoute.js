@@ -1,9 +1,10 @@
 import express from "express"
 import upload from "../middleware/multer.js"
-import hotelManagment from "../Controller/Owner/hotelManagment.js"
 import ownerLogin from "../Controller/Owner/ownerLogin.js"
 import ownerSignup from "../Controller/Owner/ownerSignup.js"
 import Auth from "../middleware/ownerAuthentication.js"
+import hotelManagment from "../Controller/Owner/hotelManagment.js"
+import roomManagement from "../Controller/Owner/roomManagement.js"
 import dashboard from "../Controller/Owner/dashboard.js"
 const { isLogged, islogout } = Auth
 
@@ -35,10 +36,11 @@ owner_route.post("/addhotel", upload.array('image', 4), hotelManagment.submitHot
 
 owner_route.post("/hotel/edit", hotelManagment.blockHotel)
 owner_route.get("/hotel/view", hotelManagment.editHotel)
-// owner_route.post("/hotel/update", hotelManagment.updateHotel)
 
 
 ///////////// ROOM MANAGEMENT///////////////
+owner_route.get("/hotel/addrooms", roomManagement.addRoom)
+owner_route.post("/hotel/addrooms", upload.array('image', 4), roomManagement.submitRoom)
 
 
 

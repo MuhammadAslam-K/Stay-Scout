@@ -22,7 +22,7 @@ const viewHotels = (async (req, res) => {
     const hotel = await Hotel.find({ owner: ownerId })
     // console.log(hotel)
     try {
-        res.render("ownerViewHotels", { hotel: hotel })
+        res.render("viewHotels", { hotel: hotel })
 
     } catch (error) {
         console.log(error)

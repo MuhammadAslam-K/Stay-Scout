@@ -1,0 +1,221 @@
+{{>userHeader}}
+{{>adminDashboardSide}}
+
+<style>
+    <style>#content-wrapper {
+        background-color: #f8f9fa;
+    }
+
+    #content {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 30px;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #80bdff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+    .error-msg {
+        font-size: 14px;
+    }
+
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+</style>
+
+
+<div id="content-wrapper" class="justify-content-center m-5">
+    <div id="content" class="bg-light p-4 border rounded">
+        <form id="registerForm" enctype="multipart/form-data">
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>Price</label>
+                    <input type="text" class="form-control" name="price">
+                    <span id="priceError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Max Adults</label>
+                    <input type="tel" class="form-control" name="adults">
+                    <span id="adultsError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Max Childrents</label>
+                    <input type="tel" class="form-control" name="childrents">
+                    <span id="childrentsError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>Bed Type</label>
+                    <input type="text" class="form-control" name="bed">
+                    <span id="bedError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="dropdown form-group col-md-6">
+                    <select id="dropdownSelect" class="form-group col-md-6" name="category">
+                        <option value="" disabled selected>Select Category</option>
+                        {{#each category}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                        <option value="new">New</option>
+                    </select>
+
+                    <div id="inputFieldContainer">
+                        <input type="text" id="newInputField" name="newCatgory" placeholder="Enter a new Type">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label for="description">Rooms Description</label>
+                    <textarea id="description" class="form-control" name="description"
+                        style="height: 150px; resize: vertical;"></textarea>
+                    <span id="descriptionError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div id="images">
+                <input type="file" id="image1" name="image" required>
+                <input type="file" id="image2" name="image" required>
+                <br>
+                <input type="file" id="image3" name="image" required>
+                <input type="file" id="image4" name="image" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div class="image-preview-container mt-4">
+            <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+        </div>
+
+    </div>
+
+
+
+    {{!-- Image preview code --}}
+    <script>
+        function previewImage(event, imageNumber) {
+            var preview = document.getElementById(`preview${imageNumber}`);
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                preview.style.display = "none";
+            }
+        }
+
+        // Add event listeners for image previews
+        document.getElementById("image1").addEventListener("change", function (event) {
+            previewImage(event, 1);
+        });
+
+        document.getElementById("image2").addEventListener("change", function (event) {
+            previewImage(event, 2);
+        });
+
+        document.getElementById("image3").addEventListener("change", function (event) {
+            previewImage(event, 3);
+        });
+
+        document.getElementById("image4").addEventListener("change", function (event) {
+            previewImage(event, 4);
+        });
+    </script>
+
+    {{!-- AXIOS --}}
+    <script>
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            resetError()
+            try {
+                const response = await axios.post('/owner/hotel/addrooms', formData)
+
+                if (response.status === 200) {
+                    window.location.href = '/owner/hotels'
+                }
+
+            } catch (error) {
+
+                if (error.response.status == 400) {
+
+                    const errors = error.response.data.error;
+
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+
+                }
+                else {
+                    alert("something went wrong");
+                }
+            }
+        };
+        document.getElementById('registerForm').addEventListener('submit', handleSubmit);
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
+        }
+
+
+    </script>
+
+    {{!-- new Type --}}
+    <script>
+
+        window.addEventListener('DOMContentLoaded', function () {
+            var inputFieldContainer = document.getElementById('inputFieldContainer');
+            inputFieldContainer.style.display = 'none';
+
+            document.getElementById('dropdownSelect').addEventListener('change', function () {
+                var selectedOption = this.value;
+
+                if (selectedOption === 'new') {
+                    inputFieldContainer.style.display = 'block';
+                } else {
+                    inputFieldContainer.style.display = 'none';
+                }
+            });
+        });
+
+
+    </script>
+
+    {{>userFooter}}

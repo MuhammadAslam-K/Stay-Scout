@@ -1,0 +1,40 @@
+{{>userHeader}}
+{{>navBar2}}
+
+
+{{#each hotel}}
+<section class="py-5 bg-light" id="next">
+    <div class="container-fluid col-lg-10">
+        <div class="row align-items-center">
+            <div class="p-3 text-center room-info">
+                <h2>{{this.name}}</h2>
+                <span class="text-uppercase letter-spacing-1">Rooms Start from {{this.startingPrice}} / per
+                    night</span>
+            </div>
+            <div class="col-md-4 order-md-2 order-lg-1" data-aos="fade-up">
+                <p class="mb-4">{{this.description}}</p>
+                <div class="col-md-6 col-lg-8 align-self-end">
+                    <a href="/hotel/home?id={{this._id}}" class="btn btn-primary btn-block text-white">Check
+                        Availability</a>
+                </div>
+            </div>
+            <div class="col-md-8 order-md-1 order-lg-2" data-aos="fade-up">
+                <div class="home">
+                    <div class="home_slider_container">
+                        <div class="owl-carousel owl-theme home_slider">
+                            {{#each this.images}}
+                            <div class="slide" style="height: 70vh;">
+                                <div class="background_image" style="opacity: unset;background-image:url({{this.url}})">
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{/each}}
+
+{{>userFooter}}

@@ -41,7 +41,8 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 
 user_route.get("/", userController.home)
 user_route.get("/profile", isLogged, userController.profile)
-
+user_route.get("/hotels", userController.hotels)
+user_route.get("/hotel/home", userController.hotelHome)
 
 /////// GOOGLE SIGNIN///////
 
@@ -53,7 +54,6 @@ user_route.get(
         res.redirect('/');
     }
 );
-
 
 user_route.get('/auth/google', googleAuth.googleSignup)
 // user_route.get("/auth/google/callback", googleAuth.googleSuccess)

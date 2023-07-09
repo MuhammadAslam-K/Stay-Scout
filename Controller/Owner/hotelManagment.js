@@ -9,7 +9,7 @@ import Type from "../../model/type.js"
 const addHotel = (async (req, res) => {
     const type = await Type.find()
     try {
-        res.render("ownerAddHotel", { type: type })
+        res.render("addHotel", { type: type })
 
     } catch (error) {
         console.log(error)

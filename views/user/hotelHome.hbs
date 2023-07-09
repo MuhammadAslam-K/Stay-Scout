@@ -1,0 +1,59 @@
+{{>userHeader}}
+{{>navBar2}}
+
+
+<div class="container-fluid" style="margin-top: 150px;">
+    <div class="row m-5 py-5">
+        <div class="col-lg-5 order-lg-2">
+            <div class="col-md-8 offset-md-2 " data-aos="fade-up">
+                <form>
+                    <div class="form-group">
+                        <label for="checkin">Check-in Date</label>
+                        <input type="date" class="form-control" id="checkin">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout">Check-out Date</label>
+                        <input type="date" class="form-control" id="checkout">
+                    </div>
+                    <div class="form-group">
+                        <label for="adults">Number of Adults</label>
+                        <input type="number" class="form-control" id="adults">
+                    </div>
+                    <div class="form-group">
+                        <label for="kids">Number of Kids</label>
+                        <input type="number" class="form-control" id="kids">
+                    </div>
+                    <div class="form-group">
+                        <label for="rooms">Number of Rooms</label>
+                        <input type="number" class="form-control" id="rooms">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-7 order-lg-1">
+            <div class="super_container " style="height: 60vh;">
+                <div class="home">
+                    <div class="home_slider_container">
+                        <div class="owl-carousel owl-theme home_slider">
+                            {{#each hotel.images}}
+                            <div class="slide">
+                                <div class="background_image"
+                                    style="background-size: cover; background-image:url({{this.url}});"></div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="home_title h1 my-4">{{hotel.name}}</div>
+            <p class="mb-4 ">{{hotel.description}}</p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{{>userFooter}}

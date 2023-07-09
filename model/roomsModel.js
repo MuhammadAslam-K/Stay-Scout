@@ -5,25 +5,33 @@ const roomSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    title: {
-        type: String,
-        require: true
-    },
     Price: {
         type: Number,
         require: true
     },
-    maxPeople: {
+    adults: {
         type: Number,
         require: true
     },
+    childrents: {
+        type: Number,
+        require: true
+    },
+    images: [{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }],
     checkIn: {
         type: Date,
-        require: true
     },
     checkOut: {
         type: Date,
-        require: true
     },
     booste: {
         type: Number,
@@ -31,7 +39,7 @@ const roomSchema = new mongoose.Schema({
     },
     is_Available: {
         type: Boolean,
-        default: false
+        default: true
     },
     is_block: {
         type: Boolean,
@@ -59,13 +67,3 @@ export default Rooms
 
 
 
-    // images: [{
-    //     public_id: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     url: {
-    //         type: String,
-    //         required: true
-    //     }
-    // }],
