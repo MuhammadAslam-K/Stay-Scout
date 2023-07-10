@@ -27,11 +27,11 @@ owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 
 
 /////////////////DASHBOARD////////////////
-owner_route.get("/dashboard", dashboard.dashboard)
-owner_route.get("/hotels", dashboard.viewHotels)
+owner_route.get("/dashboard", isLogged, dashboard.dashboard)
+owner_route.get("/hotels", isLogged, dashboard.viewHotels)
 
 /////////////////HOTEL MANAGEMENT////////////
-owner_route.get("/addhotel", hotelManagment.addHotel)
+owner_route.get("/addhotel", isLogged, hotelManagment.addHotel)
 owner_route.post("/addhotel", upload.array('image', 4), hotelManagment.submitHotel)
 
 owner_route.post("/hotel/edit", hotelManagment.blockHotel)

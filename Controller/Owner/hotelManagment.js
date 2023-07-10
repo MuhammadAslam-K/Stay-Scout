@@ -58,7 +58,7 @@ const submitHotel = (async (req, res) => {
                 typeId = type
             }
             console.log(60);
-            const ownerId = "64a2cbca876756d2ce1864bb"
+            // const ownerId = "64a2cbca876756d2ce1864bb"
             const hotel = new Hotel({
                 name,
                 title,
@@ -68,8 +68,8 @@ const submitHotel = (async (req, res) => {
                 city,
                 pincode,
                 address,
-                // hotel: req.session.owner._id,
-                owner: ownerId,
+                owner: req.session.owner._id,
+                // owner: ownerId,
                 images: hotelImages
             })
             console.log(hotel);
@@ -86,11 +86,12 @@ const submitHotel = (async (req, res) => {
 const blockHotel = (async (req, res) => {
     try {
         const id = req.query.id
+
         const hotel = await Hotel.findById(id)
-
         hotel.is_Available = !hotel.is_Available
-        await hotel.save()
 
+        await hotel.save()
+        // return res.send(200).end()
         res.redirect("/owner/hotels")
     } catch (error) {
         console.log(error)

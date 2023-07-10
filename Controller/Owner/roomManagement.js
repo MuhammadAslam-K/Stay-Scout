@@ -7,7 +7,7 @@ import cloudinary from "../../config/cloudinary.js"
 const addRoom = (async (req, res) => {
     const category = await Category.find()
     console.log(category)
-    // req.session.hotelId = req.query.id
+    req.session.hotelId = req.query.id
     // req.session.hotelId = "64a912cc3025e79ba23d0e54"
 
     try {
@@ -57,8 +57,8 @@ const submitRoom = (async (req, res) => {
                 categoryId = category
             }
             console.log(60)
-            const hotelId = "64a912cc3025e79ba23d0e54"
-            const ownerId = "64a2cbca876756d2ce1864bb"
+            // const hotelId = "64a912cc3025e79ba23d0e54"
+            // const ownerId = "64a2cbca876756d2ce1864bb"
             const room = new Rooms({
                 price,
                 adults,
@@ -67,9 +67,9 @@ const submitRoom = (async (req, res) => {
                 category: categoryId,
                 description,
                 images: roomImages,
-                // hotel: req.session.hotelId,
-                hotel: hotelId,
-                owner: ownerId,
+                hotel: req.session.hotelId,
+                // hotel: hotelId,
+                owner: req.session.owner._id,
 
             })
             console.log(room);

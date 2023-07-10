@@ -55,21 +55,27 @@
                                             <td>{{this.revenu}}</td>
                                             <td>{{this.rooms}}</td>
                                             <td>{{this.visitors}}</td>
+
                                             {{#if this.is_Available}}
                                             <td>
                                                 <form action="/owner/hotel/edit?id={{this._id}}" method="post">
+                                                    {{!-- <input type="hidden" name="id" value="{{this._id}}"> --}}
                                                     <button class="btn btn-primary btn-block" type="submit"
-                                                        name="false">Available</button>
+                                                        name="availability" value="false">Available</button>
                                                 </form>
                                             </td>
                                             {{else}}
                                             <td>
                                                 <form action="/owner/hotel/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-warning  btn-block" type="submit"
-                                                        name="true">Not Available</button>
+                                                    {{!-- <input type="hidden" name="id" value="{{this._id}}"> --}}
+                                                    <button class="btn btn-warning btn-block" type="submit"
+                                                        name="availability" value="true">Not Available</button>
                                                 </form>
                                             </td>
                                             {{/if}}
+
+
+
                                             <td>
                                                 <a href="/owner/hotel/view?id={{this.id}}"
                                                     class="btn btn-primary">View</a>
@@ -98,3 +104,61 @@
 
 
 {{>userFooter}}
+
+
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const id = formData.get('id');
+
+        try {
+            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                window.location.href = '/owner/hotels';
+            }
+        } catch (error) {
+            if (error.response.status == 400) {
+                alert("Something Went Wrong");
+            }
+        }
+    };
+
+    document.getElementById('edit').addEventListener('submit', handleSubmit);
+</script>
+
+
+{{!--
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const id = formData.get('id');
+
+        try {
+            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                window.location.href = '/owner/hotels';
+            }
+        } catch (error) {
+            if (error.response.status == 400) {
+                alert("Something Went Wrong");
+            }
+        }
+    };
+
+    // Attach event listeners to each form with unique IDs
+
+    document.getElementById('edit-{{this._id}}').addEventListener('submit', handleSubmit);
+
+</script> --}}

@@ -26,17 +26,12 @@ const signupValidate = async (req, res) => {
 
         const { name, email, phone, password, password2, upi } = req.body
         const emailExist = await Owner.findOne({ email: email })
-        const upiExist = await Owner.findOne({ upi: upi })
         const phoneExist = await Owner.findOne({ phone: phone })
-        const valid = Signup_functions.validate(req.body, true)
+        const valid = Signup_functions.validate(req.body)
 
         if (emailExist) {
 
             return res.status(409).json({ error: "The owner already Exists please Login" })
-        }
-        else if (upiExist) {
-
-            return res.status(409).json({ error: "The owner with same upi already Exist please Re-check" })
         }
         else if (phoneExist) {
 
@@ -53,7 +48,6 @@ const signupValidate = async (req, res) => {
                 email,
                 phone,
                 password,
-                upi,
             }
 
             return res.status(200).end()
@@ -101,7 +95,6 @@ const verifyOtp = async (req, res) => {
                     name,
                     email,
                     phone,
-                    upi,
                     password: hashedPassword,
 
                 })

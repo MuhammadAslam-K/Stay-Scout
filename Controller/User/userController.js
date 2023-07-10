@@ -1,13 +1,16 @@
 import Hotel from "../../model/hotelModel.js"
+import Rooms from "../../model/roomsModel.js"
 
 
 const home = (async (req, res) => {
 
     const banner = await Hotel.find().sort({ booste: -1 }).limit(2)
     const hotel = await Hotel.find().sort({ booste: -1 }).skip(2).limit(2)
+    const rooms = await Rooms.find().sort({ booste: -1 }).limit(6)
+    console.log(rooms)
 
     try {
-        res.render("home", { banner, hotel })
+        res.render("home", { banner, hotel, rooms })
 
     } catch (error) {
         console.log(error);

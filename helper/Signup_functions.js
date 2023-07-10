@@ -51,13 +51,9 @@ async function sendOTP(email, otp) {
 }
 
 ///////////// VALIDATION /////////////////////
-function validate(data, isowner = false) {
+function validate(data) {
 
-    if (isowner) {
-        var { name, email, phone, upi, password, password2 } = data;
-    } else {
-        var { name, email, phone, password, password2 } = data;
-    }
+    const { name, email, phone, password, password2 } = data;
     const errors = {}
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -99,18 +95,6 @@ function validate(data, isowner = false) {
         errors.password2Error = "please Enter Your password"
     } else if (password && password2 && password !== password2) {
         errors.password2Error = "passwords doesn't match";
-    }
-
-    // UPI Validation //
-    if (isowner) {
-
-        if (!upi) {
-            errors.upiError = "please Enter your upi Id";
-        }
-        else if (!upiIdPattern.test(upi)) {
-            errors.upiError = "please Enter Valid upi Id";
-        }
-
     }
 
     return {
