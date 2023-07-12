@@ -71,7 +71,7 @@
                     <span id="bedError" class="text-danger error-msg"></span>
                 </div>
 
-                <div class="dropdown form-group col-md-6">
+                <div class="dropdown form-group col-md-3">
                     <select id="dropdownSelect" class="form-group col-md-6" name="category">
                         <option value="" disabled selected>Select Category</option>
                         {{#each category}}
@@ -83,6 +83,28 @@
                     <div id="inputFieldContainer">
                         <input type="text" id="newInputField" name="newCatgory" placeholder="Enter a new Type">
                     </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Total No.of Rooms</label>
+                    <input type="tel" class="form-control" name="noOfRooms">
+                    <span id="noOfRoomsError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label for="description">Cancellation</label>
+                    <textarea id="description" class="form-control" name="Cancellation"
+                        style="height: 50px; resize: vertical;"></textarea>
+                    <span id="CancellationError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="description">Amenities</label>
+                    <textarea id="amenities" class="form-control" name="amenities"
+                        style="height: 50px; resize: vertical;"></textarea>
+                    <span id="amenitiesError" class="text-danger error-msg"></span>
                 </div>
             </div>
 

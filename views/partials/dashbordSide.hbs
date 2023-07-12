@@ -1,58 +1,40 @@
 {{>userHeader}}
 
 
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">Super Admin </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+    <a class="navbar-brand" href="/admin/dashboard">
+        <i class="fas fa-laugh-wink"></i>
+        <span class="ml-2">Admin</span>
     </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/admin/dashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/users">
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/owners">
+                    <span>Owners</span>
+                </a>
+            </li>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="/admin/dashboard">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Nav Item - Users -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/users" data-target="#collapseTwo" aria-expanded="true"
-            aria-controls="collapseTwo">
-            <span>USERS</span>
-        </a>
-
-    </li>
-
-    <!-- Nav Item - Admins-->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/owners" aria-expanded="true" aria-controls="collapseUtilities">
-            Owners
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/hotels" aria-expanded="true" aria-controls="collapsePages">
-            <span>Hotels</span>
-        </a>
-    </li>
-
-    <!-- Nav Item - Rooms -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/admin/rooms" aria-expanded="true">
-            <span>Rooms</span></a>
-    </li>
-
-</ul>
 
 
 

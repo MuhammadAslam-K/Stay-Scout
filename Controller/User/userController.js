@@ -1,62 +1,56 @@
-import Hotel from "../../model/hotelModel.js"
-import Rooms from "../../model/roomsModel.js"
+import propertyFetching from "../../helper/propertyFetching.js";
+import User from "../../model/userModel.js"
 
 
 const home = (async (req, res) => {
 
-    const banner = await Hotel.find().sort({ booste: -1 }).limit(2)
-    const hotel = await Hotel.find().sort({ booste: -1 }).skip(2).limit(2)
-    const rooms = await Rooms.find().sort({ booste: -1 }).limit(6)
-    console.log(rooms)
-
     try {
-        res.render("home", { banner, hotel, rooms })
+        const banner = await propertyFetching.hotel(null, 0, 2)
+        const hotel = await propertyFetching.hotel(null, 0, 2)
+        const rooms = await propertyFetching.room(null, 0, 6)
 
+        res.render("home", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("home", { banner, hotel, rooms })
+        })
     } catch (error) {
-        console.log(error);
+        return res.render("home", { errorMessage: "Internal Server Error Unable to load" });
     }
 })
 
 const profile = (async (req, res) => {
     try {
-        const user = req.session.user
-        res.render("profile", { user: user })
+        const id = req.session.user._id
+        const user = await User.findById(id)
+        res.render("profile", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("profile", { user })
+        })
 
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
+
     }
 
 })
 
-const hotels = async (req, res) => {
-
-    const hotel = await Hotel.find().sort({ booste: -1 })
-
-    try {
-        res.render("userViewHotels", { hotel })
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
-const hotelHome = (async (req, res) => {
-
-    const id = req.query.id
-    const hotel = await Hotel.findById(id)
 
 
-    try {
-        res.render("hotelHome", { hotel })
-    } catch (error) {
-        console.log(error);
-    }
 
-})
 
 export default {
     home,
     profile,
-    hotels,
-    hotelHome
 }

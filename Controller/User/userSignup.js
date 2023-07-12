@@ -5,10 +5,19 @@ import User from "../../model/userModel.js"
 
 const signUp = ((req, res) => {
     try {
-        res.render("userRegister", { user: true })
 
+        res.render("userRegister", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("userRegister")
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 })
 
@@ -20,16 +29,15 @@ const signupValidation = async (req, res) => {
 
     try {
 
+        // console.log(req.body)
         const { name, email, phone, password } = req.body
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
-
         const valid = Signup_functions.validate(req.body)
 
         if (emailExist) {
 
             return res.status(409).json({ error: "user Exists Please Login" })
-
         }
         else if (phoneExist) {
 
@@ -40,19 +48,18 @@ const signupValidation = async (req, res) => {
             return res.status(400).json({ error: valid.errors })
         }
         else {
-            console.log(req.body);
             req.session.userDetails = {
                 name,
                 email,
                 phone,
                 password
             }
-            console.log(req.session.userDetails);
-            return res.status(200).end();
 
+            return res.status(200).end();
         }
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
+
     }
 }
 
@@ -69,17 +76,29 @@ const enterOtp = (req, res) => {
         Signup_functions.sendOTP(email, generateOtp)
         Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
 
-        res.render("userOtp")
+        res.render("userOtp", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("userOtp")
+        })
 
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
+
     }
 }
 
 
 const verifyOtp = async (req, res) => {
     try {
+        console.log(req.body)
         const enteredOtp = req.body.otp
+        console.log(enteredOtp);
         let i
 
         for (i = 0; i < saveOtp.length; i++) {
@@ -104,13 +123,13 @@ const verifyOtp = async (req, res) => {
                     return res.status(200).end();
 
                 } catch (error) {
-                    res.send(error)
+                    return res.status(500).json({ error: error })
                 }
             }
         }
         return res.status(400).json({ error: "Invalid OTP" })
     } catch (error) {
-        console.log(error)
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
     }
 }
 /////////////Ended OTP///////

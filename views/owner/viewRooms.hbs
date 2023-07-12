@@ -1,0 +1,99 @@
+{{>userHeader}}
+
+{{>adminDashboardSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+
+                    <div class="dropdown form-group col-md-3">
+                        <select id="dropdownSelect" class="form-group col-md-6" name="category">
+                            <option value="" disabled selected>Select Category</option>
+                            {{#each category}}
+                            <option value="/owner/room/filter?id={{this._id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <script>
+                        const dropdownSelect = document.getElementById('dropdownSelect');
+
+                        dropdownSelect.addEventListener('change', () => {
+                            const selectedRoute = dropdownSelect.value;
+                            if (selectedRoute) {
+                                window.location.href = selectedRoute;
+                            }
+                        });
+                    </script>
+
+
+                </nav>
+
+
+                <div class="container">
+
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <a href="/owner/rooms" class="m-0 font-weight-bold text-primary">Rooms</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Hotel Name</th>
+                                            <th>Category</th>
+                                            <th>No of Rooms</th>
+                                            <th>Boosted</th>
+                                            <th>Is Blocked</th>
+                                            <th>Is Available</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each rooms}}
+                                        <tr>
+                                            <td>{{this.hotel.name}}</td>
+                                            <td>{{this.category.name}}</td>
+                                            <td>{{this.noOfRooms}}</td>
+                                            <td>{{this.booste}}</td>
+                                            <td>{{this.is_block}}</td>
+
+                                            {{#if this.is_Available}}
+                                            <td>
+                                                <form action="/owner/room/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-primary btn-block" type="submit"
+                                                        name="availability" value="false">Available</button>
+                                                </form>
+                                            </td>
+                                            {{else}}
+                                            <td>
+                                                <form action="/owner/room/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-warning btn-block" type="submit"
+                                                        name="availability" value="true">Not Available</button>
+                                                </form>
+                                            </td>
+                                            {{/if}}
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+{{>userFooter}}

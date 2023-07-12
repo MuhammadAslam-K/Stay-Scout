@@ -7,9 +7,10 @@ import { v4 as uuidv4 } from 'uuid'
 import path from "path"
 import { fileURLToPath } from 'url'
 import hbs from "hbs"
+import Handlebars from "hbs"
 import passport from "passport"
 import nocache from "nocache"
-
+// import hbsHelper from "./helper/hbsHelper.js"
 
 import user_route from "./Routers/userRoute.js"
 import owner_route from "./Routers/ownerRoute.js"
@@ -54,12 +55,27 @@ app.use(passport.session());
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'))
 
+// Register the "times" helper
+hbs.registerHelper('times', function (n, block) {
+    let accum = '';
+    for (let i = 0; i < n; i++) {
+        accum += block.fn(i);
+    }
+    return accum;
+});
+
+
+
 
 app.use("/", user_route)
 app.use("/owner", owner_route)
 app.use("/admin", admin_route)
+app.get('*', (req, res) => {
+    // res.send('404 pagenot found')
+    res.render("404")
+})
 
-hbs.registerPartials(path.join(__dirname, '/views/partials'))
+
 
 connect().then(() => {
     try {

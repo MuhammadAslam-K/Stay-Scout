@@ -32,15 +32,19 @@ owner_route.get("/hotels", isLogged, dashboard.viewHotels)
 
 /////////////////HOTEL MANAGEMENT////////////
 owner_route.get("/addhotel", isLogged, hotelManagment.addHotel)
-owner_route.post("/addhotel", upload.array('image', 4), hotelManagment.submitHotel)
+owner_route.post("/addhotel", isLogged, upload.array('image', 4), hotelManagment.submitHotel)
 
-owner_route.post("/hotel/edit", hotelManagment.blockHotel)
-owner_route.get("/hotel/view", hotelManagment.editHotel)
-
+owner_route.post("/hotel/edit", isLogged, hotelManagment.blockHotel)
+owner_route.get("/hotel/view", isLogged, hotelManagment.editHotel)
+owner_route.post("/hotel", isLogged, hotelManagment.searchHotel)
 
 ///////////// ROOM MANAGEMENT///////////////
-owner_route.get("/hotel/addrooms", roomManagement.addRoom)
-owner_route.post("/hotel/addrooms", upload.array('image', 4), roomManagement.submitRoom)
+owner_route.get("/hotel/addrooms", isLogged, roomManagement.addRoom)
+owner_route.post("/hotel/addrooms", isLogged, upload.array('image', 4), roomManagement.submitRoom)
+owner_route.get("/rooms", isLogged, roomManagement.viewRooms)
+
+owner_route.post("/room/edit", isLogged, roomManagement.blockRoom)
+owner_route.get("/room/filter", isLogged, roomManagement.filter)
 
 
 

@@ -122,7 +122,7 @@ const verifyOtp = async (req, res) => {
     }
 };
 
-/////////////Ended OTP///////
+
 
 
 

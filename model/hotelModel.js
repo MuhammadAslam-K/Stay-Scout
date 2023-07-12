@@ -17,11 +17,6 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    type: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Types',
-        required: true
-    },
     city: {
         type: String,
         require: true,
@@ -48,11 +43,15 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    rating: {
+    totalrating: {
         type: Number,
         default: 0
     },
     users: {
+        type: Number,
+        default: 0
+    },
+    rating: {
         type: Number,
         default: 0
     },
@@ -64,6 +63,10 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
+    revenue: {
+        type: Number,
+        default: 0
+    },
     is_Available: {
         type: Boolean,
         default: true
@@ -71,6 +74,11 @@ const hotelSchema = new mongoose.Schema({
     is_block: {
         type: Boolean,
         default: false
+    },
+    type: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Types',
+        required: true
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

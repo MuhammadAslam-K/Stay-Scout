@@ -5,7 +5,7 @@ const roomSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    Price: {
+    price: {
         type: Number,
         require: true
     },
@@ -16,6 +16,22 @@ const roomSchema = new mongoose.Schema({
     childrents: {
         type: Number,
         require: true
+    },
+    bed: {
+        type: String,
+        require: true
+    },
+    noOfRooms: {
+        type: Number,
+        require: true,
+    },
+    amenities: {
+        type: String,
+        require: true,
+    },
+    Cancellation: {
+        type: String,
+        require: true,
     },
     images: [{
         public_id: {

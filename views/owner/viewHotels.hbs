@@ -8,13 +8,13 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                    <form action="">
+                    <form action="/owner/hotel" method="post">
 
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                                aria-label="Search" aria-describedby="basic-addon2" name="search">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
@@ -31,7 +31,7 @@
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">HOTELS</h6>
+                            <a href="/owner/hotels" class="m-0 font-weight-bold text-primary">HOTELS</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -41,7 +41,8 @@
                                             <th>Name</th>
                                             <th>Total Revenue</th>
                                             <th>No of Rooms</th>
-                                            <th>No of Visitors</th>
+                                            <th>Type</th>
+                                            <th>Is Blocked</th>
                                             <th>Is Available</th>
                                             <th>More</th>
                                             <th>Add Rooms</th>
@@ -54,7 +55,8 @@
                                             <td>{{this.name}}</td>
                                             <td>{{this.revenu}}</td>
                                             <td>{{this.rooms}}</td>
-                                            <td>{{this.visitors}}</td>
+                                            <td>{{this.type.name}}</td>
+                                            <td>{{this.is_block}}</td>
 
                                             {{#if this.is_Available}}
                                             <td>
@@ -131,6 +133,8 @@
 
     document.getElementById('edit').addEventListener('submit', handleSubmit);
 </script>
+
+
 
 
 {{!--

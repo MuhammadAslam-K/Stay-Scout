@@ -77,7 +77,6 @@
 
     <script src="/js/axios.min.js"></script>
 
-
     <script>
         const handleSubmit = async (event) => {
             event.preventDefault();
@@ -85,11 +84,7 @@
             const formData = new FormData(event.target);
 
             try {
-                const response = await axios.post('/signup', formData, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                const response = await axios.post('/signup', Object.fromEntries(formData))
 
                 if (response.status === 200) {
                     window.location.href = '/otp'
@@ -102,23 +97,31 @@
                     const errors = error.response.data.error;
 
                     Object.keys(errors).forEach((key) => {
-                        let element = document.getElementById(key).textContent = errors[key];
+                        let element = document.getElementById(key + 'Error');
+                        if (element) {
+                            element.textContent = errors[key];
+                        }
                     });
                 }
                 else if (error.response.status == 409) {
                     document.getElementById('Error').textContent = error.response.data.error;
                 }
+                else if (error.response.status == 500) {
+                    const err = error.response.data.error;
+                    alertify.alert(err, function () {
+                        alertify.message('OK');
+                    });
+                }
                 else {
-                    alert("something went wrong");
+                    alertify.alert("Something went wrong please try later", function () {
+                        alertify.message('OK');
+                    });
                 }
             }
         };
         document.getElementById('signupForm').addEventListener('submit', handleSubmit);
 
-
-
         function showPassword() {
-
             var passwordInput = document.getElementById("Password")
             var showPassCheckbox = document.getElementById("showPass")
 
@@ -129,3 +132,14 @@
             }
         }
     </script>
+</body>
+
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

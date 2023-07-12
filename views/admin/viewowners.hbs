@@ -1,17 +1,12 @@
 {{>userHeader}}
 
+{{>dashbordSide}}
+
 <body id="page-top">
-
     <div id="wrapper">
-
-        {{>dashbordSide}}
-
         <div id="content-wrapper" class="d-flex flex-column">
-
             <div id="content">
-
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                     <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                             <i class="fa fa-bars"></i>
@@ -73,7 +68,8 @@
                                             </td>
                                             {{/if}}
                                             <td>
-                                                <a href="#" class="btn btn-primary btn-block">view</a>
+                                                <a href="/admin/owner/hotels?id={{this._id}}"
+                                                    class="btn btn-primary btn-block">view</a>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -82,20 +78,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-
-
 </body>
 
-</html>
 
 
 {{>userFooter}}

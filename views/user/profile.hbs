@@ -75,3 +75,13 @@
         background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1))
     }
 </style>
+
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

@@ -13,11 +13,19 @@ dotenv.config({ path: "config.env" })
 
 const login = ((req, res) => {
     try {
-        res.render("userLogin", { user: true })
+        res.render("userLogin", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("userLogin")
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
-
 })
 
 const loginVerify = (async (req, res) => {
@@ -61,7 +69,7 @@ const loginVerify = (async (req, res) => {
             return res.status(400).json({ error: 'user not found signup' });
         }
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error Please try again later" })
     }
 })
 
@@ -72,7 +80,7 @@ const logout = ((req, res) => {
         res.redirect("/login")
 
     } catch (error) {
-        console.log(error);
+        return res.render("profile", { errorMessage: "Internal Server Error Please try again later" });
     }
 
 })

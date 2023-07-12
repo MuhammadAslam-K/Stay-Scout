@@ -3,12 +3,14 @@ import express from "express"
 import loginController from "../Controller/User/userLogin.js"
 import signupController from "../Controller/User/userSignup.js"
 import passwordUpdation from "../Controller/User/passwordUpdation.js"
+import hotelManagement from "../Controller/User/hotelManagement.js"
+import roomManagement from "../Controller/User/roomManagement.js"
 
 import userController from "../Controller/User/userController.js"
 import auth from "../middleware/userAuthentication.js"
 import googleAuth from "../Controller/User/googleAuth.js"
 import passport from "passport"
-const { isLogged, islogout } = auth
+const { isLogged, islogout, isBlocked } = auth
 
 const user_route = express()
 user_route.set("views", "./views/user");
@@ -40,9 +42,19 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 //////////USER HOME ROUTES/////////
 
 user_route.get("/", userController.home)
-user_route.get("/profile", isLogged, userController.profile)
-user_route.get("/hotels", userController.hotels)
-user_route.get("/hotel/home", userController.hotelHome)
+user_route.get("/profile", isLogged, isBlocked, userController.profile)
+
+//////// HOTELS /////////////isLogged, isBlocked, 
+user_route.get("/hotels", hotelManagement.hotels)
+user_route.get("/hotel/home", isLogged, isBlocked, hotelManagement.hotelHome)
+
+//////////Rooms/////////////
+user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
+user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
+user_route.get("/room/filter", isLogged, isBlocked, roomManagement.roomsFilter)
+
+
+
 
 /////// GOOGLE SIGNIN///////
 

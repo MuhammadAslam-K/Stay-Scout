@@ -335,7 +335,7 @@ section {
 
 .header_content {
 	width: 100%;
-	height: 66px;
+	height: 68px;
 	padding-left: 62px;
 	padding-right: 62px;
 	-webkit-transition: all 400ms ease;
@@ -571,8 +571,7 @@ section {
 
 .home {
 	width: 100%;
-	height: 74vh;
-
+	height: 100vh;
 }
 
 .home_slider_container {
@@ -616,7 +615,7 @@ section {
 }
 
 .home_slider .background_image {
-	opacity: 0.40;
+	opacity: 0.28;
 }
 
 .home_container {
@@ -1265,4 +1264,83 @@ input[type=number]::-webkit-outer-spin-button {
 	font-size: 15px;
 	font-weight: 500;
 	color: #6d6d6d;
+}
+
+
+/*    CUSTOM       */
+
+
+.container1 {
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	gap: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+
+.slider-container1 {
+	display: flex;
+	justify-content: center;
+	border-right: 2px solid rgb(178, 173, 173);
+}
+
+.slider1 {
+	width: 100%;
+	max-width: 300px;
+	margin: 0 auto;
+}
+
+
+.slider-item img {
+	width: 100%;
+	border-radius: 5px;
+}
+
+.description-container1,
+.booking-container1 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.booking-container1 {
+	border-left: 2px solid rgb(178, 173, 173);
+}
+
+.description-container1 {
+	justify-content: flex-start;
+	margin-top: 20px;
+}
+
+
+.description-container1 h2 {
+	margin-top: 0;
+}
+
+.description-container1 p {
+	margin-bottom: 1px;
+}
+
+
+.booking-container1 a {
+	width: 50%;
+	padding: 10px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+
+}
+
+@media screen and (max-width: 768px) {
+	.container1 {
+		grid-template-columns: 1fr;
+	}
+
+	.slider-container1 {
+		margin-bottom: 20px;
+	}
 }

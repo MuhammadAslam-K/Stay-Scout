@@ -68,14 +68,31 @@
         } catch (error) {
 
             if (error.response.status == 400) {
-                document.getElementById('otpError').textContent = error.response.data.error;
+                document.getElementById('emailError').textContent = error.response.data.error;
+            }
+            else if (error.response.status == 500) {
+                const err = error.response.data.error;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
             }
             else {
-                alert("something went wrong");
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
             }
 
         }
     };
 
     document.getElementById('enterEmailForm').addEventListener('submit', handleSubmit);
+</script>
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
 </script>

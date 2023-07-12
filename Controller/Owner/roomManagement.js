@@ -2,11 +2,13 @@ import Rooms from "../../model/roomsModel.js";
 import Category from "../../model/category.js";
 import propertyValidation from "../../helper/propertyValidation.js"
 import cloudinary from "../../config/cloudinary.js"
+import Hotel from "../../model/hotelModel.js";
+import propertyFetching from "../../helper/propertyFetching.js";
 
 
 const addRoom = (async (req, res) => {
     const category = await Category.find()
-    console.log(category)
+    // console.log(category)
     req.session.hotelId = req.query.id
     // req.session.hotelId = "64a912cc3025e79ba23d0e54"
 
@@ -19,17 +21,27 @@ const addRoom = (async (req, res) => {
 })
 
 const submitRoom = (async (req, res) => {
-
+    console.log(22);
     try {
+        console.log(24);
+        const id = req.session.hotelId
+        // const id = "64aba37982494a3e05886cbd"
+        const hotel = await Hotel.findById(id)
+        console.log(hotel);
         const files = req.files;
         const roomImages = [];
-        const valid = propertyValidation.roomValidation(req.body)
+        const h = false
+        // const valid = propertyValidation.roomValidation(req.body)
 
-        if (!valid.isValid) {
-
-            return res.status(400).json({ error: valid.errors })
-        } else {
-
+        // if (!valid.isValid) {
+        //     console.log(30);
+        //     return res.status(400).json({ error: valid.errors })
+        // }
+        if (h == true) {
+            console.log(3);
+        }
+        else {
+            console.log(33);
             for (const file of files) {
                 const result = await cloudinary.uploader.upload(file.path, {
                     folder: "Rooms"
@@ -43,7 +55,7 @@ const submitRoom = (async (req, res) => {
                 roomImages.push(image);
             }
 
-            const { price, adults, childrents, bed, category, newCatgory, description } = req.body
+            const { price, adults, childrents, noOfRooms, amenities, Cancellation, bed, category, newCatgory, description } = req.body
 
             let categoryId
             if (category == "new" && newCatgory) {
@@ -56,23 +68,28 @@ const submitRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
-            console.log(60)
-            // const hotelId = "64a912cc3025e79ba23d0e54"
+            // console.log(60)
+            // const hotelId = "64aba37982494a3e05886cbd"
             // const ownerId = "64a2cbca876756d2ce1864bb"
             const room = new Rooms({
                 price,
                 adults,
                 childrents,
                 bed,
-                category: categoryId,
+                Cancellation,
+                noOfRooms,
                 description,
+                amenities,
                 images: roomImages,
-                hotel: req.session.hotelId,
+                category: categoryId,
                 // hotel: hotelId,
+                hotel: req.session.hotelId,
                 owner: req.session.owner._id,
-
+                // owner: ownerId,
             })
-            console.log(room);
+
+            hotel.rooms += noOfRooms
+            await hotel.save()
             await room.save()
             return res.send(200).end()
         }
@@ -83,7 +100,58 @@ const submitRoom = (async (req, res) => {
 
 })
 
+
+const viewRooms = async (req, res) => {
+    // const id = "64a2cbca876756d2ce1864bb";
+    const id = req.session.owner._id
+    try {
+        const rooms = await propertyFetching.room(id, 0, 0, false)
+        const category = await Category.find()
+
+        res.render("viewRooms", { rooms, category });
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const blockRoom = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        const room = await Rooms.findById(id)
+
+        room.is_Available = !room.is_Available
+        await room.save()
+        res.redirect("/owner/rooms")
+
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+
+const filter = (async (req, res) => {
+
+    try {
+        // const categoryId = req.query.id
+        // const rooms = await Rooms.find({ category: categoryId }).populate('category').populate('hotel')
+        // console.log(rooms);
+        const rooms = await propertyFetching.filterRoom(req.query.id)
+        const category = await Category.find()
+        res.render("viewRooms", { rooms, category })
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
 export default {
     addRoom,
-    submitRoom
+    submitRoom,
+    viewRooms,
+
+    blockRoom,
+    filter,
 }

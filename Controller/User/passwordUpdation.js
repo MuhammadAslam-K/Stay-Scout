@@ -4,10 +4,20 @@ import Signup_functions from "../../helper/Signup_functions.js";
 
 
 const enterEmail = ((req, res) => {
+
     try {
-        res.render("enterEmail")
+        res.render("enterEmail", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("enterEmail")
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 })
 
@@ -17,45 +27,51 @@ const emailValidation = (async (req, res) => {
         req.session.userEmail = req.body.email
 
         const email = req.session.userEmail
-        console.log(req.session.userEmail, email)
-
         const emailExits = await User.findOne({ email: email })
 
         if (emailExits) {
 
             return res.status(200).end()
-
         }
         else {
             return res.status(400).json({ error: "This Email is Not Registered Please Regester Now!!!" })
-
         }
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal server error please try again later" })
     }
 
 })
 
 const recoveryotp = ((req, res) => {
+
     try {
         const email = req.session.userEmail
         const generateOtp = Signup_functions.generateOTP()
+
         saveOtp.push(generateOtp)
         Signup_functions.sendOTP(email, generateOtp)
-
         Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
-        res.render("passwordRecoveryOtp")
 
+        res.render("passwordRecoveryOtp", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404")
+                } else {
+                    return res.render("enterEmail").json({ errorMessage: "Internal Server error please try again later" })
+                }
+            }
+            res.render("passwordRecoveryOtp")
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
-
 })
 
 
 const verifyOtp = (async (req, res) => {
     try {
         const enteredOtp = req.body.OTP
+        console.log(req.body);
         let i
 
         for (i = 0; i < saveOtp.length; i++) {
@@ -69,16 +85,24 @@ const verifyOtp = (async (req, res) => {
         return res.status(400).json({ error: "Invalid OTP" })
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).json({ error: "Internal server error please try again later" })
     }
 })
 
 const updatePassword = ((req, res) => {
     try {
-        res.render("updatePassword")
-
+        res.render("updatePassword", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("updatePassword")
+        })
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 })
 
@@ -105,8 +129,8 @@ const passwordUpdation = (async (req, res) => {
         return res.status(200).end()
 
     } catch (error) {
+        return res.status(500).json({ error: "Internal server error please try again later" })
 
-        console.log(error)
     }
 })
 

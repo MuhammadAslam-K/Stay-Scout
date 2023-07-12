@@ -20,19 +20,34 @@ admin_route.get("/logout", isLogged, adminAuth.logout)
 
 
 //////////////DASHBOARD///////////
-admin_route.get("/dashboard", isLogged, adminDashboard.dashboard)
+admin_route.get("/dashboard", adminDashboard.dashboard)
 
 
 /////////////USER MANAGEMENT//////////
-admin_route.get("/users", isLogged, userManagement.viewUser)
-admin_route.post("/user", isLogged, userManagement.searchUser)
-admin_route.post("/users/edit", isLogged, userManagement.updateUser)
+admin_route.get("/users", userManagement.viewUser)
+admin_route.post("/user", userManagement.searchUser)
+admin_route.post("/users/edit", userManagement.updateUser)
 
 
 ///////////////Owner MANAGEMENT/////////////
-admin_route.get("/owners", isLogged, ownerManagement.viewowner)
-admin_route.post("/owner", isLogged, ownerManagement.searchOwner)
-admin_route.post("/owners/edit", isLogged, ownerManagement.updateowner)
+admin_route.get("/owners", ownerManagement.viewowner)
+admin_route.post("/owner", ownerManagement.searchOwner)
+admin_route.post("/owners/edit", ownerManagement.updateowner)
+
+/////////HOTELS////////
+admin_route.get("/owner/hotels", ownerManagement.ownerHotels)
+admin_route.post("/hotel/edit", ownerManagement.blockHotel)
+admin_route.post("/owner/hotel/search", ownerManagement.searchHotel)
+
+////////ROOMS///////////
+admin_route.get("/owner/hotel/rooms", ownerManagement.ownerRooms)
+admin_route.get("/owner/hotel/room/filter", ownerManagement.RoomFilter)
+
+admin_route.post("/owner/hotel/room/edit", ownerManagement.blockRoom)
+
+
+
+
 
 
 export default admin_route

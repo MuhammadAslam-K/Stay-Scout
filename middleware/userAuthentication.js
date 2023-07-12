@@ -1,3 +1,7 @@
+import User from "../model/userModel.js"
+import swal from 'sweetalert';
+
+
 
 function isLogged(req, res, next) {
 
@@ -28,7 +32,27 @@ const islogout = ((req, res, next) => {
 })
 
 
+const isBlocked = (async (req, res, next) => {
+    const id = req.session.user._id
+    try {
+        const user = await User.findById(id)
+
+        if (user.is_block) {
+            delete req.session.user
+            res.redirect("/login")
+        }
+        else {
+            next()
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
 export default {
     islogout,
     isLogged,
+    isBlocked,
 }

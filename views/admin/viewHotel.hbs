@@ -1,0 +1,124 @@
+{{>userHeader}}
+
+{{>dashbordSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+                    <form action="/admin/owner/hotel/search" method="post">
+
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2" name="search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </nav>
+
+
+                <div class="container-fluid">
+
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">HOTELS</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Total Revenue</th>
+                                            <th>No of Rooms</th>
+                                            <th>Type</th>
+                                            <th>Is Available</th>
+                                            <th>Block</th>
+                                            <th>View Rooms</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each hotel}}
+                                        <tr>
+                                            <td>{{this.name}}</td>
+                                            <td>{{this.revenu}}</td>
+                                            <td>{{this.rooms}}</td>
+                                            <td>{{this.type.name}}</td>
+                                            <td>{{this.is_Available}}</td>
+
+                                            {{#if this.is_block}}
+                                            <td>
+                                                <form action="/admin/hotel/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-warning btn-block" type="submit"
+                                                        name="availability" value="false">Unblock</button>
+                                                </form>
+                                            </td>
+                                            {{else}}
+                                            <td>
+                                                <form action="/admin/hotel/edit?id={{this._id}}" method="post">
+                                                    <button class="btn btn-primary btn-block" type="submit"
+                                                        name="availability" value="true">Block</button>
+                                                </form>
+                                            </td>
+                                            {{/if}}
+
+
+
+                                            <td>
+                                                <a href="/admin/owner/hotel/rooms?id={{this.id}}"
+                                                    class="btn btn-primary">Rooms</a>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+{{>userFooter}}
+
+
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const id = formData.get('id');
+
+        try {
+            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                window.location.href = '/owner/hotels';
+            }
+        } catch (error) {
+            if (error.response.status == 400) {
+                alert("Something Went Wrong");
+            }
+        }
+    };
+
+    document.getElementById('edit').addEventListener('submit', handleSubmit);
+</script>

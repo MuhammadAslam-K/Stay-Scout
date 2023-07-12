@@ -7,13 +7,15 @@ import Type from "../../model/type.js"
 
 
 const addHotel = (async (req, res) => {
-    const type = await Type.find()
-    try {
-        res.render("addHotel", { type: type })
 
-    } catch (error) {
-        console.log(error)
-    }
+    const type = await Type.find()
+
+    res.render("addHotel", (err) => {
+        if (err) {
+            return res.status(404).render("404")
+        }
+        res.render("addHotel", { type: type })
+    })
 
 })
 
@@ -57,7 +59,6 @@ const submitHotel = (async (req, res) => {
             else {
                 typeId = type
             }
-            console.log(60);
             // const ownerId = "64a2cbca876756d2ce1864bb"
             const hotel = new Hotel({
                 name,
@@ -77,8 +78,7 @@ const submitHotel = (async (req, res) => {
             return res.send(200).end()
         }
     } catch (error) {
-        console.log(error)
-
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
     }
 })
 
@@ -91,26 +91,29 @@ const blockHotel = (async (req, res) => {
         hotel.is_Available = !hotel.is_Available
 
         await hotel.save()
-        // return res.send(200).end()
         res.redirect("/owner/hotels")
-    } catch (error) {
-        console.log(error)
-    }
 
+    } catch (error) {
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
+    }
 })
 
 
 const editHotel = async (req, res) => {
-
-    const id = req.query.id
-    const hotel = await Hotel.findById(id)
-    console.log(hotel)
     try {
-        res.render("editHotel", { hotel })
-    } catch (error) {
-        console.log(error);
-    }
+        const id = req.query.id
+        const hotel = await Hotel.findById(id)
 
+        res.render("editHotel", (err) => {
+            if (err) {
+                return res.status(404).render("404")
+            }
+            res.render("editHotel", { hotel })
+        })
+    } catch (error) {
+        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
+
+    }
 }
 
 // const updateHotel = async (req, res) => {
@@ -126,6 +129,26 @@ const editHotel = async (req, res) => {
 // }
 
 
+const searchHotel = (async (req, res) => {
+    try {
+        console.log(req.body);
+        const value = req.body.search
+        const regexValue = new RegExp(value, "i")
+        console.log(value);
+        const hotel = await Hotel.find({
+            $or: [
+                { name: { $regex: regexValue } }
+            ]
+        }).populate("type")
+
+        res.render("viewHotels", { hotel })
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
 
 
 export default {
@@ -134,4 +157,6 @@ export default {
     blockHotel,
     editHotel,
     // updateHotel,
+
+    searchHotel,
 }
