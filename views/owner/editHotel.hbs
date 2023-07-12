@@ -209,8 +209,16 @@
                 });
 
             }
+            else if (error.response.status == 500) {
+                const err = error.response.data.error;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
             else {
-                alert("something went wrong");
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
             }
         }
     };
@@ -228,3 +236,12 @@
 
 
 {{>userFooter}}
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

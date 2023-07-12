@@ -14,14 +14,23 @@ const dashboard = async (req, res) => {
             Rooms.find().count()
         ]);
 
-        res.render("adminDashboard", {
-            users: No_of_users,
-            owners: No_of_owners,
-            hotels: No_of_hotels,
-            rooms: No_of_rooms
-        });
+        res.render("adminDashboard", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("adminDashboard", {
+                users: No_of_users,
+                owners: No_of_owners,
+                hotels: No_of_hotels,
+                rooms: No_of_rooms
+            });
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 };
 

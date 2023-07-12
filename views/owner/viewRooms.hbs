@@ -97,3 +97,11 @@
 
 
 {{>userFooter}}
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

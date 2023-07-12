@@ -3,9 +3,18 @@ import jwt from "jsonwebtoken"
 
 const login = ((req, res) => {
     try {
-        res.render("adminLogin", { admin: true })
+        res.render("adminLogin", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("adminLogin", { admin: true })
+        })
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 })
 
@@ -38,7 +47,7 @@ const loginVerify = ((req, res) => {
             res.redirect("/admin/dashboard")
         }
     } catch (error) {
-        console.log(error)
+        return res.status(400).json({ error: "Internal Server error please try again later" })
     }
 
 })
@@ -49,7 +58,7 @@ const logout = ((req, res) => {
         delete req.session.admintoken
         res.redirect("/admin")
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 
 })

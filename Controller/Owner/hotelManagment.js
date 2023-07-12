@@ -7,16 +7,22 @@ import Type from "../../model/type.js"
 
 
 const addHotel = (async (req, res) => {
+    try {
+        const type = await Type.find()
 
-    const type = await Type.find()
-
-    res.render("addHotel", (err) => {
-        if (err) {
-            return res.status(404).render("404")
-        }
-        res.render("addHotel", { type: type })
-    })
-
+        res.render("addHotel", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("addHotel", { type: type })
+        })
+    } catch (error) {
+        return res.status(500).render("serverError");
+    }
 })
 
 
@@ -94,7 +100,7 @@ const blockHotel = (async (req, res) => {
         res.redirect("/owner/hotels")
 
     } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
+        return res.status(500).render("serverError");
     }
 })
 
@@ -106,13 +112,16 @@ const editHotel = async (req, res) => {
 
         res.render("editHotel", (err) => {
             if (err) {
-                return res.status(404).render("404")
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
             }
             res.render("editHotel", { hotel })
         })
     } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
-
+        return res.status(500).render("serverError");
     }
 }
 

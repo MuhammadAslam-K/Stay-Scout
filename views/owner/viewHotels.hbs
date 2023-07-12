@@ -126,7 +126,20 @@
             }
         } catch (error) {
             if (error.response.status == 400) {
-                alert("Something Went Wrong");
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+            }
+            else if (error.response.status == 500) {
+                const err = error.response.data.error;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
+            else {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
             }
         }
     };
@@ -137,32 +150,11 @@
 
 
 
-{{!--
 <script>
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const id = formData.get('id');
-
-        try {
-            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.status === 200) {
-                window.location.href = '/owner/hotels';
-            }
-        } catch (error) {
-            if (error.response.status == 400) {
-                alert("Something Went Wrong");
-            }
-        }
-    };
-
-    // Attach event listeners to each form with unique IDs
-
-    document.getElementById('edit-{{this._id}}').addEventListener('submit', handleSubmit);
-
-</script> --}}
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

@@ -8,12 +8,19 @@ import bcrypt from "bcrypt"
 
 const signUp = ((req, res) => {
     try {
-        res.render("ownerSignup")
-
+        res.render("ownerSignup", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("ownerSignup")
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
-
 })
 
 //////////// STARTED OTP //////////
@@ -53,7 +60,7 @@ const signupValidate = async (req, res) => {
             return res.status(200).end()
         }
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 }
 
@@ -67,10 +74,17 @@ const enterOtp = async (req, res) => {
         Signup_functions.sendOTP(email, generateOtp)
         Signup_functions.otpRemoval(ownerOtp, generateOtp, 31000)
 
-        res.render("ownerOtp")
-
+        res.render("ownerOtp", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 }
 
@@ -118,7 +132,7 @@ const verifyOtp = async (req, res) => {
             return res.status(400).json({ error: "Invalid OTP" })
         }
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 };
 

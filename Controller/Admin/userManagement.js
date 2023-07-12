@@ -3,10 +3,19 @@ import User from "../../model/userModel.js"
 const viewUser = (async (req, res) => {
     try {
         const userDetails = await User.find()
-        res.render("viewUser", { users: userDetails })
+        res.render("viewUser", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("viewUser", { users: userDetails })
+        })
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 
 })
@@ -23,10 +32,19 @@ const searchUser = (async (req, res) => {
             ]
         });
 
-        res.render("viewUser", { users: users })
+        res.render("viewUser", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("viewUser", { users: users })
+        })
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 
 })
@@ -42,7 +60,7 @@ const updateUser = (async (req, res) => {
         res.redirect("/admin/users")
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 
 })

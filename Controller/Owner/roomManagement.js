@@ -13,15 +13,23 @@ const addRoom = (async (req, res) => {
     // req.session.hotelId = "64a912cc3025e79ba23d0e54"
 
     try {
-        res.render("addRooms", { category })
+        res.render("addRooms", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("addRooms", { category })
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 
 })
 
 const submitRoom = (async (req, res) => {
-    console.log(22);
     try {
         console.log(24);
         const id = req.session.hotelId
@@ -95,7 +103,7 @@ const submitRoom = (async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 
 })
@@ -108,10 +116,19 @@ const viewRooms = async (req, res) => {
         const rooms = await propertyFetching.room(id, 0, 0, false)
         const category = await Category.find()
 
-        res.render("viewRooms", { rooms, category });
+        res.render("viewRooms", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("viewRooms", { rooms, category });
+        });
 
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 };
 
@@ -126,7 +143,7 @@ const blockRoom = (async (req, res) => {
         res.redirect("/owner/rooms")
 
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 
 })
@@ -140,9 +157,18 @@ const filter = (async (req, res) => {
         // console.log(rooms);
         const rooms = await propertyFetching.filterRoom(req.query.id)
         const category = await Category.find()
-        res.render("viewRooms", { rooms, category })
+        res.render("viewRooms", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404");
+                } else {
+                    return res.status(500).render("serverError");
+                }
+            }
+            res.render("viewRooms", { rooms, category })
+        })
     } catch (error) {
-        console.log(error);
+        return res.status(500).render("serverError");
     }
 
 })
