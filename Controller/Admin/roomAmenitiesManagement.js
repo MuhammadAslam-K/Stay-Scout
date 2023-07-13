@@ -1,12 +1,11 @@
-import Amenities from "../../model/hotelAmenities.js"
-
+import roomAmenities from "../../model/roomAmenities.js"
 
 
 const amenities = (async (req, res) => {
     try {
-        const amenities = await Amenities.find()
+        const amenities = await roomAmenities.find()
 
-        res.render("addAmenities", (err) => {
+        res.render("addRoomAmenities", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
@@ -14,7 +13,7 @@ const amenities = (async (req, res) => {
                     return res.status(500).render("serverError");
                 }
             }
-            res.render("addAmenities", { amenities })
+            res.render("addRoomAmenities", { amenities })
         })
 
     } catch (error) {
@@ -24,17 +23,21 @@ const amenities = (async (req, res) => {
 
 
 const addAmenities = (async (req, res) => {
+    console.log(11);
     try {
         const amenitiesName = req.body.amenitiesName
-        const existingAmenities = await Amenities.find({ amenities: amenitiesName })
+        const existingAmenities = await roomAmenities.find({ amenities: amenitiesName })
 
         if (existingAmenities.length != 0) {
             return res.status(400).json({ error: "The Amenities already exists" })
         }
         else {
-            const amenitie = new Amenities({ amenities: amenitiesName })
+            const amenitie = new roomAmenities({ amenities: amenitiesName })
+            console.log(amenitie)
             await amenitie.save()
 
+            // const amenities = await roomAmenities.find()
+            // return res.send(amenities)
             return res.status(200).end()
         }
     } catch (error) {
@@ -48,7 +51,7 @@ const editAmenities = (async (req, res) => {
 
         const id = req.body.id
         const amenities = req.body.updatedName
-        await Amenities.findByIdAndUpdate(id, { amenities: amenities })
+        await roomAmenities.findByIdAndUpdate(id, { amenities: amenities })
 
         return res.status(200)
     } catch (error) {
@@ -61,8 +64,9 @@ const deleteAmenities = (async (req, res) => {
 
     try {
         const id = req.query.id
-        await Amenities.findByIdAndDelete(id)
-        res.redirect("/admin/hotel/amenities")
+        console.log(id);
+        await roomAmenities.findByIdAndDelete(id)
+        res.redirect("/admin/room/amenities")
 
     } catch (error) {
         res.render("500")

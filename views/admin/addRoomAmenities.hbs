@@ -46,7 +46,7 @@
                                                     style="display: none;">OK</button>
                                             </td>
                                             <td>
-                                                <form action="/admin/hotel/deleteamenities?id={{this._id}}"
+                                                <form action="/admin/room/deleteamenities?id={{this._id}}"
                                                     method="post">
                                                     <button class="btn btn-primary btn-delete">Delete</button>
                                                 </form>
@@ -143,7 +143,7 @@
             var amenitiesName = inputField.val().trim();
 
             if (amenitiesName !== "") {
-                axios.post("/admin/hotel/addamenities", { amenitiesName: amenitiesName })
+                axios.post("/admin/room/addamenities", { amenitiesName: amenitiesName })
                     .then(function (response) {
                         inputField.val("");
                         inputField.closest(".add-amenities-row").hide();
@@ -154,7 +154,7 @@
                             var newRow = $("<tr></tr>");
                             newRow.append("<td>" + amenitiesName + "</td>");
                             newRow.append('<td><button class="btn btn-primary btn-edit">Edit</button></td>');
-                            newRow.append('<td><form action="/admin/hotel/deleteamenities" method="get"><button class="btn btn-primary btn-delete">Delete</button></form></td>');
+                            newRow.append('<td><form action="/admin/room/deleteamenities" method="get"><button class="btn btn-primary btn-delete">Delete</button></form></td>');
                             table.row.add(newRow).draw(false);
                         });
                     })
@@ -175,6 +175,7 @@
         });
     });
 </script>
+
 
 {{!-- EDITING OPTION --}}
 
@@ -219,7 +220,7 @@
             var updatedName = nameField.val().trim();
 
             // Perform the necessary update request to /admin/hotel/editamenities
-            axios.post("/admin/hotel/editamenities", { id: id, updatedName: updatedName })
+            axios.post("/admin/room/editamenities", { id: id, updatedName: updatedName })
                 .then(function (response) {
                     // After a successful update, update the UI and show/hide the necessary elements
                     amenitiesText.text(updatedName);

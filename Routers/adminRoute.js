@@ -7,6 +7,7 @@ import ownerManagement from "../Controller/Admin/ownerManagement.js"
 import hotelManagement from "../Controller/Admin/hotelManagement.js"
 import roomManagement from "../Controller/Admin/roomManagement.js"
 import amenitiesManagement from "../Controller/Admin/amenitiesManagement.js"
+import roomAmenitiesManagement from "../Controller/Admin/roomAmenitiesManagement.js"
 import auth from "../middleware/adminAuth.js"
 
 
@@ -49,12 +50,16 @@ admin_route.get("/owner/hotel/room/filter", roomManagement.filterRooms)
 admin_route.post("/owner/hotel/room/edit", roomManagement.blockRoom)
 
 
-///////////////Amenities///////////
-admin_route.get('/amenities', amenitiesManagement.amenities)
+///////////////HOTEL Amenities///////////
+admin_route.get('/hotel/amenities', amenitiesManagement.amenities)
 admin_route.post('/hotel/addamenities', amenitiesManagement.addAmenities)
 admin_route.post('/hotel/editamenities', amenitiesManagement.editAmenities)
 admin_route.post('/hotel/deleteamenities', amenitiesManagement.deleteAmenities)
 
-
+//////////ROOM AMENITIES///////////////
+admin_route.get('/room/amenities', roomAmenitiesManagement.amenities)
+admin_route.post('/room/addamenities', roomAmenitiesManagement.addAmenities)
+admin_route.post('/room/editamenities', roomAmenitiesManagement.editAmenities)
+admin_route.post('/room/deleteamenities', roomAmenitiesManagement.deleteAmenities)
 
 export default admin_route
