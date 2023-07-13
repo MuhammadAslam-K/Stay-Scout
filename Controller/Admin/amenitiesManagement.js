@@ -11,14 +11,14 @@ const amenities = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("addAmenities", { amenities })
         })
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 })
 

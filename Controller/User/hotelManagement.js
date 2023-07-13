@@ -12,14 +12,14 @@ const hotels = async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("userViewHotels", { hotel })
         });
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 };
 
@@ -36,13 +36,13 @@ const hotelHome = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("hotelHome", { hotel, rooms })
         })
     } catch (error) {
-        return res.status(500).render("serverError")
+        return res.status(500).render("500")
     }
 })
 

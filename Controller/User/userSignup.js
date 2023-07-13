@@ -11,13 +11,13 @@ const signUp = ((req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("userRegister")
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 })
 
@@ -81,7 +81,7 @@ const enterOtp = (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("userOtp")

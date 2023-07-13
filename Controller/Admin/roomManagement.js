@@ -19,13 +19,13 @@ const ownerRooms = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("viewRoom", { rooms, category })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -42,13 +42,13 @@ const filterRooms = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("viewRoom", { rooms, category })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -72,7 +72,7 @@ const blockRoom = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
 
@@ -80,7 +80,7 @@ const blockRoom = (async (req, res) => {
         })
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })

@@ -8,13 +8,13 @@ const login = ((req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("adminLogin", { admin: true })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 })
 
@@ -58,7 +58,7 @@ const logout = ((req, res) => {
         delete req.session.admintoken
         res.redirect("/admin")
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })

@@ -67,6 +67,9 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    amenities: {
+        type: Array,
+    },
     is_Available: {
         type: Boolean,
         default: true

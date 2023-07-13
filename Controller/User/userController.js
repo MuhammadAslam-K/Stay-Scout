@@ -4,6 +4,7 @@ import User from "../../model/userModel.js"
 
 const home = (async (req, res) => {
 
+    // res.render("contact")
     try {
         const banner = await propertyFetching.hotel(null, 0, 2)
         const hotel = await propertyFetching.hotel(null, 0, 2)
@@ -14,7 +15,7 @@ const home = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("home", { banner, hotel, rooms })
@@ -33,14 +34,14 @@ const profile = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("profile", { user })
         })
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
 
     }
 

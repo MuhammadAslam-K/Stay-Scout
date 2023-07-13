@@ -53,6 +53,9 @@ const roomSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
+    amenities: {
+        type: Array,
+    },
     is_Available: {
         type: Boolean,
         default: true

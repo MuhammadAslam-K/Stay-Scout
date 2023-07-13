@@ -18,13 +18,13 @@ const addRoom = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("addRooms", { category })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -121,14 +121,14 @@ const viewRooms = async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("viewRooms", { rooms, category });
         });
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 };
 
@@ -144,7 +144,7 @@ const blockRoom = (async (req, res) => {
         res.status(200).end()
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -163,13 +163,13 @@ const filter = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("viewRooms", { rooms, category })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })

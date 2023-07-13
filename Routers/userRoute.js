@@ -5,7 +5,7 @@ import signupController from "../Controller/User/userSignup.js"
 import passwordUpdation from "../Controller/User/passwordUpdation.js"
 import hotelManagement from "../Controller/User/hotelManagement.js"
 import roomManagement from "../Controller/User/roomManagement.js"
-
+import contact from "../Controller/User/contact.js"
 import userController from "../Controller/User/userController.js"
 import auth from "../middleware/userAuthentication.js"
 import googleAuth from "../Controller/User/googleAuth.js"
@@ -53,7 +53,9 @@ user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
 user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
 user_route.get("/room/filter", isLogged, isBlocked, roomManagement.roomsFilter)
 
-
+/////////////CONTACT////////////
+user_route.get("/contact", isLogged, isBlocked, contact.contact)
+user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 
 /////// GOOGLE SIGNIN///////

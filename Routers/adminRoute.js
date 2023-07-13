@@ -8,6 +8,7 @@ import hotelManagement from "../Controller/Admin/hotelManagement.js"
 import roomManagement from "../Controller/Admin/roomManagement.js"
 import amenitiesManagement from "../Controller/Admin/amenitiesManagement.js"
 import roomAmenitiesManagement from "../Controller/Admin/roomAmenitiesManagement.js"
+import messageManagement from "../Controller/Admin/messageManagement.js"
 import auth from "../middleware/adminAuth.js"
 
 
@@ -61,5 +62,11 @@ admin_route.get('/room/amenities', roomAmenitiesManagement.amenities)
 admin_route.post('/room/addamenities', roomAmenitiesManagement.addAmenities)
 admin_route.post('/room/editamenities', roomAmenitiesManagement.editAmenities)
 admin_route.post('/room/deleteamenities', roomAmenitiesManagement.deleteAmenities)
+
+
+////////////MESSAGE MANAGEMENT///////////
+admin_route.get('/messages', messageManagement.message)
+// admin_route.post('/message', messageManagement.)
+
 
 export default admin_route

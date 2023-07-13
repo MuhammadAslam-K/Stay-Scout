@@ -1,0 +1,30 @@
+{{>userHeader}}
+{{>userNavbar}}
+
+
+<form action="/contact" method="post">
+    <div class="form-group">
+        <textarea class="form-control" rows="5" name="message" placeholder="Write your message here..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div id="reportForm" style="display: none;">
+    <div class="form-group">
+        <label for="hotelName">Hotel Name</label>
+        <input type="text" class="form-control" id="hotelName" placeholder="Enter hotel name">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+
+<p>
+    <strong>Contact Information:</strong>
+    <br>
+    Email: stayscout@gmail.com
+    <br>
+    Phone: 1234567981
+    <br>
+    Address: Vasantaga Nagar Hosur near sukkkar hds
+</p>
+
+{{>userFooter}}

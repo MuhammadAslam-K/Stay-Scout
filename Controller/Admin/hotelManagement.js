@@ -15,13 +15,13 @@ const ownerHotels = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
                 } else {
-                    return res.status(500).render("serverError");
+                    return res.status(500).render("500");
                 }
             }
             res.render("viewHotel", { hotel })
         })
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -37,7 +37,7 @@ const blockHotel = (async (req, res) => {
         res.status(200).end()
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
@@ -56,7 +56,7 @@ const searchHotel = (async (req, res) => {
         return res.send(hotel)
 
     } catch (error) {
-        return res.status(500).render("serverError");
+        return res.status(500).render("500");
     }
 
 })
