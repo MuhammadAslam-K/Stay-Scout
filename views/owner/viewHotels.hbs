@@ -1,6 +1,85 @@
 {{>userHeader}}
-
 {{>adminDashboardSide}}
+
+
+<style>
+    /* Additional styles for the admin hotel view */
+
+    .container-fluid {
+        padding: 20px;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: none;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 20px;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .btn-primary {
+        background-color: #3366ff;
+        border-color: #3366ff;
+    }
+
+    .btn-primary:hover {
+        background-color: #254eda;
+        border-color: #254eda;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #d39e00;
+        border-color: #d39e00;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    /* Animation for table rows */
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table tbody tr {
+        animation: fade-in 0.3s ease-in-out;
+    }
+</style>
+
+
 
 <body id="page-top">
     <div id="wrapper">
@@ -8,7 +87,7 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                    <form action="/owner/hotel" method="post">
+                    <form onsubmit="searchHotels(event)">
 
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -20,15 +99,10 @@
                             </div>
                         </div>
                     </form>
-
-                    <a href="/owner/addhotel" class="h3 mb-0 text-gray-800 text-light m-3 btn btn-primary">
-                        Add Hotel</a>
+                    <a href="/owner/addhotel" class="h3 mb-0 text-light m-3 btn btn-primary">Add Hotel</a>
                 </nav>
 
-
                 <div class="container-fluid">
-
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <a href="/owner/hotels" class="m-0 font-weight-bold text-primary">HOTELS</a>
@@ -46,44 +120,34 @@
                                             <th>Is Available</th>
                                             <th>More</th>
                                             <th>Add Rooms</th>
-                                            {{!-- <th>Hotels</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {{#each hotel}}
                                         <tr>
                                             <td>{{this.name}}</td>
-                                            <td>{{this.revenu}}</td>
+                                            <td>{{this.revenue}}</td>
                                             <td>{{this.rooms}}</td>
                                             <td>{{this.type.name}}</td>
                                             <td>{{this.is_block}}</td>
-
-                                            {{#if this.is_Available}}
                                             <td>
-                                                <form action="/owner/hotel/edit?id={{this._id}}" method="post">
-                                                    {{!-- <input type="hidden" name="id" value="{{this._id}}"> --}}
-                                                    <button class="btn btn-primary btn-block" type="submit"
-                                                        name="availability" value="false">Available</button>
-                                                </form>
-                                            </td>
-                                            {{else}}
-                                            <td>
-                                                <form action="/owner/hotel/edit?id={{this._id}}" method="post">
-                                                    {{!-- <input type="hidden" name="id" value="{{this._id}}"> --}}
-                                                    <button class="btn btn-warning btn-block" type="submit"
-                                                        name="availability" value="true">Not Available</button>
-                                                </form>
-                                            </td>
-                                            {{/if}}
-
-
-
-                                            <td>
-                                                <a href="/owner/hotel/view?id={{this.id}}"
-                                                    class="btn btn-primary">View</a>
+                                                <div id="availabilityButton{{this._id}}">
+                                                    {{#if this.is_Available}}
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleAvailability('{{this._id}}', false)">Available</button>
+                                                    {{else}}
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleAvailability('{{this._id}}', true)">Not
+                                                        Available</button>
+                                                    {{/if}}
+                                                </div>
                                             </td>
                                             <td>
-                                                <a href="/owner/hotel/addrooms?id={{this.id}}"
+                                                <a href="/owner/hotel/update?id={{this._id}}"
+                                                    class="btn btn-primary">Edit</a>
+                                            </td>
+                                            <td>
+                                                <a href="/owner/hotel/addrooms?id={{this._id}}"
                                                     class="btn btn-primary">Add</a>
                                             </td>
                                         </tr>
@@ -93,13 +157,11 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
+
 </body>
 
 </html>
@@ -107,54 +169,103 @@
 
 {{>userFooter}}
 
-
 <script>
-    const handleSubmit = async (event) => {
+    function toggleAvailability(hotelId, availabilityStatus) {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        const id = formData.get('id');
-
-        try {
-            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
-                headers: {
-                    'Content-Type': 'application/json'
+        axios.post('/owner/hotel/block?id=' + hotelId, {
+            availability: availabilityStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const availabilityButton = document.getElementById('availabilityButton' + hotelId);
+                if (availabilityStatus) {
+                    availabilityButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleAvailability(\'' + hotelId + '\', false)">Available</button>';
+                } else {
+                    availabilityButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleAvailability(\'' + hotelId + '\', true)">Not Available</button>';
                 }
+            })
+            .catch(function (error) {
+                // Handle error here, if needed
+                console.log(error);
             });
+    }
 
-            if (response.status === 200) {
-                window.location.href = '/owner/hotels';
-            }
-        } catch (error) {
-            if (error.response.status == 400) {
+    function searchHotels(event) {
+        event.preventDefault();
+        const searchInput = document.querySelector('input[name="search"]').value;
+
+        // Send search request to the server
+        axios.post('/owner/hotel/search', {
+            search: searchInput
+        })
+            .then(function (response) {
+                // Handle the response here
+                const searchResults = response.data;
+                updateTable(searchResults);
+            })
+            .catch(function (error) {
                 alertify.alert("Something went wrong", function () {
                     alertify.message('OK');
                 });
-            }
-            else if (error.response.status == 500) {
-                const err = error.response.data.error;
-                alertify.alert(err, function () {
-                    alertify.message('OK');
-                });
-            }
-            else {
-                alertify.alert("Something went wrong", function () {
-                    alertify.message('OK');
-                });
-            }
-        }
-    };
+                console.log(error);
+            });
+    }
 
-    document.getElementById('edit').addEventListener('submit', handleSubmit);
-</script>
+    function updateTable(hotels) {
+        const tableBody = document.querySelector('#dataTable tbody');
+        tableBody.innerHTML = '';
 
+        hotels.forEach(function (hotel) {
+            const row = document.createElement('tr');
 
+            const nameCell = document.createElement('td');
+            nameCell.textContent = hotel.name;
+            row.appendChild(nameCell);
 
+            const revenueCell = document.createElement('td');
+            revenueCell.textContent = hotel.revenue;
+            row.appendChild(revenueCell);
 
-<script>
-    const errorMessage = "{{errorMessage}}";
-    if (errorMessage) {
-        alertify.alert(errorMessage, function () {
-            alertify.message('OK');
+            const roomsCell = document.createElement('td');
+            roomsCell.textContent = hotel.rooms;
+            row.appendChild(roomsCell);
+
+            const typeCell = document.createElement('td');
+            typeCell.textContent = hotel.type.name;
+            row.appendChild(typeCell);
+
+            const isBlockedCell = document.createElement('td');
+            isBlockedCell.textContent = hotel.is_block;
+            row.appendChild(isBlockedCell);
+
+            const availabilityCell = document.createElement('td');
+            const availabilityButton = document.createElement('button');
+            availabilityButton.id = 'availabilityButton' + hotel._id;
+            availabilityButton.className = hotel.is_Available ? 'btn btn-primary btn-block' : 'btn btn-warning btn-block';
+            availabilityButton.textContent = hotel.is_Available ? 'Available' : 'Not Available';
+            availabilityButton.addEventListener('click', function () {
+                toggleAvailability(hotel._id, !hotel.is_Available);
+            });
+            availabilityCell.appendChild(availabilityButton);
+            row.appendChild(availabilityCell);
+
+            const moreCell = document.createElement('td');
+            const moreLink = document.createElement('a');
+            moreLink.href = '/owner/hotel/update?id=' + hotel._id;
+            moreLink.className = 'btn btn-primary';
+            moreLink.textContent = 'Edit';
+            moreCell.appendChild(moreLink);
+            row.appendChild(moreCell);
+
+            const addRoomsCell = document.createElement('td');
+            const addRoomsLink = document.createElement('a');
+            addRoomsLink.href = '/owner/hotel/addrooms?id=' + hotel._id;
+            addRoomsLink.className = 'btn btn-primary';
+            addRoomsLink.textContent = 'Add';
+            addRoomsCell.appendChild(addRoomsLink);
+            row.appendChild(addRoomsCell);
+
+            tableBody.appendChild(row);
         });
     }
 </script>

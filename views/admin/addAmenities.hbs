@@ -1,0 +1,250 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+
+                </nav>
+
+                <div class="container">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">Rooms</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <button class="btn btn-primary btn-add-amenity">Add</button>
+                                <div class="add-amenities-row" style="display: none;">
+                                    <input type="text" class="form-control" placeholder="Amenities Name">
+                                    <button class="btn btn-success btn-submit" type="button">Submit</button>
+                                    <button class="btn btn-primary btn-cancel" type="button">Cancel</button>
+                                </div>
+
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Amenities</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each amenities}}
+                                        <tr data-id="{{this.id}}">
+                                            <td>
+                                                <span class="amenities-text">{{this.amenities}}</span>
+                                                <input type="text" class="form-control edit-amenities"
+                                                    value="{{this.amenities}}" style="display: none;">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-edit">Edit</button>
+                                                <button class="btn btn-primary btn-ok"
+                                                    style="display: none;">OK</button>
+                                            </td>
+                                            <td>
+                                                <form action="/admin/hotel/deleteamenities?id={{this._id}}"
+                                                    method="post">
+                                                    <button class="btn btn-primary btn-delete">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+{{>userFooter}}
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<style>
+    table.dataTable tbody th,
+    table.dataTable tbody td {
+        border: 1px solid #dee2e6;
+    }
+</style>
+
+
+
+
+
+{{!-- ADDING AMENITIES --}}
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+
+        $(".btn-add-amenity").on("click", function () {
+            $(".add-amenities-row").show();
+        });
+
+        // Edit button click event
+        $(document).on("click", ".btn-edit", function () {
+            var row = $(this).closest("tr");
+            var nameField = row.find(".edit-amenities");
+            var okButton = row.find(".btn-ok");
+
+            nameField.prop("disabled", false);
+            okButton.show();
+            $(this).hide();
+        });
+
+        // OK button click event
+        $(document).on("click", ".btn-ok", function () {
+            var row = $(this).closest("tr");
+            var id = row.data("id"); // Assuming you have a data attribute for the amenities ID
+            var nameField = row.find(".edit-amenities");
+            var editButton = row.find(".btn-edit");
+
+            var updatedName = nameField.val().trim();
+
+            // Perform the necessary update request to /admin/editamenities
+            // Pass the ID and updatedName to the server
+
+            // After a successful update, disable the input field, hide the OK button, and show the Edit button
+            nameField.prop("disabled", true);
+            $(this).hide();
+            editButton.show();
+        });
+
+        $(document).on("click", ".btn-delete", function () {
+            // Handle delete functionality here
+        });
+
+        $(".btn-cancel").on("click", function () {
+            // Handle cancel functionality here
+        });
+
+        $(".btn-submit").on("click", function () {
+            var inputField = $(this).closest(".add-amenities-row").find("input");
+            var amenitiesName = inputField.val().trim();
+
+            if (amenitiesName !== "") {
+                axios.post("/admin/hotel/addamenities", { amenitiesName: amenitiesName })
+                    .then(function (response) {
+                        inputField.val("");
+                        inputField.closest(".add-amenities-row").hide();
+
+                        alertify.alert("Added Successfully", function () {
+                            alertify.message('OK');
+                            // Update the DataTable with the new data
+                            var newRow = $("<tr></tr>");
+                            newRow.append("<td>" + amenitiesName + "</td>");
+                            newRow.append('<td><button class="btn btn-primary btn-edit">Edit</button></td>');
+                            newRow.append('<td><form action="/admin/deleteAmenities" method="get"><button class="btn btn-primary btn-delete">Delete</button></form></td>');
+                            table.row.add(newRow).draw(false);
+                        });
+                    })
+                    .catch(function (error) {
+                        if (error.response.status === 400) {
+                            const errorMessage = error.response.data.error;
+
+                            alertify.alert(errorMessage, function () {
+                                alertify.message('OK');
+                            });
+                        } else {
+                            alertify.alert("Something went wrong", function () {
+                                alertify.message('OK');
+                            });
+                        }
+                    });
+            }
+        });
+    });
+</script>
+
+{{!-- EDITING OPTION --}}
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+
+        $(".btn-add-amenity").on("click", function () {
+            $(".add-amenities-row").show();
+        });
+
+        // Edit button click event
+        $(document).on("click", ".btn-edit", function () {
+            var row = $(this).closest("tr");
+            var nameField = row.find(".edit-amenities");
+            var okButton = row.find(".btn-ok");
+            var amenitiesText = row.find(".amenities-text");
+
+            nameField.val(amenitiesText.text()); // Populate the input field with the current value
+            nameField.show();
+            amenitiesText.hide();
+            okButton.show();
+            $(this).hide();
+        });
+
+        // OK button click event
+        $(document).on("click", ".btn-ok", function () {
+            var row = $(this).closest("tr");
+            var id = row.data("id");
+            var nameField = row.find(".edit-amenities");
+            var editButton = row.find(".btn-edit");
+            var amenitiesText = row.find(".amenities-text");
+
+            var updatedName = nameField.val().trim();
+
+            // Perform the necessary update request to /admin/hotel/editamenities
+            axios.post("/admin/hotel/editamenities", { id: id, updatedName: updatedName })
+                .then(function (response) {
+                    // After a successful update, update the UI and show/hide the necessary elements
+                    amenitiesText.text(updatedName);
+                    amenitiesText.show();
+                    nameField.hide();
+                    $(this).hide();
+                    editButton.show();
+                })
+                .catch(function (error) {
+                    // Handle error if the update request fails
+                    console.log(error);
+                });
+        });
+
+        $(document).on("click", ".btn-delete", function () {
+            // Handle delete functionality here
+        });
+
+        $(".btn-cancel").on("click", function () {
+            // Handle cancel functionality here
+        });
+
+        $(".btn-submit").on("click", function () {
+            // Handle submit functionality here
+        });
+    });
+
+</script>

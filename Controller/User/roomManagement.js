@@ -1,5 +1,5 @@
 import propertyFetching from "../../helper/propertyFetching.js"
-import Category from "../../model/category.js"
+import Category from "../../model/roomCategory.js"
 
 
 const rooms = (async (req, res) => {

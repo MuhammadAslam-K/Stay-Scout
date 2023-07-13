@@ -79,7 +79,9 @@
                 document.getElementById('passwordError').textContent = error.response.data.error;
             }
             else {
-                alert("something went wrong");
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
             }
 
         }

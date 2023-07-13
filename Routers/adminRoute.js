@@ -4,6 +4,9 @@ import adminAuth from "../Controller/Admin/adminAuth.js"
 import adminDashboard from "../Controller/Admin/adminDashboard.js"
 import userManagement from "../Controller/Admin/userManagement.js"
 import ownerManagement from "../Controller/Admin/ownerManagement.js"
+import hotelManagement from "../Controller/Admin/hotelManagement.js"
+import roomManagement from "../Controller/Admin/roomManagement.js"
+import amenitiesManagement from "../Controller/Admin/amenitiesManagement.js"
 import auth from "../middleware/adminAuth.js"
 
 
@@ -25,28 +28,32 @@ admin_route.get("/dashboard", adminDashboard.dashboard)
 
 /////////////USER MANAGEMENT//////////
 admin_route.get("/users", userManagement.viewUser)
-admin_route.post("/user", userManagement.searchUser)
-admin_route.post("/users/edit", userManagement.updateUser)
+admin_route.post("/users/search", userManagement.searchUser)
+admin_route.post("/users/block", userManagement.blockUser)
 
 
 ///////////////Owner MANAGEMENT/////////////
 admin_route.get("/owners", ownerManagement.viewowner)
-admin_route.post("/owner", ownerManagement.searchOwner)
-admin_route.post("/owners/edit", ownerManagement.updateowner)
+admin_route.post("/owners/search", ownerManagement.searchOwner)
+admin_route.post("/owners/block", ownerManagement.blockowner)
 
 /////////HOTELS////////
-admin_route.get("/owner/hotels", ownerManagement.ownerHotels)
-admin_route.post("/hotel/edit", ownerManagement.blockHotel)
-admin_route.post("/owner/hotel/search", ownerManagement.searchHotel)
+admin_route.get("/owner/hotels", hotelManagement.ownerHotels)
+admin_route.post("/hotel/block", hotelManagement.blockHotel)
+admin_route.post("/owner/hotel/search", hotelManagement.searchHotel)
 
 ////////ROOMS///////////
-admin_route.get("/owner/hotel/rooms", ownerManagement.ownerRooms)
-admin_route.get("/owner/hotel/room/filter", ownerManagement.RoomFilter)
+admin_route.get("/owner/hotel/rooms", roomManagement.ownerRooms)
+admin_route.get("/owner/hotel/room/filter", roomManagement.filterRooms)
 
-admin_route.post("/owner/hotel/room/edit", ownerManagement.blockRoom)
+admin_route.post("/owner/hotel/room/edit", roomManagement.blockRoom)
 
 
-
+///////////////Amenities///////////
+admin_route.get('/amenities', amenitiesManagement.amenities)
+admin_route.post('/hotel/addamenities', amenitiesManagement.addAmenities)
+admin_route.post('/hotel/editamenities', amenitiesManagement.editAmenities)
+admin_route.post('/hotel/deleteamenities', amenitiesManagement.deleteAmenities)
 
 
 

@@ -6,7 +6,7 @@ import Auth from "../middleware/ownerAuthentication.js"
 import hotelManagment from "../Controller/Owner/hotelManagment.js"
 import roomManagement from "../Controller/Owner/roomManagement.js"
 import dashboard from "../Controller/Owner/dashboard.js"
-const { isLogged, islogout } = Auth
+const { isLogged, islogout, isBlocked } = Auth
 
 
 const owner_route = express()
@@ -27,24 +27,24 @@ owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 
 
 /////////////////DASHBOARD////////////////
-owner_route.get("/dashboard", isLogged, dashboard.dashboard)
-owner_route.get("/hotels", isLogged, dashboard.viewHotels)
+owner_route.get("/dashboard", isLogged, isBlocked, dashboard.dashboard)
+owner_route.get("/hotels", isLogged, isBlocked, dashboard.viewHotels)
 
 /////////////////HOTEL MANAGEMENT////////////
-owner_route.get("/addhotel", isLogged, hotelManagment.addHotel)
-owner_route.post("/addhotel", isLogged, upload.array('image', 4), hotelManagment.submitHotel)
+owner_route.get("/addhotel", isLogged, isBlocked, hotelManagment.addHotel)
+owner_route.post("/addhotel", isLogged, isBlocked, upload.array('image', 4), hotelManagment.submitHotel)
 
-owner_route.post("/hotel/edit", isLogged, hotelManagment.blockHotel)
-owner_route.get("/hotel/view", isLogged, hotelManagment.editHotel)
-owner_route.post("/hotel", isLogged, hotelManagment.searchHotel)
+owner_route.post("/hotel/block", isLogged, isBlocked, hotelManagment.blockHotel)
+owner_route.get("/hotel/update", isLogged, isBlocked, hotelManagment.editHotel)
+owner_route.post("/hotel/search", isLogged, isBlocked, hotelManagment.searchHotel)
 
 ///////////// ROOM MANAGEMENT///////////////
-owner_route.get("/hotel/addrooms", isLogged, roomManagement.addRoom)
-owner_route.post("/hotel/addrooms", isLogged, upload.array('image', 4), roomManagement.submitRoom)
-owner_route.get("/rooms", isLogged, roomManagement.viewRooms)
+owner_route.get("/hotel/addrooms", isLogged, isBlocked, roomManagement.addRoom)
+owner_route.post("/hotel/addrooms", isLogged, isBlocked, upload.array('image', 4), roomManagement.submitRoom)
+owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 
-owner_route.post("/room/edit", isLogged, roomManagement.blockRoom)
-owner_route.get("/room/filter", isLogged, roomManagement.filter)
+owner_route.post("/room/block", isLogged, isBlocked, roomManagement.blockRoom)
+owner_route.get("/room/filter", isLogged, isBlocked, roomManagement.filter)
 
 
 

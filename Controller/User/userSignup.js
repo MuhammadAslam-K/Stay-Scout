@@ -106,11 +106,11 @@ const verifyOtp = async (req, res) => {
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
 
-                const { userName, email, phone, password } = req.session.userDetails
+                const { name, email, phone, password } = req.session.userDetails
                 const hashedPassword = await Signup_functions.passwordHash(password)
 
                 const user = new User({
-                    name: userName,
+                    name,
                     email,
                     phone,
                     password: hashedPassword,

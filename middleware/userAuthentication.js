@@ -36,9 +36,10 @@ const isBlocked = (async (req, res, next) => {
     const id = req.session.user._id
     try {
         const user = await User.findById(id)
-
         if (user.is_block) {
             delete req.session.user
+            delete req.session.usertoken
+
             res.redirect("/login")
         }
         else {
@@ -48,7 +49,6 @@ const isBlocked = (async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-
 })
 
 export default {

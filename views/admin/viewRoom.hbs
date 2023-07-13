@@ -1,6 +1,5 @@
-{{>userHeader}}
-
-{{>dashbordSide}}
+{{> userHeader}}
+{{> dashbordSide}}
 
 <body id="page-top">
     <div id="wrapper">
@@ -29,16 +28,13 @@
                         });
                     </script>
 
-
                 </nav>
-
 
                 <div class="container">
 
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <H4 class="m-0 font-weight-bold text-primary">Rooms</H4>
+                            <h4 class="m-0 font-weight-bold text-primary">Rooms</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -62,23 +58,17 @@
                                             <td>{{this.booste}}</td>
                                             <td>{{this.is_Available}}</td>
 
-                                            {{#if this.is_block}}
                                             <td>
-                                                <form action="/admin/owner/hotel/room/edit?id={{this._id}}"
-                                                    method="post">
-                                                    <button class="btn btn-primary btn-block" type="submit"
-                                                        name="availability" value="false">Unblock</button>
-                                                </form>
+                                                <div id="blockButton{{this._id}}">
+                                                    {{#if this.is_block}}
+                                                    <a href="#" class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)">Unblock</a>
+                                                    {{else}}
+                                                    <a href="#" class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)">Block</a>
+                                                    {{/if}}
+                                                </div>
                                             </td>
-                                            {{else}}
-                                            <td>
-                                                <form action="/admin/owner/hotel/room/edit?id={{this._id}}"
-                                                    method="post">
-                                                    <button class="btn btn-warning btn-block" type="submit"
-                                                        name="availability" value="true">Block</button>
-                                                </form>
-                                            </td>
-                                            {{/if}}
 
                                         </tr>
                                         {{/each}}
@@ -96,7 +86,29 @@
     </div>
 </body>
 
-</html>
+{{> userFooter}}
 
 
-{{>userFooter}}
+<script>
+    function toggleBlock(roomId, blockStatus) {
+        axios.post('/admin/owner/hotel/room/edit?id=' + roomId, {
+            availability: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+
+                const blockButton = document.getElementById('blockButton' + roomId);
+                if (blockStatus) {
+                    blockButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleBlock(\'' + roomId + '\', false)">Unblock</button>';
+                } else {
+                    blockButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleBlock(\'' + roomId + '\', true)">Block</button>';
+                }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
+    }
+</script>

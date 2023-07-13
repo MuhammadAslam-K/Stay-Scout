@@ -1,5 +1,4 @@
 {{>userHeader}}
-
 {{>dashbordSide}}
 
 <body id="page-top">
@@ -8,7 +7,7 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                    <form action="/admin/owner/hotel/search" method="post">
+                    <form onsubmit="searchHotels(event)">
 
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -48,31 +47,23 @@
                                         {{#each hotel}}
                                         <tr>
                                             <td>{{this.name}}</td>
-                                            <td>{{this.revenu}}</td>
+                                            <td>{{this.revenue}}</td>
                                             <td>{{this.rooms}}</td>
                                             <td>{{this.type.name}}</td>
                                             <td>{{this.is_Available}}</td>
-
-                                            {{#if this.is_block}}
                                             <td>
-                                                <form action="/admin/hotel/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-warning btn-block" type="submit"
-                                                        name="availability" value="false">Unblock</button>
-                                                </form>
+                                                <div id="blockButton{{this._id}}">
+                                                    {{#if this.is_block}}
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)">Unblock</button>
+                                                    {{else}}
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)">Block</button>
+                                                    {{/if}}
+                                                </div>
                                             </td>
-                                            {{else}}
                                             <td>
-                                                <form action="/admin/hotel/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-primary btn-block" type="submit"
-                                                        name="availability" value="true">Block</button>
-                                                </form>
-                                            </td>
-                                            {{/if}}
-
-
-
-                                            <td>
-                                                <a href="/admin/owner/hotel/rooms?id={{this.id}}"
+                                                <a href="/admin/owner/hotel/rooms?id={{this._id}}"
                                                     class="btn btn-primary">Rooms</a>
                                             </td>
                                         </tr>
@@ -96,29 +87,99 @@
 
 {{>userFooter}}
 
-
 <script>
-    const handleSubmit = async (event) => {
+    function toggleBlock(hotelId, blockStatus) {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        const id = formData.get('id');
-
-        try {
-            const response = await axios.post(`/owner/hotel/edit?id=${id}`, formData, {
-                headers: {
-                    'Content-Type': 'application/json'
+        axios.post('/admin/hotel/block?id=' + hotelId, {
+            availability: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const blockButton = document.getElementById('blockButton' + hotelId);
+                if (blockStatus) {
+                    blockButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleBlock(\'' + hotelId + '\', false)">Unblock</button>';
+                } else {
+                    blockButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleBlock(\'' + hotelId + '\', true)">Block</button>';
                 }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
             });
+    }
 
-            if (response.status === 200) {
-                window.location.href = '/owner/hotels';
-            }
-        } catch (error) {
-            if (error.response.status == 400) {
-                alert("Something Went Wrong");
-            }
-        }
-    };
+    function searchHotels(event) {
+        event.preventDefault();
+        const searchInput = document.querySelector('input[name="search"]').value;
 
-    document.getElementById('edit').addEventListener('submit', handleSubmit);
+        // Send search request to the server
+        axios.post('/admin/owner/hotel/search', {
+            search: searchInput
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(function (response) {
+                // Handle the response here
+                const searchResults = response.data;
+                updateTable(searchResults);
+            })
+            .catch(function (error) {
+                // Handle error here, if needed
+                console.log(error);
+            });
+    }
+
+    function updateTable(hotels) {
+        const tableBody = document.querySelector('#dataTable tbody');
+        tableBody.innerHTML = '';
+
+        hotels.forEach(function (hotel) {
+            const row = document.createElement('tr');
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = hotel.name;
+            row.appendChild(nameCell);
+
+            const revenueCell = document.createElement('td');
+            revenueCell.textContent = hotel.revenue;
+            row.appendChild(revenueCell);
+
+            const roomsCell = document.createElement('td');
+            roomsCell.textContent = hotel.rooms;
+            row.appendChild(roomsCell);
+
+            const typeCell = document.createElement('td');
+            typeCell.textContent = hotel.type.name;
+            row.appendChild(typeCell);
+
+            const isAvailableCell = document.createElement('td');
+            isAvailableCell.textContent = hotel.is_Available;
+            row.appendChild(isAvailableCell);
+
+            const blockCell = document.createElement('td');
+            const blockButton = document.createElement('button');
+            blockButton.id = 'blockButton' + hotel._id;
+            blockButton.className = hotel.is_block ? 'btn btn-warning btn-block' : 'btn btn-primary btn-block';
+            blockButton.textContent = hotel.is_block ? 'Unblock' : 'Block';
+            blockButton.addEventListener('click', function () {
+                toggleBlock(hotel._id, !hotel.is_block);
+            });
+            blockCell.appendChild(blockButton);
+            row.appendChild(blockCell);
+
+            const viewRoomsCell = document.createElement('td');
+            const viewRoomsLink = document.createElement('a');
+            viewRoomsLink.href = '/admin/owner/hotel/rooms?id=' + hotel._id;
+            viewRoomsLink.className = 'btn btn-primary';
+            viewRoomsLink.textContent = 'Rooms';
+            viewRoomsCell.appendChild(viewRoomsLink);
+            row.appendChild(viewRoomsCell);
+
+            tableBody.appendChild(row);
+        });
+    }
 </script>

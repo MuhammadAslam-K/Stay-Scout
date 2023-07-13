@@ -5,10 +5,12 @@ import Rooms from "../../model/roomsModel.js"
 import Category from "../../model/roomCategory.js"
 
 
-const viewowner = (async (req, res) => {
+const ownerHotels = (async (req, res) => {
+
     try {
-        const ownerDetails = await Owner.find()
-        res.render("viewowners", (err) => {
+        const id = req.query.id
+        const hotel = await propertyFetching.hotel(id, 0, 0, false)
+        res.render("viewHotel", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.status(404).render("404");
@@ -16,57 +18,53 @@ const viewowner = (async (req, res) => {
                     return res.status(500).render("serverError");
                 }
             }
-            res.render("viewowners", { owner: ownerDetails })
+            res.render("viewHotel", { hotel })
         })
-
-
     } catch (error) {
         return res.status(500).render("serverError");
     }
 
 })
 
-const searchOwner = (async (req, res) => {
-    try {
-        const value = req.body.search
-        const regexValue = new RegExp(value, "i")
+const blockHotel = (async (req, res) => {
 
-        const users = await Owner.find({
-            $or: [
-                { name: { $regex: regexValue } },
-                { email: { $regex: regexValue } }
-            ]
-        });
-
-        return res.send(users)
-    } catch (error) {
-        return res.status(500).render("serverError");
-    }
-
-})
-
-
-const blockowner = (async (req, res) => {
     try {
         const id = req.query.id
-        const owner = await Owner.findById(id)
+        const hotel = await Hotel.findById(id)
 
-        owner.is_block = !owner.is_block
-        await owner.save()
+        hotel.is_block = !hotel.is_block
+        await hotel.save()
+        res.status(200).end()
 
-        return res.status(200).end()
     } catch (error) {
         return res.status(500).render("serverError");
     }
 
 })
 
+const searchHotel = (async (req, res) => {
+    try {
+
+        const value = req.body.search
+        const regexValue = new RegExp(value, "i")
+        const hotel = await Hotel.find({
+            $or: [
+                { name: { $regex: regexValue } }
+            ]
+        }).populate("type")
+
+        return res.send(hotel)
+
+    } catch (error) {
+        return res.status(500).render("serverError");
+    }
+
+})
 
 
 
 export default {
-    viewowner,
-    searchOwner,
-    blockowner,
-
+    ownerHotels,
+    blockHotel,
+    searchHotel
 }

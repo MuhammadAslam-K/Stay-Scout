@@ -21,6 +21,7 @@ const viewUser = (async (req, res) => {
 })
 
 const searchUser = (async (req, res) => {
+    console.log(24);
     try {
         const value = req.body.search
         const regexValue = new RegExp(value, "i")
@@ -32,24 +33,14 @@ const searchUser = (async (req, res) => {
             ]
         });
 
-        res.render("viewUser", (err) => {
-            if (err) {
-                if (err.message.includes("Failed to lookup view")) {
-                    return res.status(404).render("404");
-                } else {
-                    return res.status(500).render("serverError");
-                }
-            }
-            res.render("viewUser", { users: users })
-        })
-
+        return res.send(users)
     } catch (error) {
         return res.status(500).render("serverError");
     }
 
 })
 
-const updateUser = (async (req, res) => {
+const blockUser = (async (req, res) => {
     try {
         const id = req.query.id
         const user = await User.findById(id)
@@ -57,7 +48,7 @@ const updateUser = (async (req, res) => {
         user.is_block = !user.is_block
         await user.save()
 
-        res.redirect("/admin/users")
+        res.status(200).end()
 
     } catch (error) {
         return res.status(500).render("serverError");
@@ -70,5 +61,5 @@ const updateUser = (async (req, res) => {
 export default {
     viewUser,
     searchUser,
-    updateUser,
+    blockUser,
 }

@@ -1,7 +1,7 @@
 import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
 import propertyValidation from "../../helper/propertyValidation.js"
-import Type from "../../model/type.js"
+import Type from "../../model/hotelType.js"
 
 
 
@@ -97,7 +97,8 @@ const blockHotel = (async (req, res) => {
         hotel.is_Available = !hotel.is_Available
 
         await hotel.save()
-        res.redirect("/owner/hotels")
+        // res.redirect("/owner/hotels")
+        res.send(200).end()
 
     } catch (error) {
         return res.status(500).render("serverError");
@@ -140,20 +141,18 @@ const editHotel = async (req, res) => {
 
 const searchHotel = (async (req, res) => {
     try {
-        console.log(req.body);
         const value = req.body.search
         const regexValue = new RegExp(value, "i")
-        console.log(value);
         const hotel = await Hotel.find({
             $or: [
                 { name: { $regex: regexValue } }
             ]
         }).populate("type")
 
-        res.render("viewHotels", { hotel })
+        res.send(hotel)
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).render("serverError");
     }
 
 })

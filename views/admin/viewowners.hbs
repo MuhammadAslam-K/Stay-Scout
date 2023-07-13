@@ -1,6 +1,5 @@
-{{>userHeader}}
-
-{{>dashbordSide}}
+{{> userHeader}}
+{{> dashbordSide}}
 
 <body id="page-top">
     <div id="wrapper">
@@ -13,23 +12,21 @@
                         </button>
                     </form>
 
-                    <form action="/admin/owner" method="post"
+                    <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 name="search">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    search
+                                <button class="btn btn-primary" type="button" onclick="searchAdmins()">
+                                    Search
                                 </button>
                             </div>
                         </div>
                     </form>
-
                 </nav>
 
                 <div class="container-fluid">
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">ADMINS</h6>
@@ -52,21 +49,17 @@
                                             <td>{{this.name}}</td>
                                             <td>{{this.email}}</td>
                                             <td>{{this.phone}}</td>
-                                            {{#if this.is_block}}
                                             <td>
-                                                <form action="/admin/owners/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-primary btn-block" type="submit"
-                                                        name="false">Unblock</button>
-                                                </form>
+                                                <div id="blockButton{{this._id}}">
+                                                    {{#if this.is_block}}
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)">Unblock</button>
+                                                    {{else}}
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)">Block</button>
+                                                    {{/if}}
+                                                </div>
                                             </td>
-                                            {{else}}
-                                            <td>
-                                                <form action="/admin/owners/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-warning  btn-block" type="submit"
-                                                        name="true">Block</button>
-                                                </form>
-                                            </td>
-                                            {{/if}}
                                             <td>
                                                 <a href="/admin/owner/hotels?id={{this._id}}"
                                                     class="btn btn-primary btn-block">view</a>
@@ -84,6 +77,97 @@
     </div>
 </body>
 
+{{> userFooter}}
 
 
-{{>userFooter}}
+{{!-- BLOCK AND UNBLOCK OWNER --}}
+<script>
+    function toggleBlock(adminId, blockStatus) {
+        event.preventDefault();
+        axios.post('/admin/owners/block?id=' + adminId, {
+            blockStatus: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const blockButton = document.getElementById('blockButton' + adminId);
+                if (blockStatus) {
+                    blockButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleBlock(\'' + adminId + '\', false)">Unblock</button>';
+                } else {
+                    blockButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleBlock(\'' + adminId + '\', true)">Block</button>';
+                }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
+    }
+
+
+</script>
+
+
+{{!-- SEARCH OWNER --}}
+<script>
+    function searchAdmins() {
+        event.preventDefault();
+        const searchInput = document.querySelector('input[name="search"]').value;
+        axios.post('/admin/owners/search', { search: searchInput }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(function (response) {
+                const searchResults = response.data;
+                updateTable(searchResults);
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                })
+                console.log(error);
+            });
+    }
+
+    function updateTable(searchResults) {
+        const tableBody = document.querySelector('#dataTable tbody');
+        tableBody.innerHTML = '';
+
+        searchResults.forEach(function (admin) {
+            const row = document.createElement('tr');
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = admin.name;
+            row.appendChild(nameCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = admin.email;
+            row.appendChild(emailCell);
+
+            const phoneCell = document.createElement('td');
+            phoneCell.textContent = admin.phone;
+            row.appendChild(phoneCell);
+
+            const blockCell = document.createElement('td');
+            const blockButton = document.createElement('button');
+            blockButton.className = admin.is_block ? 'btn btn-primary btn-block' : 'btn btn-warning btn-block';
+            blockButton.textContent = admin.is_block ? 'Unblock' : 'Block';
+            blockButton.addEventListener('click', function () {
+                toggleBlock(admin._id, !admin.is_block);
+            });
+            blockCell.appendChild(blockButton);
+            row.appendChild(blockCell);
+
+            const hotelsCell = document.createElement('td');
+            const viewButton = document.createElement('a');
+            viewButton.className = 'btn btn-primary btn-block';
+            viewButton.textContent = 'View';
+            viewButton.href = '/admin/owner/hotels?id=' + admin._id;
+            hotelsCell.appendChild(viewButton);
+            row.appendChild(hotelsCell);
+
+            tableBody.appendChild(row);
+        });
+    }
+</script>

@@ -1,5 +1,4 @@
 {{>userHeader}}
-
 {{>adminDashboardSide}}
 
 <body id="page-top">
@@ -64,17 +63,18 @@
 
                                             {{#if this.is_Available}}
                                             <td>
-                                                <form action="/owner/room/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-primary btn-block" type="submit"
-                                                        name="availability" value="false">Available</button>
-                                                </form>
+                                                <div id="availabilityButton{{this._id}}">
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleAvailability('{{this._id}}', false)">Available</button>
+                                                </div>
                                             </td>
                                             {{else}}
                                             <td>
-                                                <form action="/owner/room/edit?id={{this._id}}" method="post">
-                                                    <button class="btn btn-warning btn-block" type="submit"
-                                                        name="availability" value="true">Not Available</button>
-                                                </form>
+                                                <div id="availabilityButton{{this._id}}">
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleAvailability('{{this._id}}', true)">Not
+                                                        Available</button>
+                                                </div>
                                             </td>
                                             {{/if}}
                                         </tr>
@@ -103,5 +103,27 @@
         alertify.alert(errorMessage, function () {
             alertify.message('OK');
         });
+    }
+
+    function toggleAvailability(roomId, availabilityStatus) {
+        event.preventDefault();
+        axios.post('/owner/room/block?id=' + roomId, {
+            availability: availabilityStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const availabilityButton = document.getElementById('availabilityButton' + roomId);
+                if (availabilityStatus) {
+                    availabilityButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleAvailability(\'' + roomId + '\', false)">Available</button>';
+                } else {
+                    availabilityButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleAvailability(\'' + roomId + '\', true)">Not Available</button>';
+                }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
     }
 </script>

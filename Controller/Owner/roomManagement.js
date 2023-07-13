@@ -1,5 +1,5 @@
 import Rooms from "../../model/roomsModel.js";
-import Category from "../../model/category.js";
+import Category from "../../model/roomCategory.js";
 import propertyValidation from "../../helper/propertyValidation.js"
 import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js";
@@ -140,7 +140,8 @@ const blockRoom = (async (req, res) => {
 
         room.is_Available = !room.is_Available
         await room.save()
-        res.redirect("/owner/rooms")
+        // res.redirect("/owner/rooms")
+        res.status(200).end()
 
     } catch (error) {
         return res.status(500).render("serverError");

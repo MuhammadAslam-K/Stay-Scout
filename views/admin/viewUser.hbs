@@ -1,4 +1,4 @@
-{{>userHeader}}
+{{!-- {{>userHeader}}
 {{>dashbordSide}}
 
 <body id="page-top">
@@ -83,4 +83,160 @@
 
 
 
+{{>userFooter}} --}}
+
+
+{{>userHeader}}
+{{>dashbordSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
+
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                name="search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" onclick="searchUsers(event)">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </nav>
+
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">USERS</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone No</th>
+                                            <th>Blocked</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each users}}
+                                        <tr>
+                                            <td>{{this.name}}</td>
+                                            <td>{{this.email}}</td>
+                                            <td>{{this.phone}}</td>
+                                            <td>
+                                                <div id="blockButton{{this._id}}">
+                                                    {{#if this.is_block}}
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)">Unblock</button>
+                                                    {{else}}
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)">Block</button>
+                                                    {{/if}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
 {{>userFooter}}
+
+<script>
+    function toggleBlock(userId, blockStatus) {
+        event.preventDefault();
+        axios.post('/admin/users/block?id=' + userId, {
+            blockStatus: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const blockButton = document.getElementById('blockButton' + userId);
+                if (blockStatus) {
+                    blockButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleBlock(\'' + userId + '\', false)">Unblock</button>';
+                } else {
+                    blockButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleBlock(\'' + userId + '\', true)">Block</button>';
+                }
+            })
+            .catch(function (error) {
+                // Handle error here, if needed
+                console.log(error);
+            });
+    }
+
+    function searchUsers(event) {
+        event.preventDefault();
+        const searchInput = document.querySelector('input[name="search"]').value;
+
+        // Send search request to the server
+        axios.post('/admin/users/search', { search: searchInput }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(function (response) {
+                // Handle the response here
+                const searchResults = response.data;
+                updateTable(searchResults);
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
+    }
+
+    function updateTable(searchResults) {
+        const tableBody = document.querySelector('#dataTable tbody');
+        tableBody.innerHTML = '';
+
+        searchResults.forEach(function (user) {
+            const row = document.createElement('tr');
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = user.name;
+            row.appendChild(nameCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = user.email;
+            row.appendChild(emailCell);
+
+            const phoneCell = document.createElement('td');
+            phoneCell.textContent = user.phone;
+            row.appendChild(phoneCell);
+
+            const blockCell = document.createElement('td');
+            const blockButton = document.createElement('button');
+            blockButton.className = user.is_block ? 'btn btn-primary btn-block' : 'btn btn-warning btn-block';
+            blockButton.textContent = user.is_block ? 'Unblock' : 'Block';
+            blockButton.addEventListener('click', function () {
+                toggleBlock(user._id, !user.is_block);
+            });
+            blockCell.appendChild(blockButton);
+            row.appendChild(blockCell);
+
+            tableBody.appendChild(row);
+        });
+    }
+</script>
