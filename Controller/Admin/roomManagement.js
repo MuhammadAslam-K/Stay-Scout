@@ -31,27 +31,6 @@ const ownerRooms = (async (req, res) => {
 })
 
 
-const filterRooms = (async (req, res) => {
-
-    try {
-        const category = await Category.find()
-        const rooms = await propertyFetching.filterRoom(req.query.id)
-
-        res.render("viewRoom", (err) => {
-            if (err) {
-                if (err.message.includes("Failed to lookup view")) {
-                    return res.status(404).render("404");
-                } else {
-                    return res.status(500).render("500");
-                }
-            }
-            res.render("viewRoom", { rooms, category })
-        })
-    } catch (error) {
-        return res.status(500).render("500");
-    }
-
-})
 
 const blockRoom = (async (req, res) => {
     try {
@@ -91,6 +70,5 @@ const blockRoom = (async (req, res) => {
 
 export default {
     ownerRooms,
-    filterRooms,
     blockRoom,
 }

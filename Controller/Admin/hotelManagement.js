@@ -42,29 +42,10 @@ const blockHotel = (async (req, res) => {
 
 })
 
-const searchHotel = (async (req, res) => {
-    try {
-
-        const value = req.body.search
-        const regexValue = new RegExp(value, "i")
-        const hotel = await Hotel.find({
-            $or: [
-                { name: { $regex: regexValue } }
-            ]
-        }).populate("type")
-
-        return res.send(hotel)
-
-    } catch (error) {
-        return res.status(500).render("500");
-    }
-
-})
 
 
 
 export default {
     ownerHotels,
     blockHotel,
-    searchHotel
 }

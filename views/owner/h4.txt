@@ -66,39 +66,41 @@
 
 
             </div>
-
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="city" value="{{hotel.city}}">
-                    <span id="cityError" class="text-danger error-msg"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
-                    <span id="pincodeError" class="text-danger error-msg"></span>
-                </div>
-            </div>
-
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label for="description">Description....</label>
-                    <textarea id="description" class="form-control" name="description"
-                        style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
-                    <span id="descriptionError" class="text-danger error-msg"></span>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="description">Address</label>
-                    <textarea id="description" class="form-control" name="address"
-                        style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
-                    <span id="addressError" class="text-danger error-msg"></span>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
     </div>
+
+    <div class="form-row m-4">
+        <div class="form-group col-md-6">
+            <label>City</label>
+            <input type="text" class="form-control" name="city" value="{{hotel.city}}">
+            <span id="cityError" class="text-danger error-msg"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Pincode</label>
+            <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
+            <span id="pincodeError" class="text-danger error-msg"></span>
+        </div>
+    </div>
+
+    <div class="form-row m-4">
+        <div class="form-group col-md-6">
+            <label for="description">Description....</label>
+            <textarea id="description" class="form-control" name="description"
+                style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
+            <span id="descriptionError" class="text-danger error-msg"></span>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="description">Address</label>
+            <textarea id="description" class="form-control" name="address"
+                style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
+            <span id="addressError" class="text-danger error-msg"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+
 
     <div class="image-preview-container">
         <div>
@@ -118,18 +120,11 @@
 
 
 {{!-- Image preview code --}}
-
-<!-- ...existing code... -->
-
 <script>
     function deleteImage(index) {
         // Remove the image from the hotel.images array
         const images = document.querySelectorAll('.image-preview-container > div');
         images[index].remove();
-
-        // Remove the corresponding image from the form data
-        const fileInput = document.getElementById(`image${index}`);
-        fileInput.value = null;
 
         // Reorder the index values in the remaining image elements
         const remainingImages = document.querySelectorAll('.image-preview-container > div');
@@ -137,13 +132,13 @@
             image.querySelector('button').setAttribute('onclick', `deleteImage(${index})`);
         });
 
-        // Show the corresponding file input fields
-        const fileInputs = document.querySelectorAll('input[name="newImages"]');
-        fileInputs[index].style.display = 'block';
-        fileInputs[index].required = true;
+        // Show the corresponding file input field
+        const fileInput = document.getElementById(`image${index}`);
+        fileInput.style.display = 'block';
+        fileInput.required = true;
     }
-</script>
 
+</script>
 
 {{!-- AXIOS --}}
 <script>

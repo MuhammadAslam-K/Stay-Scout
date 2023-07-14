@@ -1,7 +1,6 @@
 {{>userHeader}}
 {{>adminDashboardSide}}
 
-
 <style>
     /* Additional styles for the admin hotel view */
 
@@ -79,26 +78,13 @@
     }
 </style>
 
-
-
 <body id="page-top">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                    <form onsubmit="searchHotels(event)">
 
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2" name="search">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                     <a href="/owner/addhotel" class="h3 mb-0 text-light m-3 btn btn-primary">Add Hotel</a>
                 </nav>
 
@@ -161,15 +147,27 @@
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
 
-
 {{>userFooter}}
 
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
 <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+    });
+
     function toggleAvailability(hotelId, availabilityStatus) {
         event.preventDefault();
         axios.post('/owner/hotel/block?id=' + hotelId, {
@@ -186,27 +184,6 @@
             })
             .catch(function (error) {
                 // Handle error here, if needed
-                console.log(error);
-            });
-    }
-
-    function searchHotels(event) {
-        event.preventDefault();
-        const searchInput = document.querySelector('input[name="search"]').value;
-
-        // Send search request to the server
-        axios.post('/owner/hotel/search', {
-            search: searchInput
-        })
-            .then(function (response) {
-                // Handle the response here
-                const searchResults = response.data;
-                updateTable(searchResults);
-            })
-            .catch(function (error) {
-                alertify.alert("Something went wrong", function () {
-                    alertify.message('OK');
-                });
                 console.log(error);
             });
     }

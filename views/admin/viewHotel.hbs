@@ -7,24 +7,8 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                    <form onsubmit="searchHotels(event)">
-
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2" name="search">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                 </nav>
-
-
                 <div class="container-fluid">
-
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h4 class="m-0 font-weight-bold text-primary">HOTELS</h3>
@@ -87,7 +71,15 @@
 
 {{>userFooter}}
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
 <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+
     function toggleBlock(hotelId, blockStatus) {
         event.preventDefault();
         axios.post('/admin/hotel/block?id=' + hotelId, {
@@ -110,76 +102,5 @@
             });
     }
 
-    function searchHotels(event) {
-        event.preventDefault();
-        const searchInput = document.querySelector('input[name="search"]').value;
 
-        // Send search request to the server
-        axios.post('/admin/owner/hotel/search', {
-            search: searchInput
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(function (response) {
-                // Handle the response here
-                const searchResults = response.data;
-                updateTable(searchResults);
-            })
-            .catch(function (error) {
-                // Handle error here, if needed
-                console.log(error);
-            });
-    }
-
-    function updateTable(hotels) {
-        const tableBody = document.querySelector('#dataTable tbody');
-        tableBody.innerHTML = '';
-
-        hotels.forEach(function (hotel) {
-            const row = document.createElement('tr');
-
-            const nameCell = document.createElement('td');
-            nameCell.textContent = hotel.name;
-            row.appendChild(nameCell);
-
-            const revenueCell = document.createElement('td');
-            revenueCell.textContent = hotel.revenue;
-            row.appendChild(revenueCell);
-
-            const roomsCell = document.createElement('td');
-            roomsCell.textContent = hotel.rooms;
-            row.appendChild(roomsCell);
-
-            const typeCell = document.createElement('td');
-            typeCell.textContent = hotel.type.name;
-            row.appendChild(typeCell);
-
-            const isAvailableCell = document.createElement('td');
-            isAvailableCell.textContent = hotel.is_Available;
-            row.appendChild(isAvailableCell);
-
-            const blockCell = document.createElement('td');
-            const blockButton = document.createElement('button');
-            blockButton.id = 'blockButton' + hotel._id;
-            blockButton.className = hotel.is_block ? 'btn btn-warning btn-block' : 'btn btn-primary btn-block';
-            blockButton.textContent = hotel.is_block ? 'Unblock' : 'Block';
-            blockButton.addEventListener('click', function () {
-                toggleBlock(hotel._id, !hotel.is_block);
-            });
-            blockCell.appendChild(blockButton);
-            row.appendChild(blockCell);
-
-            const viewRoomsCell = document.createElement('td');
-            const viewRoomsLink = document.createElement('a');
-            viewRoomsLink.href = '/admin/owner/hotel/rooms?id=' + hotel._id;
-            viewRoomsLink.className = 'btn btn-primary';
-            viewRoomsLink.textContent = 'Rooms';
-            viewRoomsCell.appendChild(viewRoomsLink);
-            row.appendChild(viewRoomsCell);
-
-            tableBody.appendChild(row);
-        });
-    }
 </script>

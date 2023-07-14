@@ -97,7 +97,6 @@ const blockHotel = (async (req, res) => {
         hotel.is_Available = !hotel.is_Available
 
         await hotel.save()
-        // res.redirect("/owner/hotels")
         res.send(200).end()
 
     } catch (error) {
@@ -109,7 +108,9 @@ const blockHotel = (async (req, res) => {
 const editHotel = async (req, res) => {
     try {
         const id = req.query.id
+        req.session.HOTELID = id
         const hotel = await Hotel.findById(id)
+        const type = await Type.find()
 
         res.render("editHotel", (err) => {
             if (err) {
@@ -119,43 +120,62 @@ const editHotel = async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("editHotel", { hotel })
+            res.render("editHotel", { hotel, type })
         })
     } catch (error) {
         return res.status(500).render("500");
     }
 }
 
-// const updateHotel = async (req, res) => {
+
+// const editHotel_post = (async (req, res) => {
 
 //     try {
+//         const url = req.body.url
+//         const id = req.session.HOTELID
 
-//         const id = req.body.id
-//         const
+//         const existingHotel = await Hotel.findById(id)
+//         // const hotel = Hotel.find({ images.url: url })
+//         delete req.session.HOTELID
+//         res.status(200).end()
 //     } catch (error) {
-
+//         res.status(500).end()
 //     }
+// })
 
-// }
-
-
-const searchHotel = (async (req, res) => {
+const editHotel_post = async (req, res) => {
     try {
-        const value = req.body.search
-        const regexValue = new RegExp(value, "i")
-        const hotel = await Hotel.find({
-            $or: [
-                { name: { $regex: regexValue } }
-            ]
-        }).populate("type")
+        console.log(req.body);
+        console.log(req.query);
+        const url = req.body.url;
+        const id = req.session.HOTELID;
 
-        res.send(hotel)
+        // const existingHotel = await Hotel.findById(id);
 
+
+        delete req.session.HOTELID;
+        res.status(200).end();
     } catch (error) {
-        return res.status(500).render("500");
+        console.error(error);
+        res.status(500).end();
+    }
+};
+
+let image = []
+const imageDelete = ((req, res) => {
+
+    try {
+        console.log(168)
+        const url = req.body.requestData
+        console.log(url)
+        image.push(url)
+    } catch (error) {
+        return res.status(400).end()
     }
 
 })
+
+
 
 
 
@@ -164,7 +184,6 @@ export default {
     submitHotel,
     blockHotel,
     editHotel,
-    // updateHotel,
-
-    searchHotel,
+    editHotel_post,
+    imageDelete,
 }

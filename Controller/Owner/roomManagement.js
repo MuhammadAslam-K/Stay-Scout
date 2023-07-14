@@ -150,35 +150,9 @@ const blockRoom = (async (req, res) => {
 })
 
 
-const filter = (async (req, res) => {
-
-    try {
-        // const categoryId = req.query.id
-        // const rooms = await Rooms.find({ category: categoryId }).populate('category').populate('hotel')
-        // console.log(rooms);
-        const rooms = await propertyFetching.filterRoom(req.query.id)
-        const category = await Category.find()
-        res.render("viewRooms", (err) => {
-            if (err) {
-                if (err.message.includes("Failed to lookup view")) {
-                    return res.status(404).render("404");
-                } else {
-                    return res.status(500).render("500");
-                }
-            }
-            res.render("viewRooms", { rooms, category })
-        })
-    } catch (error) {
-        return res.status(500).render("500");
-    }
-
-})
-
 export default {
     addRoom,
     submitRoom,
     viewRooms,
-
     blockRoom,
-    filter,
 }

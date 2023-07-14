@@ -26,24 +26,6 @@ const viewowner = (async (req, res) => {
 
 })
 
-const searchOwner = (async (req, res) => {
-    try {
-        const value = req.body.search
-        const regexValue = new RegExp(value, "i")
-
-        const users = await Owner.find({
-            $or: [
-                { name: { $regex: regexValue } },
-                { email: { $regex: regexValue } }
-            ]
-        });
-
-        return res.send(users)
-    } catch (error) {
-        return res.status(500).render("500");
-    }
-
-})
 
 
 const blockowner = (async (req, res) => {
@@ -66,7 +48,6 @@ const blockowner = (async (req, res) => {
 
 export default {
     viewowner,
-    searchOwner,
     blockowner,
 
 }

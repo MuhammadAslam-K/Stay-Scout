@@ -12,7 +12,20 @@ const message = (async (req, res) => {
 
 })
 
+const messageDelete = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        await Message.findByIdAndDelete(id)
+        res.redirect("/admin/messages")
+    } catch (error) {
+        res.render("500")
+    }
+
+})
+
 
 export default {
     message,
+    messageDelete,
 }

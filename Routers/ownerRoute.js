@@ -36,7 +36,8 @@ owner_route.post("/addhotel", isLogged, isBlocked, upload.array('image', 4), hot
 
 owner_route.post("/hotel/block", isLogged, isBlocked, hotelManagment.blockHotel)
 owner_route.get("/hotel/update", isLogged, isBlocked, hotelManagment.editHotel)
-owner_route.post("/hotel/search", isLogged, isBlocked, hotelManagment.searchHotel)
+owner_route.post("/hotel/edit", isLogged, isBlocked, hotelManagment.editHotel_post)
+owner_route.post("/hotel/deleteimg", isLogged, isBlocked, hotelManagment.imageDelete)
 
 ///////////// ROOM MANAGEMENT///////////////
 owner_route.get("/hotel/addrooms", isLogged, isBlocked, roomManagement.addRoom)
@@ -44,7 +45,6 @@ owner_route.post("/hotel/addrooms", isLogged, isBlocked, upload.array('image', 4
 owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 
 owner_route.post("/room/block", isLogged, isBlocked, roomManagement.blockRoom)
-owner_route.get("/room/filter", isLogged, isBlocked, roomManagement.filter)
 
 
 

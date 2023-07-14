@@ -30,24 +30,19 @@ admin_route.get("/dashboard", adminDashboard.dashboard)
 
 /////////////USER MANAGEMENT//////////
 admin_route.get("/users", userManagement.viewUser)
-admin_route.post("/users/search", userManagement.searchUser)
 admin_route.post("/users/block", userManagement.blockUser)
 
 
 ///////////////Owner MANAGEMENT/////////////
 admin_route.get("/owners", ownerManagement.viewowner)
-admin_route.post("/owners/search", ownerManagement.searchOwner)
 admin_route.post("/owners/block", ownerManagement.blockowner)
 
 /////////HOTELS////////
 admin_route.get("/owner/hotels", hotelManagement.ownerHotels)
 admin_route.post("/hotel/block", hotelManagement.blockHotel)
-admin_route.post("/owner/hotel/search", hotelManagement.searchHotel)
 
 ////////ROOMS///////////
 admin_route.get("/owner/hotel/rooms", roomManagement.ownerRooms)
-admin_route.get("/owner/hotel/room/filter", roomManagement.filterRooms)
-
 admin_route.post("/owner/hotel/room/edit", roomManagement.blockRoom)
 
 
@@ -66,7 +61,7 @@ admin_route.post('/room/deleteamenities', roomAmenitiesManagement.deleteAmenitie
 
 ////////////MESSAGE MANAGEMENT///////////
 admin_route.get('/messages', messageManagement.message)
-// admin_route.post('/message', messageManagement.)
+admin_route.get('/message/delete', messageManagement.messageDelete)
 
 
 export default admin_route

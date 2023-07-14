@@ -23,6 +23,15 @@
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
         margin: 0 10px 10px 0;
     }
+
+    .file-input {
+        display: none;
+    }
+
+    .file-label {
+        display: block;
+        margin-top: 10px;
+    }
 </style>
 
 
@@ -63,73 +72,68 @@
                         <input type="text" id="newInputField" name="newCatgory" placeholder="Enter a new Type">
                     </div>
                 </div>
-
-
             </div>
-
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="city" value="{{hotel.city}}">
-                    <span id="cityError" class="text-danger error-msg"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
-                    <span id="pincodeError" class="text-danger error-msg"></span>
-                </div>
-            </div>
-
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label for="description">Description....</label>
-                    <textarea id="description" class="form-control" name="description"
-                        style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
-                    <span id="descriptionError" class="text-danger error-msg"></span>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="description">Address</label>
-                    <textarea id="description" class="form-control" name="address"
-                        style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
-                    <span id="addressError" class="text-danger error-msg"></span>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
     </div>
+
+    <div class="form-row m-4">
+        <div class="form-group col-md-6">
+            <label>City</label>
+            <input type="text" class="form-control" name="city" value="{{hotel.city}}">
+            <span id="cityError" class="text-danger error-msg"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Pincode</label>
+            <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
+            <span id="pincodeError" class="text-danger error-msg"></span>
+        </div>
+    </div>
+
+    <div class="form-row m-4">
+        <div class="form-group col-md-6">
+            <label for="description">Description....</label>
+            <textarea id="description" class="form-control" name="description"
+                style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
+            <span id="descriptionError" class="text-danger error-msg"></span>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="description">Address</label>
+            <textarea id="description" class="form-control" name="address"
+                style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
+            <span id="addressError" class="text-danger error-msg"></span>
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
 
     <div class="image-preview-container">
         <div>
-            <p>Old Images</p>
+            <p>Images</p>
         </div>
         {{#each hotel.images}}
         <div>
             <img class="image-preview" src="{{this.url}}" alt="Image Preview">
             <button class="delete-button" type="button" onclick="deleteImage({{@index}})">Delete</button>
-            <input type="file" id="image{{@index}}" name="newImages" accept="image/*" style="display: none;">
         </div>
         {{/each}}
-
+        <div id="fileInputContainer"></div>
+        <input type="file" class="file-input" name="newImage" accept="image/*">
+        <label class="file-label" for="newImage">Add Image</label>
     </div>
-
 </div>
 
 
 {{!-- Image preview code --}}
-
-<!-- ...existing code... -->
-
 <script>
+    let deletedImagesCount = 0;
+
     function deleteImage(index) {
         // Remove the image from the hotel.images array
         const images = document.querySelectorAll('.image-preview-container > div');
         images[index].remove();
-
-        // Remove the corresponding image from the form data
-        const fileInput = document.getElementById(`image${index}`);
-        fileInput.value = null;
 
         // Reorder the index values in the remaining image elements
         const remainingImages = document.querySelectorAll('.image-preview-container > div');
@@ -137,13 +141,28 @@
             image.querySelector('button').setAttribute('onclick', `deleteImage(${index})`);
         });
 
-        // Show the corresponding file input fields
-        const fileInputs = document.querySelectorAll('input[name="newImages"]');
-        fileInputs[index].style.display = 'block';
-        fileInputs[index].required = true;
+        // Increment the deletedImagesCount
+        deletedImagesCount++;
+
+        // Show the file input fields based on deletedImagesCount
+        const fileInputContainer = document.getElementById('fileInputContainer');
+        fileInputContainer.innerHTML = '';
+        for (let i = 0; i < deletedImagesCount; i++) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.className = 'file-input';
+            fileInput.name = `newImage_${i}`;
+            fileInput.accept = 'image/*';
+            fileInputContainer.appendChild(fileInput);
+
+            const fileLabel = document.createElement('label');
+            fileLabel.className = 'file-label';
+            fileLabel.htmlFor = `newImage_${i}`;
+            fileLabel.textContent = 'Add Image';
+            fileInputContainer.appendChild(fileLabel);
+        }
     }
 </script>
-
 
 {{!-- AXIOS --}}
 <script>
@@ -212,7 +231,6 @@
         });
     });
 </script>
-
 
 {{>userFooter}}
 

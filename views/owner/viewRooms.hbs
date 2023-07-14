@@ -1,5 +1,5 @@
-{{>userHeader}}
-{{>adminDashboardSide}}
+{{> userHeader}}
+{{> adminDashboardSide}}
 
 <body id="page-top">
     <div id="wrapper">
@@ -7,28 +7,6 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-
-                    <div class="dropdown form-group col-md-3">
-                        <select id="dropdownSelect" class="form-group col-md-6" name="category">
-                            <option value="" disabled selected>Select Category</option>
-                            {{#each category}}
-                            <option value="/owner/room/filter?id={{this._id}}">{{this.name}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-
-                    <script>
-                        const dropdownSelect = document.getElementById('dropdownSelect');
-
-                        dropdownSelect.addEventListener('change', () => {
-                            const selectedRoute = dropdownSelect.value;
-                            if (selectedRoute) {
-                                window.location.href = selectedRoute;
-                            }
-                        });
-                    </script>
-
-
                 </nav>
 
 
@@ -97,7 +75,15 @@
 
 
 {{>userFooter}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
 <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+
     const errorMessage = "{{errorMessage}}";
     if (errorMessage) {
         alertify.alert(errorMessage, function () {

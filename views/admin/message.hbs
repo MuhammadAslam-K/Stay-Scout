@@ -1,4 +1,4 @@
-{{>userHeader}}
+{{!-- {{>userHeader}}
 {{>dashbordSide}}
 
 
@@ -13,7 +13,7 @@
                 <div class="container">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 font-weight-bold text-primary">Rooms</h4>
+                            <h4 class="m-0 font-weight-bold text-primary">Messages</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -62,4 +62,89 @@
 
 
 
+{{>userFooter}} --}}
+
+{{>userHeader}}
+{{>dashbordSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+
+                </nav>
+                <div class="container">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">Messages</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="add-amenities-row" style="display: none;">
+                                    <input type="text" class="form-control" placeholder="Amenities Name">
+                                    <button class="btn btn-success btn-submit" type="button">Submit</button>
+                                    <button class="btn btn-primary btn-cancel" type="button">Cancel</button>
+                                </div>
+
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Messages</th>
+                                            <th>User Name</th>
+                                            <th>Details</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each message}}
+                                        <tr>
+                                            <td>
+                                                <textarea id="description" class="form-control" name="Cancellation"
+                                                    style="height: 50px; resize: vertical;">{{this.message}}</textarea>
+                                            </td>
+                                            <td>
+                                                <span>{{this.user.name}}</span>
+                                            </td>
+                                            <td>
+                                                <form action="/admin/message/details?id={{this._id}}" method="get">
+                                                    <button class="btn btn-primary btn-delete">Details</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/message/delete?id={{this._id}}"
+                                                    class="btn btn-primary btn-delete">Delete</a>
+
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
 {{>userFooter}}
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Disable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false, // Disable automatic column width calculation
+            "pageLength": 10 // Set number of rows per page
+        });
+    });
+</script>

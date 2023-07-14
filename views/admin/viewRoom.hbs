@@ -7,27 +7,6 @@
             <div id="content">
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-
-                    <div class="dropdown form-group col-md-3">
-                        <select id="dropdownSelect" class="form-group col-md-6" name="category">
-                            <option value="" disabled selected>Select Category</option>
-                            {{#each category}}
-                            <option value="/admin/owner/hotel/room/filter?id={{this._id}}">{{this.name}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-
-                    <script>
-                        const dropdownSelect = document.getElementById('dropdownSelect');
-
-                        dropdownSelect.addEventListener('change', () => {
-                            const selectedRoute = dropdownSelect.value;
-                            if (selectedRoute) {
-                                window.location.href = selectedRoute;
-                            }
-                        });
-                    </script>
-
                 </nav>
 
                 <div class="container">
@@ -89,19 +68,26 @@
 {{> userFooter}}
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
 <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+
     function toggleBlock(roomId, blockStatus) {
         axios.post('/admin/owner/hotel/room/edit?id=' + roomId, {
             availability: blockStatus
         })
             .then(function (response) {
                 // Handle the response here, if needed
-
                 const blockButton = document.getElementById('blockButton' + roomId);
                 if (blockStatus) {
-                    blockButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleBlock(\'' + roomId + '\', false)">Unblock</button>';
+                    blockButton.innerHTML = '<a href="#" class="btn btn-primary btn-block" onclick="toggleBlock(\'' + roomId + '\', false)">Unblock</a>';
                 } else {
-                    blockButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleBlock(\'' + roomId + '\', true)">Block</button>';
+                    blockButton.innerHTML = '<a href="#" class="btn btn-warning btn-block" onclick="toggleBlock(\'' + roomId + '\', true)">Block</a>';
                 }
             })
             .catch(function (error) {

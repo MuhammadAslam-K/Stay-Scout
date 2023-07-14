@@ -20,25 +20,6 @@ const viewUser = (async (req, res) => {
 
 })
 
-const searchUser = (async (req, res) => {
-    console.log(24);
-    try {
-        const value = req.body.search
-        const regexValue = new RegExp(value, "i")
-
-        const users = await User.find({
-            $or: [
-                { name: { $regex: regexValue } },
-                { email: { $regex: regexValue } }
-            ]
-        });
-
-        return res.send(users)
-    } catch (error) {
-        return res.status(500).render("500");
-    }
-
-})
 
 const blockUser = (async (req, res) => {
     try {
@@ -60,6 +41,5 @@ const blockUser = (async (req, res) => {
 
 export default {
     viewUser,
-    searchUser,
     blockUser,
 }
