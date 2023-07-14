@@ -47,7 +47,7 @@ const roomDetails = (async (req, res) => {
     try {
         const id = req.query.id
         const room = await propertyFetching.room(id)
-
+        req.session.room = id
         res.render("viewRoom", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -62,6 +62,10 @@ const roomDetails = (async (req, res) => {
         return res.status(500).render("500")
     }
 })
+
+
+
+
 
 
 export default {

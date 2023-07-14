@@ -143,7 +143,43 @@ function roomValidation(data) {
     }
 }
 
+
+const bookingValidation = (date) => {
+    const { checkIn, checkOut, adults, kids } = date;
+    const numberPattern = /^[0-9]+$/;
+    const errors = {};
+
+    if (!numberPattern.test(adults)) {
+        errors.adultsError = "Invalid input for adults";
+    }
+
+    if (!numberPattern.test(kids)) {
+        errors.kidsError = "Invalid input for kids";
+    }
+
+    const currentDate = new Date();
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    if (checkInDate < currentDate) {
+        errors.checkInError = "Check-in date cannot be in the past";
+    }
+
+    if (checkOutDate <= checkInDate) {
+        errors.checkOutError = "Check-out date must be greater than the check-in date";
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+};
+
+
+
+
 export default {
     hotelValidation,
     roomValidation,
+    bookingValidation,
 }

@@ -5,6 +5,7 @@ import signupController from "../Controller/User/userSignup.js"
 import passwordUpdation from "../Controller/User/passwordUpdation.js"
 import hotelManagement from "../Controller/User/hotelManagement.js"
 import roomManagement from "../Controller/User/roomManagement.js"
+import checkinRooms from "../Controller/User/checkinRooms.js"
 import contact from "../Controller/User/contact.js"
 import userController from "../Controller/User/userController.js"
 import auth from "../middleware/userAuthentication.js"
@@ -52,6 +53,8 @@ user_route.get("/hotel/home", isLogged, isBlocked, hotelManagement.hotelHome)
 user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
 user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
 user_route.get("/room/filter", isLogged, isBlocked, roomManagement.roomsFilter)
+user_route.post("/room/checkin", isLogged, isBlocked, checkinRooms.checkAvailability)
+user_route.post("/room/book", isLogged, isBlocked, checkinRooms.book)
 
 /////////////CONTACT////////////
 user_route.get("/contact", isLogged, isBlocked, contact.contact)

@@ -43,15 +43,7 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    totalrating: {
-        type: Number,
-        default: 0
-    },
     users: {
-        type: Number,
-        default: 0
-    },
-    rating: {
         type: Number,
         default: 0
     },

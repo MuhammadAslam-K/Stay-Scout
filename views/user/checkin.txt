@@ -1,0 +1,109 @@
+// POST request to book a room
+app.post('/book-room', async (req, res) => {
+  const roomId = req.body.roomId;
+  const checkIn = new Date(req.body.checkIn);
+  const checkOut = new Date(req.body.checkOut);
+
+  try {
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ message: 'Room not found' });
+    }
+
+    if (!room.available) {
+      return res.status(400).json({ message: 'Room is not available' });
+    }
+
+    // Check if room is available for the selected dates
+    if (room.checkIn && room.checkOut) {
+      if (checkIn >= room.checkIn && checkIn <= room.checkOut) {
+        return res.status(400).json({ message: 'Room is already booked for the selected check-in date' });
+      }
+
+      if (checkOut >= room.checkIn && checkOut <= room.checkOut) {
+        return res.status(400).json({ message: 'Room is already booked for the selected check-out date' });
+      }
+    }
+
+    // Update room availability and dates
+    room.available = false;
+    room.checkIn = checkIn;
+    room.checkOut = checkOut;
+    await room.save();
+
+    return res.status(200).json({ message: 'Room booked successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+const roomSchema = new mongoose.Schema({
+  name: String,
+  available: { type: Boolean, default: true },
+  checkIn: { type: Date },
+  checkOut: { type: Date }
+});
+
+
+
+
+
+You can use a library like Moment.js to handle date-related operations.
+
+
+
+const mongoose = require('mongoose');
+
+// Define the booking schema
+const bookingSchema = new mongoose.Schema({
+  checkInDate: { type: Date, required: true },
+  checkOutDate: { type: Date, required: true },
+  roomId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  guestName: { type: String, required: true },
+});
+
+// Create the Booking model
+const Booking = mongoose.model('Booking', bookingSchema);
+
+// Check availability and create a booking
+async function createBooking(checkInDate, checkOutDate, roomId, guestName) {
+  // Check if the room is already booked for the given dates
+  const existingBooking = await Booking.findOne({
+    roomId,
+    $or: [
+      { checkInDate: { $lte: checkOutDate }, checkOutDate: { $gte: checkInDate } },
+      { checkInDate: { $gte: checkInDate, $lte: checkOutDate } },
+    ],
+  });
+
+  if (existingBooking) {
+    throw new Error('The room is already booked for the specified dates.');
+  }
+
+  // Create the new booking
+  const booking = new Booking({
+    checkInDate,
+    checkOutDate,
+    roomId,
+    guestName,
+  });
+
+  const savedBooking = await booking.save();
+
+  return savedBooking;
+}
+
+// Example usage
+createBooking(new Date('2023-07-01'), new Date('2023-07-05'), 'room123', 'John Doe')
+  .then((booking) => {
+    console.log('Booking created:', booking);
+  })
+  .catch((error) => {
+    console.error('Error creating booking:', error.message);
+  });
+

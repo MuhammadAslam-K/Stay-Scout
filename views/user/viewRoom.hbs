@@ -1,11 +1,6 @@
 {{>userHeader}}
 {{>navBar2}}
 
-
-
-
-
-
 <style>
     .form-control {
         background-color: #f8f9fa;
@@ -68,74 +63,162 @@
     }
 </style>
 
-
-{{!-- HOTEL --}}
+<!-- Rooms -->
 <div class="container-fluid" style="margin-top: 100px;">
     <div class="row m-5 py-5">
         <div class="col-lg-5 order-lg-2">
-            <div class="col-md-8 offset-md-2 " data-aos="fade-up">
-                <form>
+            <div class="col-md-8 offset-md-2 form-container" data-aos="fade-up">
+                <form id="checkin" class="align-form-elements">
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkin">
+                        <input type="date" class="form-control" id="checkin" name="checkIn" required>
+                        <span class="text-danger" id="checkInError"></span>
                     </div>
                     <div class="form-group">
                         <label for="checkout">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkout">
+                        <input type="date" class="form-control" id="checkout" name="checkOut" required>
+                        <span class="text-danger" id="checkOutError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="adults">Number of Adults</label>
-                        <input type="number" class="form-control" id="adults">
+                        <label for="adults">Adults</label>
+                        <input type="number" class="form-control" id="adults" name="adults" required>
+                        <span class="text-danger" id="adultsError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="kids">Number of Kids</label>
-                        <input type="number" class="form-control" id="kids">
+                        <label for="kids">Kids</label>
+                        <input type="number" class="form-control" id="kids" name="kids" required>
+                        <span class="text-danger" id="kidsError"></span>
                     </div>
-                    <div class="form-group">
-                        <label for="rooms">Number of Rooms</label>
-                        <input type="number" class="form-control" id="rooms">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Check</button>
+                    <button type="button" class="btn btn-primary" id="book">Book</button>
                 </form>
             </div>
         </div>
         <div class="col-lg-7 order-lg-1">
-            <div class="super_container " style="height: 60vh;">
-                <div class="home">
-                    <div class="home_slider_container">
-                        <div class="owl-carousel owl-theme home_slider">
-                            {{#each room.images}}
-                            <div class="slide">
-                                <div class="background_image"
-                                    style="opacity: unset; background-size: cover; background-image:url({{this.url}});">
-                                </div>
+            <div class="super_container" style="height: 60vh;">
+                <div class="home_slider_container">
+                    <div class="owl-carousel owl-theme home_slider">
+                        {{#each room.images}}
+                        <div class="slide">
+                            <div class="background_image"
+                                style="opacity: unset; background-size: cover; background-image:url({{this.url}});">
                             </div>
-                            {{/each}}
                         </div>
+                        {{/each}}
                     </div>
                 </div>
             </div>
+            <p>Max no of Adults: {{room.adults}}</p>
+            <p>Max no of Kids: {{room.childrents}}</p>
             <p class="mt-3">Per night Rs: {{room.price}}</p>
-            <p>Available Rooms: {{room.noOfRooms}}</p>
             <p class="mb-5">{{room.description}}</p>
             <p>
-            <h2>Amenities</h2>{{room.amenities}}</p>
+            <h2>Amenities</h2>{{room.amenities}}
+            </p>
         </div>
     </div>
 </div>
-{{!-- END HOTELS --}}
-
-
+<!-- END HOTELS -->
 
 {{>userSiteFooter}}
 {{>userFooter}}
 
-
 <script>
-    const errorMessage = "{{errorMessage}}";
-    if (errorMessage) {
-        alertify.alert(errorMessage, function () {
-            alertify.message('OK');
-        });
-    }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        try {
+            const response = await axios.post('/room/checkin', Object.fromEntries(formData))
+
+            if (response.status === 200) {
+                alertify.alert("Rooms are available", function () {
+                    alertify.message('OK');
+                });
+            }
+
+        } catch (error) {
+
+            if (error.response.status == 400) {
+
+                const errors = error.response.data.error;
+                alert(error)
+                Object.keys(errors).forEach((key) => {
+                    let element = document.getElementById(key + 'Error');
+                    if (element) {
+                        element.textContent = errors[key];
+                    }
+                });
+            }
+            else if (error.response.status == 404) {
+                const err = error.response.data.message;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
+            else {
+                alertify.alert("Something went wrong, please try again later", function () {
+                    alertify.message('OK');
+                });
+            }
+        }
+    };
+    document.getElementById('checkin').addEventListener('submit', handleSubmit);
+
 </script>
+
+
+{{!-- BOOKING --}}
+<script>
+    const handleBook = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(document.getElementById('checkin'));
+
+        try {
+            const response = await axios.post('/room/book', Object.fromEntries(formData));
+
+            if (response.status === 200) {
+                alertify.alert("Booking successful", function () {
+                    alertify.message('OK');
+                });
+            }
+        } catch (error) {
+            if (error.response.status == 400) {
+
+                const errors = error.response.data.error;
+                alert(error)
+                Object.keys(errors).forEach((key) => {
+                    let element = document.getElementById(key + 'Error');
+                    if (element) {
+                        element.textContent = errors[key];
+                    }
+                });
+            }
+            else if (error.response.status == 404) {
+                const err = error.response.data.message;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
+            else {
+                alertify.alert("Something went wrong, please try again later", function () {
+                    alertify.message('OK');
+                });
+            }
+        }
+    };
+    document.getElementById('book').addEventListener('click', handleBook);
+
+</script>
+
+
+
+
+
+
+
+
+
+{{>userFooter}}

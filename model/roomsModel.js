@@ -3,11 +3,11 @@ import mongoose from "mongoose"
 const roomSchema = new mongoose.Schema({
     description: {
         type: String,
-        require: true
+        required: true
     },
     price: {
         type: Number,
-        require: true
+        required: true
     },
     adults: {
         type: Number,
@@ -15,19 +15,11 @@ const roomSchema = new mongoose.Schema({
     },
     childrents: {
         type: Number,
-        require: true
+        required: true
     },
     bed: {
         type: String,
-        require: true
-    },
-    noOfRooms: {
-        type: Number,
-        require: true,
-    },
-    amenities: {
-        type: String,
-        require: true,
+        required: true
     },
     Cancellation: {
         type: String,
@@ -43,18 +35,21 @@ const roomSchema = new mongoose.Schema({
             required: true
         }
     }],
-    checkIn: {
+    checkIn: [{
         type: Date,
-    },
-    checkOut: {
+        default: [],
+    }],
+    checkOut: [{
         type: Date,
-    },
+        default: [],
+    }],
     booste: {
         type: Number,
         default: 1
     },
     amenities: {
         type: Array,
+        require: true,
     },
     is_Available: {
         type: Boolean,

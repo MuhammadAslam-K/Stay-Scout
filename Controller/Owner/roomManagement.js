@@ -63,7 +63,7 @@ const submitRoom = (async (req, res) => {
                 roomImages.push(image);
             }
 
-            const { price, adults, childrents, noOfRooms, amenities, Cancellation, bed, category, newCatgory, description } = req.body
+            const { price, adults, childrents, amenities, Cancellation, bed, category, newCatgory, description } = req.body
 
             let categoryId
             if (category == "new" && newCatgory) {
@@ -85,7 +85,6 @@ const submitRoom = (async (req, res) => {
                 childrents,
                 bed,
                 Cancellation,
-                noOfRooms,
                 description,
                 amenities,
                 images: roomImages,
