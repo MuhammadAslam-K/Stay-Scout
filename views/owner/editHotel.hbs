@@ -28,7 +28,7 @@
 
 <div id="content-wrapper" class="justify-content-center m-5">
     <div id="content">
-        <form id="registerForm" enctype="multipart/form-data">
+        <form id="updateForm" enctype="multipart/form-data">
             <input type="text" name="id" value="{{hotel._id}}" style="display: none;">
             <div class="form-row m-4 ">
                 <div class="form-group col-md-6">
@@ -90,131 +90,54 @@
 
                 <div class="form-group col-md-6">
                     <label for="description">Address</label>
-                    <textarea id="description" class="form-control" name="address"
+                    <textarea id="address" class="form-control" name="address"
                         style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
                     <span id="addressError" class="text-danger error-msg"></span>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
     </div>
 
     <div class="image-preview-container">
-        <div>
-            <p>Old Images</p>
-        </div>
         {{#each hotel.images}}
         <div>
             <img class="image-preview" src="{{this.url}}" alt="Image Preview">
-            <button class="delete-button" type="button" onclick="deleteImage({{@index}})">Delete</button>
-            <input type="file" id="image{{@index}}" name="newImages" accept="image/*" style="display: none;">
+            <input type="checkbox" name="selectedImages" value="{{this.url}}">
         </div>
         {{/each}}
-
     </div>
 
+    <div class="image-preview-container" id="newImagePreviewContainer"></div>
+
+    <input type="file" id="imageInput" name="image" multiple>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </div>
 
+{{>userFooter}}
 
-{{!-- Image preview code --}}
-
-<!-- ...existing code... -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/dist/js/alertify.min.js"></script>
 
 <script>
-    function deleteImage(index) {
-        // Remove the image from the hotel.images array
-        const images = document.querySelectorAll('.image-preview-container > div');
-        images[index].remove();
 
-        // Remove the corresponding image from the form data
-        const fileInput = document.getElementById(`image${index}`);
-        fileInput.value = null;
-
-        // Reorder the index values in the remaining image elements
-        const remainingImages = document.querySelectorAll('.image-preview-container > div');
-        remainingImages.forEach((image, index) => {
-            image.querySelector('button').setAttribute('onclick', `deleteImage(${index})`);
-        });
-
-        // Show the corresponding file input fields
-        const fileInputs = document.querySelectorAll('input[name="newImages"]');
-        fileInputs[index].style.display = 'block';
-        fileInputs[index].required = true;
-    }
-</script>
-
-
-{{!-- AXIOS --}}
-<script>
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData(event.target);
-        resetError()
         try {
-            const response = await axios.post('/owner/update', formData)
+            const formData = new FormData(event.target)
 
-            if (response.status === 200) {
-                window.location.href = '/owner/hotels'
-            }
-
+            const response = await axios.post('/owner/hotel/edit', formData);
+            // Handle the response from the server as needed
         } catch (error) {
-
-            if (error.response.status == 400) {
-
-                const errors = error.response.data.error;
-
-                Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key).textContent = errors[key];
-                });
-
-            }
-            else if (error.response.status == 500) {
-                const err = error.response.data.error;
-                alertify.alert(err, function () {
-                    alertify.message('OK');
-                });
-            }
-            else {
-                alertify.alert("Something went wrong", function () {
-                    alertify.message('OK');
-                });
-            }
+            alert(error)
+            // Handle any errors
         }
     };
-    document.getElementById('registerForm').addEventListener('submit', handleSubmit);
 
-    function resetError() {
-        const errorElements = document.querySelectorAll(".error-msg");
-        errorElements.forEach((element) => {
-            element.textContent = "";
-        });
-    }
+
+    document.getElementById('updateForm').addEventListener('submit', handleSubmit);
 </script>
-
-
-{{!-- NEW TYPE --}}
-
-<script>
-    window.addEventListener('DOMContentLoaded', function () {
-        var inputFieldContainer = document.getElementById('inputFieldContainer');
-        inputFieldContainer.style.display = 'none';
-
-        document.getElementById('dropdownSelect').addEventListener('change', function () {
-            var selectedOption = this.value;
-
-            if (selectedOption === 'new') {
-                inputFieldContainer.style.display = 'block';
-            } else {
-                inputFieldContainer.style.display = 'none';
-            }
-        });
-    });
-</script>
-
-
-{{>userFooter}}
 
 <script>
     const errorMessage = "{{errorMessage}}";

@@ -163,26 +163,14 @@
     <div class="row m-5 py-5">
         <div class="col-lg-5 order-lg-2">
             <div class="col-md-8 offset-md-2" data-aos="fade-up">
-                <form>
+                <form id="checkin">
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkin">
+                        <input type="date" class="form-control" id="checkin" name="checkIn">
                     </div>
                     <div class="form-group">
                         <label for="checkout">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkout">
-                    </div>
-                    <div class="form-group">
-                        <label for="adults">Number of Adults</label>
-                        <input type="number" class="form-control" id="adults">
-                    </div>
-                    <div class="form-group">
-                        <label for="kids">Number of Kids</label>
-                        <input type="number" class="form-control" id="kids">
-                    </div>
-                    <div class="form-group">
-                        <label for="rooms">Number of Rooms</label>
-                        <input type="number" class="form-control" id="rooms">
+                        <input type="date" class="form-control" id="checkout" name="checkOut">
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                 </form>
@@ -245,6 +233,40 @@
 
 {{>userSiteFooter}}
 {{>userFooter}}
+
+
+
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        try {
+            const response = await axios.post('/hotel/checkin', Object.fromEntries(formData));
+            if (response.status === 200) {
+                document.body.innerHTML = response.data;
+            }
+
+
+        } catch (error) {
+
+            if (error.response.status == 404) {
+                alertify.alert("The rooms is not available for the given date", function () {
+                    alertify.message('OK');
+                });
+            } else {
+
+                alertify.alert("Something went wrong, please try again later", function () {
+                    alertify.message('OK');
+                });
+            }
+        }
+    };
+    document.getElementById('checkin').addEventListener('submit', handleSubmit);
+
+</script>
+
 
 
 <script>

@@ -2,6 +2,7 @@ import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
 import propertyValidation from "../../helper/propertyValidation.js"
 import Type from "../../model/hotelType.js"
+import { ReturnDocument } from "mongodb"
 
 
 
@@ -45,7 +46,6 @@ const submitHotel = (async (req, res) => {
                 });
 
                 const image = {
-                    public_id: result.public_id,
                     url: result.secure_url
                 };
 
@@ -53,7 +53,6 @@ const submitHotel = (async (req, res) => {
             }
 
             const { name, title, startingPrice, type, newtype, city, pincode, description, address } = req.body
-            console.log(startingPrice);
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -128,49 +127,70 @@ const editHotel = async (req, res) => {
 }
 
 
-// const editHotel_post = (async (req, res) => {
-
-//     try {
-//         const url = req.body.url
-//         const id = req.session.HOTELID
-
-//         const existingHotel = await Hotel.findById(id)
-//         // const hotel = Hotel.find({ images.url: url })
-//         delete req.session.HOTELID
-//         res.status(200).end()
-//     } catch (error) {
-//         res.status(500).end()
-//     }
-// })
-
-const editHotel_post = async (req, res) => {
-    try {
-        console.log(req.body);
-        console.log(req.query);
-        const url = req.body.url;
-        const id = req.session.HOTELID;
-
-        // const existingHotel = await Hotel.findById(id);
-
-
-        delete req.session.HOTELID;
-        res.status(200).end();
-    } catch (error) {
-        console.error(error);
-        res.status(500).end();
-    }
-};
-
-let image = []
-const imageDelete = ((req, res) => {
+const updateHotel = (async (req, res) => {
 
     try {
-        console.log(168)
-        const url = req.body.requestData
-        console.log(url)
-        image.push(url)
+        const id = req.session.HOTELID
+        const files = req.files
+        const hotelImages = []
+        const oldImages = req.body.selectedImages
+
+        const valid = propertyValidation.hotelValidation(req.body)
+        let h = true
+        if (h == false) {
+
+            return res.status(400).json({ error: valid.errors })
+        }
+        else {
+            for (const file of files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: "Hotels"
+                });
+
+                const image = {
+                    url: result.secure_url
+                };
+
+                hotelImages.push(image);
+            }
+
+            const convertedArray = oldImages.map((urlString) => {
+                const url = urlString.split(':')[1].trim();
+                return { url };
+            });
+            const images = [...hotelImages, ...convertedArray]
+
+            // console.log(images)
+
+            const hotel = await Hotel.findById(id)
+
+            const { name, title, startingPrice, type, newtype, city, pincode, description, address } = req.body
+            let typeId
+            if (type == "new" && newtype) {
+                const newTypeData = new Type({
+                    name: newtype
+                })
+                const savedType = await newTypeData.save()
+                typeId = savedType._id
+            }
+            else {
+                typeId = type
+            }
+
+            hotel.name = name
+            hotel.title = title
+            hotel.startingPrice = startingPrice
+            hotel.city = city
+            hotel.pincode = pincode
+            hotel.description = description
+            hotel.address = address
+            hotel.images = images
+
+            await hotel.save()
+            return res.status(200).end()
+        }
     } catch (error) {
-        return res.status(400).end()
+        res.render("500")
     }
 
 })
@@ -179,11 +199,15 @@ const imageDelete = ((req, res) => {
 
 
 
+
+
+
 export default {
     addHotel,
     submitHotel,
+
     blockHotel,
     editHotel,
-    editHotel_post,
-    imageDelete,
+    updateHotel,
+
 }

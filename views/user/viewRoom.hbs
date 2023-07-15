@@ -123,6 +123,7 @@
 {{>userSiteFooter}}
 {{>userFooter}}
 
+{{!-- CHECKIN --}}
 <script>
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -180,9 +181,16 @@
             const response = await axios.post('/room/book', Object.fromEntries(formData));
 
             if (response.status === 200) {
-                alertify.alert("Booking successful", function () {
-                    alertify.message('OK');
-                });
+                Notification()
+                function Notification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Profile updated successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
+                }
             }
         } catch (error) {
             if (error.response.status == 400) {

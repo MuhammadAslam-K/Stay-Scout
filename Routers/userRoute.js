@@ -45,14 +45,13 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 user_route.get("/", userController.home)
 user_route.get("/profile", isLogged, isBlocked, userController.profile)
 user_route.post("/profile/edit", isLogged, isBlocked, userController.profile_edit)
-// user_route.get("/profile", userController.profile)
+
 
 //////// HOTELS /////////////isLogged, isBlocked, 
-// user_route.get("/hotels", isLogged, isBlocked, hotelManagement.hotels)
-user_route.get("/hotels", hotelManagement.hotels)
+user_route.get("/hotels", isLogged, isBlocked, hotelManagement.hotels)
 user_route.get("/hotel/home", isLogged, isBlocked, hotelManagement.hotelHome)
-// user_route.post("hotel/search", isLogged, isBlocked, hotelManagement.hotelSearch)
-user_route.post("/hotel/search", hotelManagement.hotelSearch)
+user_route.post("/hotel/search", isLogged, isBlocked, hotelManagement.hotelSearch)
+user_route.post("/hotel/checkin", isLogged, isBlocked, hotelManagement.roomAvailability)
 
 //////////Rooms/////////////
 user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
