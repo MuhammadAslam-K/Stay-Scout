@@ -1,3 +1,4 @@
+import Signup_functions from "../../helper/Signup_functions.js";
 import propertyFetching from "../../helper/propertyFetching.js";
 import User from "../../model/userModel.js"
 
@@ -47,11 +48,37 @@ const profile = (async (req, res) => {
 
 })
 
+const profile_edit = async (req, res) => {
 
+    try {
+        const { name, email, phone } = req.body;
+        const id = req.session.user._id;
+        const valid = Signup_functions.profile_edit(req.body)
+
+        if (!valid.isValid) {
+            return res.status(400).json({ error: valid.errors })
+        }
+        else {
+
+            const user = await User.findById(id)
+
+            user.name = name;
+            user.email = email;
+            user.phone = phone;
+
+            const result = await user.save();
+            console.log(result)
+            res.status(200).end();
+        }
+    } catch (error) {
+        res.render("500");
+    }
+}
 
 
 
 export default {
     home,
     profile,
+    profile_edit,
 }

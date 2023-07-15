@@ -44,6 +44,8 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 
 user_route.get("/", userController.home)
 user_route.get("/profile", isLogged, isBlocked, userController.profile)
+user_route.post("/profile/edit", isLogged, isBlocked, userController.profile_edit)
+// user_route.get("/profile", userController.profile)
 
 //////// HOTELS /////////////isLogged, isBlocked, 
 user_route.get("/hotels", isLogged, isBlocked, hotelManagement.hotels)

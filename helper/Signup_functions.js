@@ -114,10 +114,49 @@ function otpRemoval(otpArray, otp) {
     }, 31000);
 }
 
+
+const profile_edit = (data) => {
+
+    const { email, name, phone } = data
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^\d{12}$/;
+    const errors = {}
+    console.log(email, name, phone)
+    // NAME VALIDATION
+
+    if (!name) {
+        errors.nameError = "Please Enter Your Name"
+    } else if (name.length < 3 || name[0] == " ") {
+        errors.nameError = "Enter a Valid Name"
+    }
+
+    // EMAIL VALIDATION
+
+    if (!email) {
+        errors.emailError = "please enter your email address";
+    } else if (email.length < 3 || email.trim() === "" || !emailPattern.test(email)) {
+        errors.emailError = "please Enter a Valid email";
+    }
+
+    //  PHONE VALIDATION 
+    if (!phone) {
+        errors.phoneError = "please Enter your mobile number";
+    } else if (!phonePattern.test(phone)) {
+        errors.phoneError = "please check your number and provide a valid one";
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+}
+
+
 export default {
     passwordHash,
     generateOTP,
     sendOTP,
     validate,
     otpRemoval,
+    profile_edit,
 }
