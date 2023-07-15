@@ -1,5 +1,5 @@
 {{>userHeader}}
-{{>userNavbar}}
+{{>navBar2}}
 
 <div class="container">
     <div class="row">
@@ -22,19 +22,23 @@
             <div class="details">
                 <p>Email: stayscout@gmail.com</p>
                 <p>Phone: 1234567981</p>
-                <p>Address: Vasantaga Nagar, Hosur, Near Sukkkar HDS</p>
+                {{!-- <p>Address: Vasantaga Nagar, Hosur, Near Sukkkar HDS</p> --}}
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    <style>.message-form {
+    .message-form {
         display: grid;
         grid-template-columns: 1fr;
         gap: 20px;
         margin-top: 100px;
         /* Adjust the margin-top value to move the form down */
+    }
+
+    .container {
+        margin-top: 16vh;
     }
 
     .message-box {
@@ -69,7 +73,6 @@
     }
 </style>
 
-</style>
 
 {{!-- {{>userSiteFooter}} --}}
 {{>userFooter}}

@@ -7,9 +7,16 @@
                     <li class="active"><a href="/">Home</a></li>
                     <li><a href="/hotels">Hotels</a></li>
                     <li><a href="/rooms">Rooms</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="/contact">Contact</a></li>
                     <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
-
+                    <li>
+                        <form action="/hotel/search" method="post">
+                            <div class="search_container">
+                                <div class="search_icon"><i class="fa-solid fa-search"></i></div>
+                                <input type="text" class="search_input" placeholder="Search" name="search">
+                            </div>
+                        </form>
+                    </li>
 
                 </ul>
             </nav>
@@ -30,9 +37,38 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/hotels">Hotels</a></li>
                 <li><a href="/rooms">Rooms</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="/contact">Contact</a></li>
                 <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
             </ul>
         </nav>
     </div>
 </div>
+
+
+<style>
+    .search_container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+
+    .search_icon {
+        color: #ffffff;
+        font-size: 18px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .search_input {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: width 0.3s ease;
+    }
+
+    .search_input:focus {
+        width: 250px;
+    }
+</style>
