@@ -22,6 +22,7 @@ const addHotel = (async (req, res) => {
             res.render("addHotel", { type, amenities })
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -29,7 +30,7 @@ const addHotel = (async (req, res) => {
 
 const submitHotel = (async (req, res) => {
     try {
-
+        console.log(req.body);
         const files = req.files;
         const hotelImages = [];
         const valid = propertyValidation.hotelValidation(req.body)
@@ -51,8 +52,10 @@ const submitHotel = (async (req, res) => {
                 hotelImages.push(image);
             }
 
-            const { name, title, startingPrice, type, newtype, city, amenities, pincode, description, address } = req.body
+            const { name, title, startingPrice, type, newtype, city, amenities, latitude, longitude, pincode, description, address } = req.body
             console.log(req.body)
+            const latitudeData = parseFloat(latitude[0]);
+            const longitudeData = parseFloat(longitude[0]);
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -74,6 +77,8 @@ const submitHotel = (async (req, res) => {
                 pincode,
                 amenities,
                 address,
+                latitude: latitudeData,
+                longitude: longitudeData,
                 owner: req.session.owner._id,
                 images: hotelImages
             })

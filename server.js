@@ -68,12 +68,10 @@ hbs.registerHelper('times', function (n, block) {
 
 
 
-
 app.use("/", user_route)
 app.use("/owner", owner_route)
 app.use("/admin", admin_route)
 app.get('*', (req, res) => {
-    // res.send('404 pagenot found')
     res.render("404")
 })
 

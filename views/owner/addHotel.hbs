@@ -2,7 +2,7 @@
 {{>adminDashboardSide}}
 
 <style>
-    <style>#content-wrapper {
+    #content-wrapper {
         background-color: #f8f9fa;
     }
 
@@ -50,21 +50,18 @@
                     <input type="text" class="form-control" name="name">
                     <span id="nameError" class="text-danger error-msg"></span>
                 </div>
-
                 <div class="form-group col-md-6">
                     <label>Title (max 10 words)</label>
                     <input type="text" class="form-control" name="title">
                     <span id="titleError" class="text-danger error-msg"></span>
                 </div>
             </div>
-
             <div class="form-row m-4">
                 <div class="form-group col-md-6">
                     <label>Starting Price of the Room</label>
                     <input type="tel" class="form-control" name="startingPrice">
                     <span id="priceError" class="text-danger error-msg"></span>
                 </div>
-
                 <div class="dropdown form-group col-md-6">
                     <select id="dropdownSelect" class="form-group col-md-6" name="type">
                         <option value="" disabled selected>Select Type</option>
@@ -73,13 +70,11 @@
                         {{/each}}
                         <option value="new">New</option>
                     </select>
-
                     <div id="inputFieldContainer">
                         <input type="text" id="newInputField" name="newtype" placeholder="Enter a new Type">
                     </div>
                 </div>
             </div>
-
             <div class="form-row m-4">
                 <div class="form-group col-md-6">
                     <label>City</label>
@@ -92,7 +87,6 @@
                     <span id="pincodeError" class="text-danger error-msg"></span>
                 </div>
             </div>
-
             <div class="form-row m-4">
                 <div class="form-group col-md-6">
                     <label for="description">Description....</label>
@@ -100,22 +94,19 @@
                         style="height: 150px; resize: vertical;"></textarea>
                     <span id="descriptionError" class="text-danger error-msg"></span>
                 </div>
-
                 <div class="form-group col-md-6">
                     <label for="description">Address</label>
-                    <textarea id="description" class="form-control" name="address"
+                    <textarea id="address" class="form-control" name="address"
                         style="height: 150px; resize: vertical;"></textarea>
                     <span id="addressError" class="text-danger error-msg"></span>
                 </div>
             </div>
-
             <div class="m-3">
                 {{#each amenities}}
                 <input type="checkbox" name="amenities" value="{{this.amenities}}">
                 <span class="me-3">{{this.amenities}}</span>
                 {{/each}}
             </div>
-
             <div id="images">
                 <input type="file" id="image1" name="image" required>
                 <input type="file" id="image2" name="image" required>
@@ -123,20 +114,47 @@
                 <input type="file" id="image3" name="image" required>
                 <input type="file" id="image4" name="image" required>
             </div>
+
+            <div id="map" style="height: 400px;"></div> <!-- Add the map container here with a specified height -->
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+
+            <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+            <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css" rel="stylesheet" />
+
+            <script>
+                mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGs1ZHZqejYwZ3RhM2RudDQ0cmE1NDJuIn0.8MByk6wQU2kWJ60t4K0zIg'; // Replace with your Mapbox access token
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [77.2090, 28.6139], // Delhi's longitude and latitude
+                    zoom: 9
+                });
+
+                const marker = new mapboxgl.Marker({
+                    draggable: true
+                }).setLngLat([77.2090, 28.6139]).addTo(map);
+
+                marker.on('dragend', () => {
+                    const lngLat = marker.getLngLat();
+                    document.getElementById('latitude').value = lngLat.lat;
+                    document.getElementById('longitude').value = lngLat.lng;
+                });
+            </script>
+
+
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-
         <div class="image-preview-container mt-4">
             <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
             <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
             <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
             <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
         </div>
-
     </div>
-    {{!--
-</div> --}}
-
+</div>
 
 {{!-- Image preview code --}}
 <script>
@@ -176,30 +194,39 @@
     });
 </script>
 
+
 {{!-- AXIOS --}}
 <script>
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData(event.target);
-        resetError()
+        resetError();
+
+        const latitude = marker.getLngLat().lat;
+        const longitude = marker.getLngLat().lng;
+
+        formData.append('latitude', latitude);
+        formData.append('longitude', longitude);
+
         try {
-            const response = await axios.post('/owner/addhotel', formData)
+            const response = await axios.post('/owner/addhotel', formData);
 
             if (response.status === 200) {
-                window.location.href = '/owner/hotels'
+                window.location.href = '/owner/hotels';
             }
 
         } catch (error) {
 
             if (error.response.status == 400) {
-
                 const errors = error.response.data.error;
 
                 Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key).textContent = errors[key];
+                    let element = document.getElementById(key + 'Error');
+                    if (element) {
+                        element.textContent = errors[key];
+                    }
                 });
-
             }
             else if (error.response.status == 500) {
                 const err = error.response.data.error;
@@ -214,6 +241,7 @@
             }
         }
     };
+
     document.getElementById('registerForm').addEventListener('submit', handleSubmit);
 
     function resetError() {
@@ -222,13 +250,10 @@
             element.textContent = "";
         });
     }
-
-
 </script>
 
-{{!-- new Type --}}
+{{!-- New Type --}}
 <script>
-
     window.addEventListener('DOMContentLoaded', function () {
         var inputFieldContainer = document.getElementById('inputFieldContainer');
         inputFieldContainer.style.display = 'none';
@@ -243,8 +268,6 @@
             }
         });
     });
-
-
 </script>
 
 {{>userFooter}}
