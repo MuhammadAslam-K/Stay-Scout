@@ -35,18 +35,22 @@ const hotelHome = (async (req, res) => {
         req.session.hotelID = id
         const hotel = await propertyFetching.hotel(id)
         const rooms = await propertyFetching.hotelRoom(id)
-
+        console.log(hotel);
         res.render("hotelHome", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
+                    console.log(err);
                     return res.status(500).render("500");
                 }
             }
-            res.render("hotelHome", { hotel, rooms })
+            // res.render("hotelHome", { hotel, rooms })
+            res.render("hotelHome", { hotel, rooms, latitude: hotel.latitude, longitude: hotel.longitude });
+
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500")
     }
 })

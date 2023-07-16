@@ -94,8 +94,6 @@
 {{>userSiteFooter}}
 {{>userFooter}}
 
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet" />
 
 <script>
     // Function to get user's current location
@@ -140,12 +138,11 @@
         style: 'mapbox://styles/mapbox/streets-v11',
         zoom: 14,
         center: [{{ hotel.longitude }}, {{ hotel.latitude }}]
-    });
+  });
 
     // Add a marker for the hotel location
     new mapboxgl.Marker().setLngLat([{{ hotel.longitude }}, {{ hotel.latitude }}]).addTo(map);
 
-    // Event listener for the navigate button
     // Event listener for the navigate button
     document.getElementById('navigateBtn').addEventListener('click', async () => {
         try {
@@ -154,106 +151,14 @@
             const userLatitude = position.coords.latitude;
             const userLongitude = position.coords.longitude;
 
-            // Make a request to Mapbox Directions API
-            const response = await axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${userLongitude},${userLatitude};{{hotel.longitude}},{{hotel.latitude}}?access_token=${mapboxgl.accessToken}`);
-            console.log(response.data)
+            // Generate the navigation URL
+            const navigationUrl = `https://www.mapbox.com/directions/?f=${userLatitude},${userLongitude};t={{hotel.latitude}},{{hotel.longitude}}`;
 
-            // Retrieve the navigation route
-            const route = response.data.routes[0];
-            const navigationPath = route.geometry
-
-            function decodePolyline(polyline) {
-                const poly = [];
-                let index = 0,
-                    len = polyline.length;
-                let lat = 0,
-                    lng = 0;
-
-                while (index < len) {
-                    let b, shift = 0,
-                        result = 0;
-
-                    do {
-                        b = polyline.charAt(index++).charCodeAt(0) - 63;
-                        result |= (b & 0x1f) << shift;
-                        shift += 5;
-                    } while (b >= 0x20);
-
-                    let dlat = (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-                    lat += dlat;
-
-                    shift = 0;
-                    result = 0;
-
-                    do {
-                        b = polyline.charAt(index++).charCodeAt(0) - 63;
-                        result |= (b & 0x1f) << shift;
-                        shift += 5;
-                    } while (b >= 0x20);
-
-                    let dlng = (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-                    lng += dlng;
-
-                    poly.push([lng / 1e5, lat / 1e5]);
-                }
-
-                return poly;
-            }
-            if (navigationPath && navigationPath.length > 0) {
-                // Decode the polyline
-                const decodedPath = decodePolyline(navigationPath);
-
-                // Create a GeoJSON feature with the navigation path
-                const navigationFeature = {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: decodedPath,
-                    },
-                };
-
-                // Remove existing navigation source and layer if they exist
-                if (map.getSource('navigation')) {
-                    map.removeLayer('navigation');
-                    map.removeSource('navigation');
-                }
-
-                // Add the navigation path to the map as a GeoJSON source and layer
-                map.addSource('navigation', {
-                    type: 'geojson',
-                    data: navigationFeature,
-                });
-
-                map.addLayer({
-                    id: 'navigation',
-                    type: 'line',
-                    source: 'navigation',
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round',
-                    },
-                    paint: {
-                        'line-color': '#0074D9',
-                        'line-width': 3,
-                    },
-                });
-
-                // Fit the map to display the entire navigation path
-                const bounds = new mapboxgl.LngLatBounds();
-                decodedPath.forEach((point) => bounds.extend(point));
-                map.fitBounds(bounds, { padding: 50 });
-            } else {
-                console.log('Navigation path is undefined or empty.');
-                alert('Unable to retrieve navigation path. Please try again.');
-            }
+            // Open the navigation URL in a new tab
+            window.open(navigationUrl, '_blank');
         } catch (error) {
-            console.log('Error occurred while getting user location or retrieving navigation:', error);
-            alert(
-                'Unable to get user location or retrieve navigation. Please make sure location access is allowed and try again.'
-            );
+            console.log('Error occurred while getting user location:', error);
+            alert('Unable to get user location. Please make sure location access is allowed.');
         }
     });
-
-
 </script>
