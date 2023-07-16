@@ -1,32 +1,6 @@
 {{>userHeader}}
 {{>navBar2}}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form action="/contact" method="post" class="message-form">
-                <div class="form-group">
-                    <label for="messageTextarea">Message</label>
-                    <textarea class="form-control message-box" id="messageTextarea" rows="8"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <div id="reportFields" style="display: none;">
-                    <div class="form-group">
-                        <label for="hotelNameInput">Hotel Name</label>
-                        <input type="text" class="form-control" id="hotelNameInput">
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <div class="details">
-                <p>Email: stayscout@gmail.com</p>
-                <p>Phone: 1234567981</p>
-                {{!-- <p>Address: Vasantaga Nagar, Hosur, Near Sukkkar HDS</p> --}}
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     .message-form {
@@ -72,6 +46,64 @@
         }
     }
 </style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form id="ContactForm" class="message-form">
+                <div class="form-group">
+                    <label for="messageTextarea">Message</label>
+                    <textarea class="form-control message-box" id="messageTextarea" rows="8" name="message"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <div id="reportFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="hotelNameInput">Hotel Name</label>
+                        <input type="text" class="form-control" id="hotelNameInput">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="details">
+                <p>Email: stayscout@gmail.com</p>
+                <p>Phone: 1234567981</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+
+        try {
+            const response = await axios.post('/contact', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status === 200) {
+                alertify.alert("Submited successfully", function () {
+                    alertify.message('OK');
+                });
+            }
+        } catch (error) {
+            alertify.alert("Something went wrong please try later", function () {
+                alertify.message('OK');
+            });
+        }
+
+    }
+
+    document.getElementById('ContactForm').addEventListener('submit', handleSubmit);
+</script>
 
 
 {{!-- {{>userSiteFooter}} --}}

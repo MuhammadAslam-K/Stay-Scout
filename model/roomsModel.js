@@ -21,15 +21,7 @@ const roomSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    Cancellation: {
-        type: String,
-        require: true,
-    },
     images: [{
-        public_id: {
-            type: String,
-            required: true
-        },
         url: {
             type: String,
             required: true
@@ -72,6 +64,11 @@ const roomSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
+        required: true
+    },
+    Cancellation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cancellation',
         required: true
     },
 })

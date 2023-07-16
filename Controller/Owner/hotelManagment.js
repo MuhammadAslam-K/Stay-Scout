@@ -2,14 +2,14 @@ import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
 import propertyValidation from "../../helper/propertyValidation.js"
 import Type from "../../model/hotelType.js"
-import { ReturnDocument } from "mongodb"
-
+import Amenities from "../../model/hotelAmenities.js"
 
 
 
 const addHotel = (async (req, res) => {
     try {
         const type = await Type.find()
+        const amenities = await Amenities.find()
 
         res.render("addHotel", (err) => {
             if (err) {
@@ -19,7 +19,7 @@ const addHotel = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("addHotel", { type: type })
+            res.render("addHotel", { type, amenities })
         })
     } catch (error) {
         return res.status(500).render("500");
@@ -28,7 +28,6 @@ const addHotel = (async (req, res) => {
 
 
 const submitHotel = (async (req, res) => {
-    // console.log(req.body);
     try {
 
         const files = req.files;
@@ -52,7 +51,8 @@ const submitHotel = (async (req, res) => {
                 hotelImages.push(image);
             }
 
-            const { name, title, startingPrice, type, newtype, city, pincode, description, address } = req.body
+            const { name, title, startingPrice, type, newtype, city, amenities, pincode, description, address } = req.body
+            console.log(req.body)
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -64,7 +64,6 @@ const submitHotel = (async (req, res) => {
             else {
                 typeId = type
             }
-            // const ownerId = "64a2cbca876756d2ce1864bb"
             const hotel = new Hotel({
                 name,
                 title,
@@ -73,13 +72,12 @@ const submitHotel = (async (req, res) => {
                 type: typeId,
                 city,
                 pincode,
+                amenities,
                 address,
                 owner: req.session.owner._id,
-                // owner: ownerId,
                 images: hotelImages
             })
-            console.log(hotel);
-            await hotel.save()
+            const result = await hotel.save()
             return res.send(200).end()
         }
     } catch (error) {
@@ -110,6 +108,8 @@ const editHotel = async (req, res) => {
         req.session.HOTELID = id
         const hotel = await Hotel.findById(id)
         const type = await Type.find()
+        const amenities = await Amenities.find()
+
 
         res.render("editHotel", (err) => {
             if (err) {
@@ -119,7 +119,7 @@ const editHotel = async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("editHotel", { hotel, type })
+            res.render("editHotel", { hotel, type, amenities })
         })
     } catch (error) {
         return res.status(500).render("500");
@@ -131,8 +131,10 @@ const updateHotel = (async (req, res) => {
 
     try {
         const id = req.session.HOTELID
+        const hotel = await Hotel.findById(id)
         const files = req.files
         const hotelImages = []
+        const amenities = []
         const oldImages = req.body.selectedImages
 
         const valid = propertyValidation.hotelValidation(req.body)
@@ -160,11 +162,8 @@ const updateHotel = (async (req, res) => {
             });
             const images = [...hotelImages, ...convertedArray]
 
-            // console.log(images)
-
-            const hotel = await Hotel.findById(id)
-
-            const { name, title, startingPrice, type, newtype, city, pincode, description, address } = req.body
+            console.log(req.body);
+            const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address } = req.body
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -177,6 +176,13 @@ const updateHotel = (async (req, res) => {
                 typeId = type
             }
 
+            if (newAmenities) {
+                amenities = [...oldAmenities, ...newAmenities]
+            }
+            else {
+                amenities = [...oldAmenities]
+            }
+
             hotel.name = name
             hotel.title = title
             hotel.startingPrice = startingPrice
@@ -184,7 +190,9 @@ const updateHotel = (async (req, res) => {
             hotel.pincode = pincode
             hotel.description = description
             hotel.address = address
+            hotel.type = typeId
             hotel.images = images
+            hotel.amenities = amenities
 
             await hotel.save()
             return res.status(200).end()

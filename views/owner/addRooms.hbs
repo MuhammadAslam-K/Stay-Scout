@@ -84,22 +84,19 @@
                         <input type="text" id="newInputField" name="newCatgory" placeholder="Enter a new Type">
                     </div>
                 </div>
-            </div>
 
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label for="description">Cancellation</label>
-                    <textarea id="description" class="form-control" name="Cancellation"
-                        style="height: 50px; resize: vertical;"></textarea>
-                    <span id="CancellationError" class="text-danger error-msg"></span>
+
+                <div class="form-group col-md-3">
+
+                    <select id="dropdownSelect" class="form-group col-md-6" name="Cancellation">
+                        <option value="" disabled selected>Select Cancellation Policy</option>
+                        {{#each cancellation}}
+                        <option value="{{this._id}}">{{this.cancellation}}</option>
+                        {{/each}}
+                    </select>
+
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label for="description">Amenities</label>
-                    <textarea id="amenities" class="form-control" name="amenities"
-                        style="height: 50px; resize: vertical;"></textarea>
-                    <span id="amenitiesError" class="text-danger error-msg"></span>
-                </div>
             </div>
 
             <div class="form-row m-4">
@@ -109,6 +106,13 @@
                         style="height: 150px; resize: vertical;"></textarea>
                     <span id="descriptionError" class="text-danger error-msg"></span>
                 </div>
+            </div>
+
+            <div class="m-3">
+                {{#each amenities}}
+                <input type="checkbox" name="amenities" value="{{this.amenities}}">
+                <span class="me-3">{{this.amenities}}</span>
+                {{/each}}
             </div>
 
             <div id="images">
@@ -221,7 +225,7 @@
 
     </script>
 
-    {{!-- new Type --}}
+    {{!-- new Category --}}
     <script>
 
         window.addEventListener('DOMContentLoaded', function () {

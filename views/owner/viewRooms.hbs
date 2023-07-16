@@ -24,10 +24,10 @@
                                         <tr>
                                             <th>Hotel Name</th>
                                             <th>Category</th>
-                                            <th>No of Rooms</th>
                                             <th>Boosted</th>
                                             <th>Is Blocked</th>
                                             <th>Is Available</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -35,7 +35,6 @@
                                         <tr>
                                             <td>{{this.hotel.name}}</td>
                                             <td>{{this.category.name}}</td>
-                                            <td>{{this.noOfRooms}}</td>
                                             <td>{{this.booste}}</td>
                                             <td>{{this.is_block}}</td>
 
@@ -55,6 +54,10 @@
                                                 </div>
                                             </td>
                                             {{/if}}
+                                            <td>
+                                                <a href="/owner/room/edit?id={{this._id}}"
+                                                    class="btn btn-block btn-primary">Edit</a>
+                                            </td>
                                         </tr>
                                         {{/each}}
                                     </tbody>

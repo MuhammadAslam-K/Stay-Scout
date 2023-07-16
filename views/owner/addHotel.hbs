@@ -109,6 +109,13 @@
                 </div>
             </div>
 
+            <div class="m-3">
+                {{#each amenities}}
+                <input type="checkbox" name="amenities" value="{{this.amenities}}">
+                <span class="me-3">{{this.amenities}}</span>
+                {{/each}}
+            </div>
+
             <div id="images">
                 <input type="file" id="image1" name="image" required>
                 <input type="file" id="image2" name="image" required>
@@ -116,7 +123,6 @@
                 <input type="file" id="image3" name="image" required>
                 <input type="file" id="image4" name="image" required>
             </div>
-
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 

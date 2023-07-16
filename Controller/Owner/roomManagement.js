@@ -1,16 +1,19 @@
 import Rooms from "../../model/roomsModel.js";
 import Category from "../../model/roomCategory.js";
+import roomAmenities from "../../model/roomAmenities.js"
 import propertyValidation from "../../helper/propertyValidation.js"
 import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js";
 import propertyFetching from "../../helper/propertyFetching.js";
+import Cancellation from "../../model/cancellation.js"
+
 
 
 const addRoom = (async (req, res) => {
     const category = await Category.find()
-    // console.log(category)
+    const amenities = await roomAmenities.find()
+    const cancellation = await Cancellation.find()
     req.session.hotelId = req.query.id
-    // req.session.hotelId = "64a912cc3025e79ba23d0e54"
 
     try {
         res.render("addRooms", (err) => {
@@ -21,7 +24,7 @@ const addRoom = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("addRooms", { category })
+            res.render("addRooms", { category, amenities, cancellation })
         })
     } catch (error) {
         return res.status(500).render("500");
@@ -31,11 +34,8 @@ const addRoom = (async (req, res) => {
 
 const submitRoom = (async (req, res) => {
     try {
-        console.log(24);
         const id = req.session.hotelId
-        // const id = "64aba37982494a3e05886cbd"
         const hotel = await Hotel.findById(id)
-        console.log(hotel);
         const files = req.files;
         const roomImages = [];
         const h = false
@@ -56,7 +56,6 @@ const submitRoom = (async (req, res) => {
                 });
 
                 const image = {
-                    public_id: result.public_id,
                     url: result.secure_url
                 };
 
@@ -76,9 +75,7 @@ const submitRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
-            // console.log(60)
-            // const hotelId = "64aba37982494a3e05886cbd"
-            // const ownerId = "64a2cbca876756d2ce1864bb"
+
             const room = new Rooms({
                 price,
                 adults,
@@ -89,10 +86,8 @@ const submitRoom = (async (req, res) => {
                 amenities,
                 images: roomImages,
                 category: categoryId,
-                // hotel: hotelId,
                 hotel: req.session.hotelId,
                 owner: req.session.owner._id,
-                // owner: ownerId,
             })
 
             hotel.rooms += noOfRooms
@@ -109,7 +104,6 @@ const submitRoom = (async (req, res) => {
 
 
 const viewRooms = async (req, res) => {
-    // const id = "64a2cbca876756d2ce1864bb";
     const id = req.session.owner._id
     try {
         const rooms = await propertyFetching.room(id, 0, 0, false)
@@ -139,7 +133,6 @@ const blockRoom = (async (req, res) => {
 
         room.is_Available = !room.is_Available
         await room.save()
-        // res.redirect("/owner/rooms")
         res.status(200).end()
 
     } catch (error) {
@@ -149,9 +142,112 @@ const blockRoom = (async (req, res) => {
 })
 
 
+const editRoom = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        req.session.roomID = id
+        const room = await Rooms.findOne({ _id: id });
+        const category = await Category.find()
+        const amenities = await roomAmenities.find()
+        const cancellation = await Cancellation.find()
+        res.render("editRoom", { room, category, amenities, cancellation })
+
+    } catch (error) {
+        console.log(error)
+        res.render("500")
+    }
+})
+
+
+const updateRoom = (async (req, res) => {
+
+    try {
+        const id = req.session.roomID
+        const room = await Rooms.findOne({ _id: id })
+        const files = req.files;
+        const roomImages = [];
+        const amenities = []
+        const oldImages = req.body.selectedImages
+
+        const h = false
+        // const valid = propertyValidation.roomValidation(req.body)
+
+        // if (!valid.isValid) {
+        //     console.log(30);
+        //     return res.status(400).json({ error: valid.errors })
+        // }
+        if (h == true) {
+            console.log(3);
+        }
+        else {
+            for (const file of files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: "Rooms"
+                });
+
+                const image = {
+                    url: result.secure_url
+                };
+
+                roomImages.push(image);
+            }
+
+            const convertedArray = oldImages.map((urlString) => {
+                const url = urlString.split(':')[1].trim();
+                return { url };
+            });
+            const images = [...roomImages, ...convertedArray]
+
+            const { price, adults, childrents, oldAmenities, newAmenities, Cancellation, bed, category, newCatgory, description } = req.body
+
+            let categoryId
+            if (category == "new" && newCatgory) {
+                const newCategoryData = new Category({
+                    name: newCatgory
+                })
+                const savedCategory = await newCategoryData.save()
+                categoryId = savedCategory._id
+            }
+            else {
+                categoryId = category
+            }
+
+            if (newAmenities) {
+                amenities = [...oldAmenities, ...newAmenities]
+            }
+            else {
+                amenities = [...oldAmenities]
+            }
+
+            room.price = price
+            room.adults = adults
+            room.childrents = childrents
+            room.bed = bed
+            room.Cancellation = Cancellation
+            room.description = description
+            room.amenities = amenities
+            room.images = images
+            room.category = categoryId
+
+            await room.save()
+            return res.send(200).end()
+        }
+
+    } catch (error) {
+        res.render("500")
+    }
+
+})
+
+
+
 export default {
     addRoom,
     submitRoom,
     viewRooms,
+
     blockRoom,
+    editRoom,
+    updateRoom,
 }

@@ -29,93 +29,89 @@
 <div id="content-wrapper" class="justify-content-center m-5">
     <div id="content">
         <form id="updateForm" enctype="multipart/form-data">
-            <input type="text" name="id" value="{{hotel._id}}" style="display: none;">
-            <div class="form-row m-4 ">
-                <div class="form-group col-md-6">
-                    <label>Name of the Hotel</label>
-                    <input type="text" class="form-control" name="name" value="{{hotel.name}}">
-                    <span id="nameError" class="text-danger error-msg"></span>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>Title (max 10 words)</label>
-                    <input type="text" class="form-control" name="title" value="{{hotel.title}}">
-                    <span id="titleError" class="text-danger error-msg"></span>
-                </div>
-            </div>
+            <input type="text" name="id" value="{{room._id}}" style="display: none;">
             <div class="form-row m-4">
                 <div class="form-group col-md-6">
-                    <label>Starting Price of the Room</label>
-                    <input type="tel" class="form-control" name="startingprice" value="{{hotel.startingPrice}}">
+                    <label>Price</label>
+                    <input type="text" class="form-control" name="price" value="{{room.price}}">
                     <span id="priceError" class="text-danger error-msg"></span>
                 </div>
 
-                <div class="dropdown form-group col-md-3">
-                    <select id="dropdownSelect" class="form-group col-md-6" name="type">
+                <div class="form-group col-md-3">
+                    <label>Max Adults</label>
+                    <input type="tel" class="form-control" name="adults" value="{{room.adults}}">
+                    <span id="adultsError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Max Childrents</label>
+                    <input type="tel" class="form-control" name="kids" value="{{room.childrents}}">
+                    <span id="childrentsError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-4">
+                    <label>Bed Type</label>
+                    <input type="text" class="form-control" name="bed" value="{{room.bed}}">
+                    <span id="bedError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="dropdown form-group col-md-4">
+                    <select id="dropdownSelect" class="form-group col-md-6" name="category">
                         <option value="" disabled selected>Select Category</option>
-                        {{#each type}}
+                        {{#each category}}
                         <option value="{{this._id}}">{{this.name}}</option>
                         {{/each}}
                         <option value="new">New</option>
                     </select>
 
                     <div id="inputFieldContainer">
-                        <input type="text" id="newInputField" name="newtype" placeholder="Enter a new Type">
+                        <input type="text" id="newInputField" name="newCatgory" placeholder="Enter a new Type">
                     </div>
                 </div>
 
-
-            </div>
-
-            <div class="form-row m-4">
-                <div class="form-group col-md-6">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="city" value="{{hotel.city}}">
-                    <span id="cityError" class="text-danger error-msg"></span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" name="pincode" value="{{hotel.pincode}}">
-                    <span id="pincodeError" class="text-danger error-msg"></span>
+                <div class="dropdown form-group col-md-4">
+                    <select id="dropdownSelect" class="form-group col-md-6" name="Cancellation">
+                        <option value="" disabled selected>Select Category</option>
+                        {{#each cancellation}}
+                        <option value="{{this._id}}">{{this.cancellation}}</option>
+                        {{/each}}
+                        <option value="new">New</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-row m-4">
+
                 <div class="form-group col-md-6">
-                    <label for="description">Description....</label>
+                    <label for="description">Rooms Description</label>
                     <textarea id="description" class="form-control" name="description"
-                        style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
+                        style="height: 150px; resize: vertical;">{{room.description}}</textarea>
                     <span id="descriptionError" class="text-danger error-msg"></span>
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label for="description">Address</label>
-                    <textarea id="address" class="form-control" name="address"
-                        style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
-                    <span id="addressError" class="text-danger error-msg"></span>
+                <div class="m-3">
+                    <p>Available Amenities</p>
+                    {{#each room.amenities}}
+                    <input type="checkbox" name="oldAmenities" value="{{this}}">
+                    <span class="me-3">{{this}}</span>
+                    {{/each}}
+                </div>
+
+                <div class="m-3">
+                    <p>Add More</p>
+                    {{#each amenities}}
+                    <input type="checkbox" name="newAmenities" value="{{this.amenities}}">
+                    <span class="me-3">{{this.amenities}}</span>
+                    {{/each}}
                 </div>
             </div>
-
     </div>
 
-    <div class="m-3">
-        <p>Available Amenities</p>
-        {{#each hotel.amenities}}
-        <input type="checkbox" name="oldAmenities" value="{{this}}">
-        <span class="me-3">{{this}}</span>
-        {{/each}}
-    </div>
 
-    <div class="m-3">
-        <p>Add More</p>
-        {{#each amenities}}
-        <input type="checkbox" name="newAmenities" value="{{this.amenities}}">
-        <span class="me-3">{{this.amenities}}</span>
-        {{/each}}
-    </div>
 
     <div class="image-preview-container">
-        {{#each hotel.images}}
+        {{#each room.images}}
         <div>
             <img class="image-preview" src="{{this.url}}" alt="Image Preview">
             <input type="checkbox" name="selectedImages" value="{{this.url}}">
@@ -143,7 +139,7 @@
         try {
             const formData = new FormData(event.target)
 
-            const response = await axios.post('/owner/hotel/edit', formData);
+            const response = await axios.post('/owner/room/edit', formData);
             // Handle the response from the server as needed
         } catch (error) {
             alert(error)
@@ -155,8 +151,7 @@
     document.getElementById('updateForm').addEventListener('submit', handleSubmit);
 </script>
 
-
-{{!-- NEW TYPE --}}
+{{!-- NEW CATEGORY --}}
 
 <script>
 
@@ -177,6 +172,7 @@
 
 
 </script>
+
 
 <script>
     const errorMessage = "{{errorMessage}}";

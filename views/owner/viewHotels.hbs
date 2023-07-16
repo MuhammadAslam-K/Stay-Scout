@@ -177,9 +177,9 @@
                 // Handle the response here, if needed
                 const availabilityButton = document.getElementById('availabilityButton' + hotelId);
                 if (availabilityStatus) {
-                    availabilityButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleAvailability(\'' + hotelId + '\', false)">Available</button>';
+                    availabilityButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleAvailability(\'' + hotelId + '\', false)">Available</button>';
                 } else {
-                    availabilityButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleAvailability(\'' + hotelId + '\', true)">Not Available</button>';
+                    availabilityButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleAvailability(\'' + hotelId + '\', true)">Not Available</button>';
                 }
             })
             .catch(function (error) {
