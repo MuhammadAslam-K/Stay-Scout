@@ -35,8 +35,8 @@ const submitHotel = (async (req, res) => {
         const hotelImages = [];
         const valid = propertyValidation.hotelValidation(req.body)
 
+        console.log(valid);
         if (!valid.isValid) {
-
             return res.status(400).json({ error: valid.errors })
         } else {
 
@@ -53,7 +53,7 @@ const submitHotel = (async (req, res) => {
             }
 
             const { name, title, startingPrice, type, newtype, city, amenities, latitude, longitude, pincode, description, address } = req.body
-            console.log(req.body)
+
             const latitudeData = parseFloat(latitude[0]);
             const longitudeData = parseFloat(longitude[0]);
             let typeId
@@ -67,6 +67,7 @@ const submitHotel = (async (req, res) => {
             else {
                 typeId = type
             }
+            console.log(70);
             const hotel = new Hotel({
                 name,
                 title,
@@ -83,9 +84,11 @@ const submitHotel = (async (req, res) => {
                 images: hotelImages
             })
             const result = await hotel.save()
+            console.log(result);
             return res.send(200).end()
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
     }
 })
@@ -102,6 +105,7 @@ const blockHotel = (async (req, res) => {
         res.send(200).end()
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -127,25 +131,26 @@ const editHotel = async (req, res) => {
             res.render("editHotel", { hotel, type, amenities })
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 }
 
 
 const updateHotel = (async (req, res) => {
-
+    console.log(141);
     try {
         const id = req.session.HOTELID
         const hotel = await Hotel.findById(id)
         const files = req.files
         const hotelImages = []
-        const amenities = []
+        let amenities = []
         const oldImages = req.body.selectedImages
-
+        console.log(req.body);
         const valid = propertyValidation.hotelValidation(req.body)
-        let h = true
-        if (h == false) {
 
+        console.log(valid);
+        if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
         }
         else {
@@ -161,14 +166,12 @@ const updateHotel = (async (req, res) => {
                 hotelImages.push(image);
             }
 
-            const convertedArray = oldImages.map((urlString) => {
-                const url = urlString.split(':')[1].trim();
-                return { url };
-            });
-            const images = [...hotelImages, ...convertedArray]
+
+            const images = hotelImages.concat(oldImages.map((url) => ({ url })));
 
             console.log(req.body);
             const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address } = req.body
+
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -182,7 +185,7 @@ const updateHotel = (async (req, res) => {
             }
 
             if (newAmenities) {
-                amenities = [...oldAmenities, ...newAmenities]
+                amenities = [...oldAmenities, newAmenities]
             }
             else {
                 amenities = [...oldAmenities]
@@ -199,10 +202,12 @@ const updateHotel = (async (req, res) => {
             hotel.images = images
             hotel.amenities = amenities
 
-            await hotel.save()
+            const reu = await hotel.save()
+            console.log(reu);
             return res.status(200).end()
         }
     } catch (error) {
+        console.log(error);
         res.render("500")
     }
 
@@ -222,5 +227,4 @@ export default {
     blockHotel,
     editHotel,
     updateHotel,
-
 }

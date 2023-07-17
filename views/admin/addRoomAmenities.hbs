@@ -13,11 +13,12 @@
                 <div class="container">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 font-weight-bold text-primary">Rooms</h4>
+                            <h4 class="m-0 font-weight-bold text-primary">Room Amenities</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <button class="btn btn-primary btn-add-amenity">Add</button>
+                                <span id="Error" class="text-danger"></span>
                                 <div class="add-amenities-row" style="display: none;">
                                     <input type="text" class="form-control" placeholder="Amenities Name">
                                     <button class="btn btn-success btn-submit" type="button">Submit</button>
@@ -160,11 +161,8 @@
                     })
                     .catch(function (error) {
                         if (error.response.status === 400) {
-                            const errorMessage = error.response.data.error;
+                            document.getElementById('Error').textContent = "The Amenitie already Exists"
 
-                            alertify.alert(errorMessage, function () {
-                                alertify.message('OK');
-                            });
                         } else {
                             alertify.alert("Something went wrong", function () {
                                 alertify.message('OK');

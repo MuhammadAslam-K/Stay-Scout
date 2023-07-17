@@ -40,7 +40,6 @@ const blockRoom = (async (req, res) => {
 
         room.is_block = !room.is_block
         await room.save()
-
         const hotelId = req.session.adminHotelId
 
         const category = await Category.find()
@@ -59,11 +58,32 @@ const blockRoom = (async (req, res) => {
         })
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 
 })
 
+
+const roomBoosting = async (req, res) => {
+
+    const id = req.query.id
+    const boostValue = req.body.boost
+
+    try {
+        const updatedRoom = await Rooms.findByIdAndUpdate(
+            id,
+            { booste: boostValue },
+            { new: true }
+        );
+
+        return res.json(updatedRoom);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to update boost value' });
+    }
+
+}
 
 
 
@@ -71,4 +91,5 @@ const blockRoom = (async (req, res) => {
 export default {
     ownerRooms,
     blockRoom,
+    roomBoosting,
 }

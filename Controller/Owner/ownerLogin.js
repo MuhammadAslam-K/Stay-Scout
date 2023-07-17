@@ -23,6 +23,7 @@ const login = ((req, res) => {
             res.render("ownerLogin")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -61,6 +62,7 @@ const loginVerify = (async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error);
         return res.status(401).json({ error: "Internal Server error please try agin later" })
     }
 })
@@ -73,6 +75,7 @@ const logout = ((req, res) => {
         res.redirect("/owner")
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })

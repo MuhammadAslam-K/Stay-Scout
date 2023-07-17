@@ -44,7 +44,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label>Max Childrents</label>
-                    <input type="tel" class="form-control" name="kids" value="{{room.childrents}}">
+                    <input type="tel" class="form-control" name="childrents" value="{{room.childrents}}">
                     <span id="childrentsError" class="text-danger error-msg"></span>
                 </div>
             </div>
@@ -72,7 +72,7 @@
 
                 <div class="dropdown form-group col-md-4">
                     <select id="dropdownSelect" class="form-group col-md-6" name="Cancellation">
-                        <option value="" disabled selected>Select Category</option>
+                        <option value="" disabled selected>Select cancellation</option>
                         {{#each cancellation}}
                         <option value="{{this._id}}">{{this.cancellation}}</option>
                         {{/each}}
@@ -140,10 +140,27 @@
             const formData = new FormData(event.target)
 
             const response = await axios.post('/owner/room/edit', formData);
-            // Handle the response from the server as needed
+            if (response.status === 200) {
+                Notification()
+                function Notification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Room updated Successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
+                }
+                window.location.href = '/owner/rooms'
+            }
         } catch (error) {
-            alert(error)
-            // Handle any errors
+
+            if (error.response.status == 400) {
+                const errors = error.response.data.error;
+                Object.keys(errors).forEach((key) => {
+                    let element = document.getElementById(key).textContent = errors[key];
+                });
+            }
         }
     };
 

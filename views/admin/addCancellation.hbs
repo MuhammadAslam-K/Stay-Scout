@@ -18,6 +18,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <button class="btn btn-primary btn-add-amenity">Add</button>
+                                <span id="Error" class="text-danger"></span>
                                 <div class="add-cancellation-row" style="display: none;">
                                     <input type="text" class="form-control" placeholder="cancellation Name">
                                     <button class="btn btn-success btn-submit" type="button">Submit</button>
@@ -160,11 +161,8 @@
                     })
                     .catch(function (error) {
                         if (error.response.status === 400) {
-                            const errorMessage = error.response.data.error;
+                            document.getElementById('Error').textContent = "This Cancellation policy already exists"
 
-                            alertify.alert(errorMessage, function () {
-                                alertify.message('OK');
-                            });
                         } else {
                             alertify.alert("Something went wrong", function () {
                                 alertify.message('OK');

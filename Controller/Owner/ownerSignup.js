@@ -19,6 +19,7 @@ const signUp = ((req, res) => {
             res.render("ownerSignup")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -30,8 +31,8 @@ let ownerOtp = []
 
 const signupValidate = async (req, res) => {
     try {
-
-        const { name, email, phone, password, password2, upi } = req.body
+        console.log(req.body);
+        const { name, email, phone, password } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
         const valid = Signup_functions.validate(req.body)
@@ -56,10 +57,11 @@ const signupValidate = async (req, res) => {
                 phone,
                 password,
             }
-
+            console.log(60);
             return res.status(200).end()
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 }
@@ -67,6 +69,7 @@ const signupValidate = async (req, res) => {
 
 const enterOtp = async (req, res) => {
     try {
+        console.log(req.session.ownerDetails);
         const email = req.session.ownerDetails.email
         const generateOtp = Signup_functions.generateOTP()
 
@@ -82,8 +85,10 @@ const enterOtp = async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
+            res.render("ownerOtp")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 }
@@ -132,6 +137,7 @@ const verifyOtp = async (req, res) => {
             return res.status(400).json({ error: "Invalid OTP" })
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 };

@@ -46,7 +46,7 @@
             <div class="form-row m-4">
                 <div class="form-group col-md-6">
                     <label>Starting Price of the Room</label>
-                    <input type="tel" class="form-control" name="startingprice" value="{{hotel.startingPrice}}">
+                    <input type="tel" class="form-control" name="startingPrice" value="{{hotel.startingPrice}}">
                     <span id="priceError" class="text-danger error-msg"></span>
                 </div>
 
@@ -146,8 +146,13 @@
             const response = await axios.post('/owner/hotel/edit', formData);
             // Handle the response from the server as needed
         } catch (error) {
-            alert(error)
-            // Handle any errors
+            console.log(error)
+            if (error.response.status == 400) {
+                const errors = error.response.data.error;
+                Object.keys(errors).forEach((key) => {
+                    let element = document.getElementById(key).textContent = errors[key];
+                });
+            }
         }
     };
 

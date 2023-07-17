@@ -54,7 +54,6 @@ const profile_edit = async (req, res) => {
         const { name, email, phone } = req.body;
         const id = req.session.user._id;
         const valid = Signup_functions.profile_edit(req.body)
-
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
         }

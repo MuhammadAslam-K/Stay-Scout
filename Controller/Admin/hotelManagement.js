@@ -42,10 +42,29 @@ const blockHotel = (async (req, res) => {
 
 })
 
+const hotelBoosting = async (req, res) => {
 
+    const id = req.query.id
+    const boostValue = req.body.boost
+
+    try {
+        const updatedHotel = await Hotel.findByIdAndUpdate(
+            id,
+            { booste: boostValue },
+            { new: true }
+        );
+
+        return res.json(updatedHotel);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to update boost value' });
+    }
+
+}
 
 
 export default {
     ownerHotels,
     blockHotel,
+    hotelBoosting
 }

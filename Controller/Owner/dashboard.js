@@ -16,6 +16,7 @@ const dashboard = ((req, res) => {
             res.render("ownerDashboard")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -39,6 +40,7 @@ const viewHotels = (async (req, res) => {
             res.render("viewHotels", { hotel })
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })

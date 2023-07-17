@@ -194,6 +194,7 @@
     });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
 {{!-- AXIOS --}}
 <script>
@@ -213,19 +214,26 @@
             const response = await axios.post('/owner/addhotel', formData);
 
             if (response.status === 200) {
-                window.location.href = '/owner/hotels';
+                Notification()
+                function Notification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Hotel Added Successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
+                }
+                window.location.href = '/owner/hotels'
+
             }
 
         } catch (error) {
-
+            console.log(error)
             if (error.response.status == 400) {
                 const errors = error.response.data.error;
-
                 Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key + 'Error');
-                    if (element) {
-                        element.textContent = errors[key];
-                    }
+                    let element = document.getElementById(key).textContent = errors[key];
                 });
             }
             else if (error.response.status == 500) {

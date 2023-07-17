@@ -184,9 +184,18 @@
             resetError()
             try {
                 const response = await axios.post('/owner/hotel/addrooms', formData)
-
                 if (response.status === 200) {
-                    window.location.href = '/owner/hotels'
+                    Notification()
+                    function Notification() {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Hotel Added Successfully",
+                            showConfirmButton: true,
+                            confirmButtonColor: "#00A300",
+                        });
+                    }
+                    window.location.href = '/owner/rooms'
                 }
 
             } catch (error) {

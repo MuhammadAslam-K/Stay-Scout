@@ -1,6 +1,26 @@
 {{>userHeader}}
 {{>dashbordSide}}
 
+<style>
+    <style>.boost-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .boost-arrow {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .boost-value {
+        margin: 0 10px;
+    }
+</style>
+
+
+
+
 <body id="page-top">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
@@ -21,6 +41,7 @@
                                             <th>Name</th>
                                             <th>Total Revenue</th>
                                             <th>No of Rooms</th>
+                                            <th>Boost</th>
                                             <th>Type</th>
                                             <th>Is Available</th>
                                             <th>Block</th>
@@ -33,6 +54,19 @@
                                             <td>{{this.name}}</td>
                                             <td>{{this.revenue}}</td>
                                             <td>{{this.rooms}}</td>
+                                            {{!-- <td>{{this.booste}}</td> --}}
+                                            <td>
+                                                <div class="boost-container">
+                                                    <button class="boost-arrow increment"
+                                                        onclick="changeBoost('{{this._id}}', 'increment')">&#9650;</button>
+                                                    <span id="boostValue{{this._id}}"
+                                                        class="boost-value">{{this.booste}}</span>
+                                                    <button class="boost-arrow decrement"
+                                                        onclick="changeBoost('{{this._id}}', 'decrement')">&#9660;</button>
+                                                </div>
+                                            </td>
+
+
                                             <td>{{this.type.name}}</td>
                                             <td>{{this.is_Available}}</td>
                                             <td>
@@ -103,4 +137,39 @@
     }
 
 
+</script>
+
+<script>
+    // ...
+
+    function changeBoost(hotelId, action) {
+        event.preventDefault();
+        const boostValueElement = document.getElementById('boostValue' + hotelId);
+        let boostValue = parseInt(boostValueElement.innerHTML);
+
+        if (action === 'increment') {
+            boostValue++;
+        } else if (action === 'decrement') {
+            if (boostValue > 0) {
+                boostValue--;
+            }
+        }
+
+        axios.post('/admin/hotel/boost?id=' + hotelId, {
+            boost: boostValue
+        })
+
+            .then(function (response) {
+                // Handle the response here, if needed
+                boostValueElement.innerHTML = boostValue;
+            })
+            .catch(function (error) {
+                console.log(error);
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+            });
+    }
+
+    // ...
 </script>

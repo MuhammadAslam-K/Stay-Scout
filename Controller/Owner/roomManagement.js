@@ -27,6 +27,7 @@ const addRoom = (async (req, res) => {
             res.render("addRooms", { category, amenities, cancellation })
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 
@@ -39,14 +40,11 @@ const submitRoom = (async (req, res) => {
         const files = req.files;
         const roomImages = [];
         const h = false
-        // const valid = propertyValidation.roomValidation(req.body)
-
-        // if (!valid.isValid) {
-        //     console.log(30);
-        //     return res.status(400).json({ error: valid.errors })
-        // }
-        if (h == true) {
-            console.log(3);
+        const valid = propertyValidation.roomValidation(req.body)
+        console.log(valid);
+        if (!valid.isValid) {
+            console.log(30);
+            return res.status(400).json({ error: valid.errors })
         }
         else {
             console.log(33);
@@ -90,13 +88,15 @@ const submitRoom = (async (req, res) => {
                 owner: req.session.owner._id,
             })
 
-            hotel.rooms += noOfRooms
+            hotel.rooms += 1
+            console.log(hotel.rooms)
             await hotel.save()
             await room.save()
             return res.send(200).end()
         }
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server error please try again later" })
     }
 
@@ -121,6 +121,7 @@ const viewRooms = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 };
@@ -136,6 +137,7 @@ const blockRoom = (async (req, res) => {
         res.status(200).end()
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 
@@ -161,24 +163,20 @@ const editRoom = (async (req, res) => {
 
 
 const updateRoom = (async (req, res) => {
-
+    console.log(166);
     try {
+        console.log(req.body);
         const id = req.session.roomID
         const room = await Rooms.findOne({ _id: id })
         const files = req.files;
         const roomImages = [];
-        const amenities = []
+        let amenities = []
         const oldImages = req.body.selectedImages
-
-        const h = false
-        // const valid = propertyValidation.roomValidation(req.body)
-
-        // if (!valid.isValid) {
-        //     console.log(30);
-        //     return res.status(400).json({ error: valid.errors })
-        // }
-        if (h == true) {
-            console.log(3);
+        const valid = propertyValidation.roomValidation(req.body)
+        console.log(valid);
+        if (!valid.isValid) {
+            console.log(180);
+            return res.status(400).json({ error: valid.errors })
         }
         else {
             for (const file of files) {
@@ -192,12 +190,10 @@ const updateRoom = (async (req, res) => {
 
                 roomImages.push(image);
             }
+            console.log(194);
 
-            const convertedArray = oldImages.map((urlString) => {
-                const url = urlString.split(':')[1].trim();
-                return { url };
-            });
-            const images = [...roomImages, ...convertedArray]
+            const images = roomImages.concat(oldImages.map((url) => ({ url })));
+
 
             const { price, adults, childrents, oldAmenities, newAmenities, Cancellation, bed, category, newCatgory, description } = req.body
 
@@ -212,9 +208,9 @@ const updateRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
-
+            console.log(214);
             if (newAmenities) {
-                amenities = [...oldAmenities, ...newAmenities]
+                amenities = [...oldAmenities, newAmenities]
             }
             else {
                 amenities = [...oldAmenities]
@@ -230,11 +226,14 @@ const updateRoom = (async (req, res) => {
             room.images = images
             room.category = categoryId
 
-            await room.save()
+            const resu = await room.save()
+            console.log(resu);
+            console.log(232);
             return res.send(200).end()
         }
 
     } catch (error) {
+        console.log(error);
         res.render("500")
     }
 

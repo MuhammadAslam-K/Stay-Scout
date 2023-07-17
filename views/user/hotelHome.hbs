@@ -17,7 +17,7 @@
         <div class="col-lg-5 order-lg-2">
             <!-- Check-in form -->
             <div class="col-md-8 offset-md-2" data-aos="fade-up">
-                <form id="checkin">
+                <form id="checkin" class="mb-5 ">
                     <!-- Form inputs -->
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
@@ -29,6 +29,9 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                 </form>
+                {{#each hotel.amenities}}
+                <p>{{this}}</p>
+                {{/each}}
             </div>
         </div>
         <div class="col-lg-7 order-lg-1">
@@ -48,7 +51,8 @@
             </div>
             <div class="home_title h1 my-4">{{hotel.name}}</div>
             <p class="mb-4">{{hotel.description}}</p>
-            <h4 class="mb-4">Location: {{hotel.address}}</h4>
+
+            <h4 class="my-4">Location: {{hotel.address}}</h4>
             <button id="navigateBtn" class="btn btn-primary">Navigate <i
                     class="fas fa-map-marker-alt ml-2"></i></button>
         </div>
@@ -71,13 +75,13 @@
                 </div>
             </div>
         </div>
-        <!-- Room description -->
+
         <div class="description-container1">
             <h5 class="bed-type">Bed Type: {{this.bed}}</h5>
             <p class="amenities">Amenities: {{this.amenities}}</p>
             <p class="cancellation">Cancellation: {{this.Cancellation}}</p>
         </div>
-        <!-- Booking details -->
+
         <div class="booking-container1 d-flex align-items-center">
             <h5 class="rooms-left">Rooms left: {{this.noOfRooms}}</h5>
             <h5 class="price">Starts From RS{{this.price}}</h5>

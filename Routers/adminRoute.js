@@ -41,10 +41,12 @@ admin_route.post("/owners/block", ownerManagement.blockowner)
 /////////HOTELS////////
 admin_route.get("/owner/hotels", hotelManagement.ownerHotels)
 admin_route.post("/hotel/block", hotelManagement.blockHotel)
+admin_route.post("/hotel/boost", hotelManagement.hotelBoosting)
 
 ////////ROOMS///////////
 admin_route.get("/owner/hotel/rooms", roomManagement.ownerRooms)
 admin_route.post("/owner/hotel/room/edit", roomManagement.blockRoom)
+admin_route.post("/room/boost", roomManagement.roomBoosting)
 
 
 ///////////////HOTEL Amenities///////////
