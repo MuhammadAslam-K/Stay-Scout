@@ -39,15 +39,12 @@ const submitRoom = (async (req, res) => {
         const hotel = await Hotel.findById(id)
         const files = req.files;
         const roomImages = [];
-        const h = false
         const valid = propertyValidation.roomValidation(req.body)
-        console.log(valid);
+
         if (!valid.isValid) {
-            console.log(30);
             return res.status(400).json({ error: valid.errors })
         }
         else {
-            console.log(33);
             for (const file of files) {
                 const result = await cloudinary.uploader.upload(file.path, {
                     folder: "Rooms"
@@ -163,9 +160,7 @@ const editRoom = (async (req, res) => {
 
 
 const updateRoom = (async (req, res) => {
-    console.log(166);
     try {
-        console.log(req.body);
         const id = req.session.roomID
         const room = await Rooms.findOne({ _id: id })
         const files = req.files;
@@ -173,9 +168,8 @@ const updateRoom = (async (req, res) => {
         let amenities = []
         const oldImages = req.body.selectedImages
         const valid = propertyValidation.roomValidation(req.body)
-        console.log(valid);
+
         if (!valid.isValid) {
-            console.log(180);
             return res.status(400).json({ error: valid.errors })
         }
         else {
@@ -190,11 +184,8 @@ const updateRoom = (async (req, res) => {
 
                 roomImages.push(image);
             }
-            console.log(194);
 
             const images = roomImages.concat(oldImages.map((url) => ({ url })));
-
-
             const { price, adults, childrents, oldAmenities, newAmenities, Cancellation, bed, category, newCatgory, description } = req.body
 
             let categoryId
@@ -208,9 +199,8 @@ const updateRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
-            console.log(214);
             if (newAmenities) {
-                amenities = [...oldAmenities, newAmenities]
+                amenities = [...oldAmenities, ...newAmenities]
             }
             else {
                 amenities = [...oldAmenities]
@@ -227,8 +217,6 @@ const updateRoom = (async (req, res) => {
             room.category = categoryId
 
             const resu = await room.save()
-            console.log(resu);
-            console.log(232);
             return res.send(200).end()
         }
 

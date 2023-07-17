@@ -27,6 +27,10 @@ const roomSchema = new mongoose.Schema({
             required: true
         }
     }],
+    Cancellation: {
+        type: String,
+        required: true,
+    },
     checkIn: [{
         type: Date,
         default: [],
@@ -66,11 +70,7 @@ const roomSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-    Cancellation: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cancellation',
-        required: true
-    },
+
 })
 const Rooms = mongoose.model("Rooms", roomSchema)
 

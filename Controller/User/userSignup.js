@@ -34,18 +34,18 @@ const signupValidation = async (req, res) => {
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
         const valid = Signup_functions.validate(req.body)
+        console.log(valid);
+        if (!valid.isValid) {
 
-        if (emailExist) {
-
-            return res.status(409).json({ error: "user Exists Please Login" })
+            return res.status(400).json({ error: valid.errors })
         }
         else if (phoneExist) {
 
             return res.status(409).json({ error: "The user with same Mobile Number already Exist please try another Number" })
         }
-        else if (!valid.isValid) {
+        else if (emailExist) {
+            return res.status(409).json({ error: "user Exists Please Login" })
 
-            return res.status(400).json({ error: valid.errors })
         }
         else {
             req.session.userDetails = {

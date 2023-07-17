@@ -142,9 +142,22 @@
 
         try {
             const formData = new FormData(event.target)
+            resetError()
 
             const response = await axios.post('/owner/hotel/edit', formData);
-            // Handle the response from the server as needed
+            if (response.status === 200) {
+                Notification()
+                function Notification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Hotel updated Successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
+                }
+                window.location.href = '/owner/hotels'
+            }
         } catch (error) {
             console.log(error)
             if (error.response.status == 400) {
@@ -158,6 +171,13 @@
 
 
     document.getElementById('updateForm').addEventListener('submit', handleSubmit);
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 </script>
 
 

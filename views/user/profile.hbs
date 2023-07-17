@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         <input type="text" name="name" value="{{user.name}}" readonly>
-                                        <span class="text-danger" id="nameError"></span>
+                                        <span class="text-danger error-msg" id="nameError"></span>
                                     </div>
                                 </div>
                                 <hr>
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         <input type="text" name="email" value="{{user.email}}" readonly>
-                                        <span class="text-danger" id="emailError"></span>
+                                        <span class="text-danger error-msg" id="emailError"></span>
                                     </div>
                                 </div>
                                 <hr>
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         <input type="text" name="phone" value="{{user.phone}}" readonly>
-                                        <span class="text-danger" id="phoneError"></span>
+                                        <span class="text-danger error-msg" id="phoneError"></span>
                                     </div>
                                 </div>
                                 <hr>
@@ -166,6 +166,7 @@
             try {
                 const formData = new FormData(profileForm);
                 const requestData = Object.fromEntries(formData);
+                resetError()
 
                 const response = await axios.post("/profile/edit", requestData);
                 console.log(response.data);
@@ -200,4 +201,11 @@
             }
         });
     });
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 </script>

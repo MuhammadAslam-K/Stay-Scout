@@ -20,7 +20,7 @@
                                         <div class="form-group">
                                             <input id="otp" type="tel" class="form-control form-control-user" name="otp"
                                                 placeholder="Enter OTP..." required>
-                                            <span id="otpError" class="text-danger"></span>
+                                            <span id="otpError" class="text-danger error-msg"></span>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Submit</button>
                                     </form>
@@ -53,7 +53,7 @@
             event.preventDefault();
 
             const formData = new FormData(event.target);
-
+            resetError()
 
             try {
                 const response = await axios.post('/owner/submitOtp', formData, {
@@ -86,6 +86,13 @@
         };
 
         document.getElementById('otpForm').addEventListener('submit', handleSubmit);
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
+        }
     </script>
 
 

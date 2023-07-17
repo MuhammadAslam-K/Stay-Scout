@@ -8,15 +8,18 @@ const formValidation = async (id, data) => {
     const { checkIn, checkOut, adults, kids } = data
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
+    let booking
 
     if (kids > room.childrents) {
+        console.log(14);
         errors.kidsError = `The Room can contain only ${room.childrents} kids`
     }
     else if (adults > room.adults) {
+        console.log(18);
         errors.adultError = `The Room can contain only ${room.adults} Adults`
     }
     if (Object.keys(errors).length === 0) {
-        const booking = await Room.findOne({
+        booking = await Room.findOne({
             _id: id,
             $or: [
                 {
@@ -39,6 +42,7 @@ const formValidation = async (id, data) => {
         }
     }
     else {
+        console.log(45);
         return errors
     }
 

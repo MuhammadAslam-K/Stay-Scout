@@ -72,22 +72,22 @@
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
                         <input type="date" class="form-control" id="checkin" name="checkIn" required>
-                        <span class="text-danger" id="checkInError"></span>
+                        <span class="text-danger error-msg" id="checkInError"></span>
                     </div>
                     <div class="form-group">
                         <label for="checkout">Check-out Date</label>
                         <input type="date" class="form-control" id="checkout" name="checkOut" required>
-                        <span class="text-danger" id="checkOutError"></span>
+                        <span class="text-danger error-msg" id="checkOutError"></span>
                     </div>
                     <div class="form-group">
                         <label for="adults">Adults</label>
                         <input type="number" class="form-control" id="adults" name="adults" required>
-                        <span class="text-danger" id="adultsError"></span>
+                        <span class="text-danger error-msg" id="adultError"></span>
                     </div>
                     <div class="form-group">
                         <label for="kids">Kids</label>
                         <input type="number" class="form-control" id="kids" name="kids" required>
-                        <span class="text-danger" id="kidsError"></span>
+                        <span class="text-danger error-msg" id="kidsError"></span>
                     </div>
                     <button type="submit" class="btn btn-primary">Check</button>
                     <button type="button" class="btn btn-primary" id="book">Book</button>
@@ -129,10 +129,10 @@
         event.preventDefault();
 
         const formData = new FormData(event.target);
+        resetError()
 
         try {
             const response = await axios.post('/room/checkin', Object.fromEntries(formData))
-
             if (response.status === 200) {
                 alertify.alert("Rooms are available", function () {
                     alertify.message('OK');
@@ -140,16 +140,12 @@
             }
 
         } catch (error) {
-
+            console.log(error)
             if (error.response.status == 400) {
-
+                alert("ok")
                 const errors = error.response.data.error;
-                alert(error)
                 Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key + 'Error');
-                    if (element) {
-                        element.textContent = errors[key];
-                    }
+                    let element = document.getElementById(key).textContent = errors[key];
                 });
             }
             else if (error.response.status == 404) {
@@ -167,6 +163,12 @@
     };
     document.getElementById('checkin').addEventListener('submit', handleSubmit);
 
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 </script>
 
 
@@ -176,17 +178,17 @@
         event.preventDefault();
 
         const formData = new FormData(document.getElementById('checkin'));
+        resetError()
 
         try {
             const response = await axios.post('/room/book', Object.fromEntries(formData));
-
             if (response.status === 200) {
                 Notification()
                 function Notification() {
                     Swal.fire({
                         position: "center",
                         icon: "success",
-                        title: "Profile updated successfully",
+                        title: "Booked Successfully",
                         showConfirmButton: true,
                         confirmButtonColor: "#00A300",
                     });
@@ -218,6 +220,13 @@
         }
     };
     document.getElementById('book').addEventListener('click', handleBook);
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 
 </script>
 

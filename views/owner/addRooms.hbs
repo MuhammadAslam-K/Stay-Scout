@@ -91,7 +91,7 @@
                     <select id="dropdownSelect" class="form-group col-md-6" name="Cancellation">
                         <option value="" disabled selected>Select Cancellation Policy</option>
                         {{#each cancellation}}
-                        <option value="{{this._id}}">{{this.cancellation}}</option>
+                        <option value="{{this.cancellation}}">{{this.cancellation}}</option>
                         {{/each}}
                     </select>
 
@@ -190,7 +190,7 @@
                         Swal.fire({
                             position: "center",
                             icon: "success",
-                            title: "Hotel Added Successfully",
+                            title: "Room Added Successfully",
                             showConfirmButton: true,
                             confirmButtonColor: "#00A300",
                         });
@@ -203,6 +203,7 @@
                 if (error.response.status == 400) {
 
                     const errors = error.response.data.error;
+                    resetError()
 
                     Object.keys(errors).forEach((key) => {
                         let element = document.getElementById(key).textContent = errors[key];

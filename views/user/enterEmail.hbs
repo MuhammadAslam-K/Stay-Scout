@@ -18,8 +18,8 @@
                                     <form class="user" id="enterEmailForm">
                                         <div class="form-group">
                                             <input type="tel" class="form-control form-control-user" name="email"
-                                                placeholder="Email Address" id="userEmail">
-                                            <span id="emailError" class="text-danger"></span>
+                                                placeholder="Email Address" id="userEmail" required>
+                                            <span id="emailError" class="text-danger error-msg"></span>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary btn-user btn-block"
@@ -53,7 +53,7 @@
         event.preventDefault();
 
         const formData = new FormData(event.target);
-
+        resetError()
 
         try {
             const response = await axios.post('/emailValidate', formData, {
@@ -86,6 +86,13 @@
     };
 
     document.getElementById('enterEmailForm').addEventListener('submit', handleSubmit);
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 </script>
 
 <script>

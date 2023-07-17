@@ -1,8 +1,6 @@
-import Owner from "../../model/ownerModel.js"
 import propertyFetching from "../../helper/propertyFetching.js"
 import Hotel from "../../model/hotelModel.js"
-import Rooms from "../../model/roomsModel.js"
-import Category from "../../model/roomCategory.js"
+
 
 
 const ownerHotels = (async (req, res) => {

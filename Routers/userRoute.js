@@ -67,17 +67,16 @@ user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 /////// GOOGLE SIGNIN///////
 
-user_route.get(
-    '/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
+// user_route.get(
+//     '/auth/google/callback',
+//     passport.authenticate('google', { failureRedirect: '/login' }),
+//     (req, res) => {
 
-        res.redirect('/');
-    }
-);
-
-user_route.get('/auth/google', googleAuth.googleSignup)
+//         res.redirect('/');
+//     }
+// );
 // user_route.get("/auth/google/callback", googleAuth.googleSuccess)
+user_route.get('/auth/google', googleAuth.googleSignup)
 
 
 

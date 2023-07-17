@@ -11,6 +11,8 @@ dotenv.config({ path: "config.env" })
 /////////// PASSWORD HASHIG//////
 
 var email
+let errorMessage;
+
 
 passport.use(
     new GoogleStrategy(
@@ -25,20 +27,30 @@ passport.use(
                 const existingUser = await User.findOne({ email: profile.emails[0].value })
                 const passport = profile.id
                 email = profile.emails[0].value
-                console.log(existingUser);
-
+                console.log(profile);
                 if (existingUser) {
 
 
                     if ((existingUser.password === passport) && (existingUser.is_block === false)) {
+                        console.log(35);
                         return done(null, existingUser);
                     }
+                    // else if (existingUser.is_block === true) {
+                    //     return done(new Error("Your Account is Blocked by the Admin Please Contact stayscout@gmail.com"), null)
+                    // }
+                    // else {
+                    //     return done(new Error("Please log in with your existing account."), null)
+                    // }
                     else if (existingUser.is_block === true) {
-                        return done(new Error("Your Account is Blocked by the Admin Please Contact stayscout@gmail.com"), null)
+                        console.log(45);
+                        errorMessage = "Your Account is Blocked by the Admin Please Contact stayscout@gmail.com";
+                        return done(null, false);
+                    } else {
+                        console.log(49);
+                        errorMessage = "Please log in with your existing account.";
+                        return done(null, false);
                     }
-                    else {
-                        return done(new Error("Please log in with your existing account."), null)
-                    }
+
                 }
 
                 const newUser = new User({
@@ -47,7 +59,6 @@ passport.use(
                     password: passport,
                 });
 
-                console.log(newUser);
                 await newUser.save();
 
                 done(null, newUser);
@@ -77,10 +88,18 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+
+
+
 const googleSignup = passport.authenticate('google', { scope: ['profile', 'email'] })
 
 const googleSuccess = (passport.authenticate('google', { failureRedirect: '/login' })
     , (req, res) => {
+        console.log(errorMessage);
+        if (errorMessage) {
+            res.render('userRegister', { errorMessage });
+
+        }
 
         const payload = { email: email };
 

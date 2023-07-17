@@ -138,7 +138,7 @@ const editHotel = async (req, res) => {
 
 
 const updateHotel = (async (req, res) => {
-    console.log(141);
+
     try {
         const id = req.session.HOTELID
         const hotel = await Hotel.findById(id)
@@ -146,10 +146,8 @@ const updateHotel = (async (req, res) => {
         const hotelImages = []
         let amenities = []
         const oldImages = req.body.selectedImages
-        console.log(req.body);
         const valid = propertyValidation.hotelValidation(req.body)
 
-        console.log(valid);
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
         }
@@ -169,7 +167,6 @@ const updateHotel = (async (req, res) => {
 
             const images = hotelImages.concat(oldImages.map((url) => ({ url })));
 
-            console.log(req.body);
             const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address } = req.body
 
             let typeId
@@ -185,7 +182,7 @@ const updateHotel = (async (req, res) => {
             }
 
             if (newAmenities) {
-                amenities = [...oldAmenities, newAmenities]
+                amenities = [...oldAmenities, ...newAmenities]
             }
             else {
                 amenities = [...oldAmenities]
@@ -203,7 +200,6 @@ const updateHotel = (async (req, res) => {
             hotel.amenities = amenities
 
             const reu = await hotel.save()
-            console.log(reu);
             return res.status(200).end()
         }
     } catch (error) {

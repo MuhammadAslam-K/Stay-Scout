@@ -82,7 +82,6 @@ const hotelRoom = (async (id) => {
 
     try {
         const room = await Rooms.find({ hotel: id }).sort(sort)
-        // console.log(room);
         return room
     } catch (error) {
         console.log(error);

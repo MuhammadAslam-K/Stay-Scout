@@ -57,10 +57,11 @@ const hotelHome = (async (req, res) => {
 
 
 const hotelSearch = (async (req, res) => {
-
+    console.log(60);
     try {
         console.log(req.body.search)
         const value = req.body.search
+        console.log(value);
         const regexValue = new RegExp(value, "i")
 
         const hotel = await Hotel.find({
@@ -69,7 +70,7 @@ const hotelSearch = (async (req, res) => {
                 { city: { $regex: regexValue } }
             ]
         })
-
+        console.log(hotel);
         res.render("userViewHotels", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -84,7 +85,6 @@ const hotelSearch = (async (req, res) => {
     } catch (error) {
         res.render("500")
     }
-
 })
 
 
@@ -114,8 +114,6 @@ const roomAvailability = (async (req, res) => {
                     ]
                 }
             ]
-
-
         })
 
         if (rooms.length === 0) {

@@ -18,14 +18,14 @@
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 aria-describedby="emailHelp" placeholder="Email Address..." name="email"
-                                                id="ownerEmail" required>
-                                            <span id="emailError" class="text-danger"></span>
+                                                id="ownerEmail">
+                                            <span id="emailError" class="text-danger error-msg"></span>
                                         </div>
 
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="ownerPassword" placeholder="Password" name="password" required>
-                                            <span id="passwordError" class="text-danger"></span>
+                                                id="ownerPassword" placeholder="Password" name="password">
+                                            <span id="passwordError" class="text-danger error-msg"></span>
                                         </div>
                                         <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
                                             Password</span>
@@ -61,7 +61,7 @@
         event.preventDefault();
 
         const formData = new FormData(event.target);
-
+        resetError()
 
         try {
             const response = await axios.post('/owner', formData, {
@@ -107,6 +107,13 @@
         } else {
             passwordInput.type = "password";
         }
+    }
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
     }
 </script>
 

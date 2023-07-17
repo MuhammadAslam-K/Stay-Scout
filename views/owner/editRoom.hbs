@@ -74,7 +74,7 @@
                     <select id="dropdownSelect" class="form-group col-md-6" name="Cancellation">
                         <option value="" disabled selected>Select cancellation</option>
                         {{#each cancellation}}
-                        <option value="{{this._id}}">{{this.cancellation}}</option>
+                        <option value="{{this.cancellation}}">{{this.cancellation}}</option>
                         {{/each}}
                         <option value="new">New</option>
                     </select>
@@ -138,6 +138,7 @@
 
         try {
             const formData = new FormData(event.target)
+            resetError()
 
             const response = await axios.post('/owner/room/edit', formData);
             if (response.status === 200) {
@@ -166,6 +167,13 @@
 
 
     document.getElementById('updateForm').addEventListener('submit', handleSubmit);
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
 </script>
 
 {{!-- NEW CATEGORY --}}

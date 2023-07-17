@@ -17,32 +17,32 @@
 
                                 <div class="form-group">
                                     <input id="name" class="form-control form-control-user" type="text"
-                                        placeholder="Name" name="name" required>
-                                    <span id="nameError" class="text-danger"></span>
+                                        placeholder="Name" name="name">
+                                    <span id="nameError" class="text-danger error-msg"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <input id="email" class="form-control form-control-user" type="email"
-                                        placeholder="Email Address" name="email" required>
-                                    <span id="emailError" class="text-danger"></span>
+                                        placeholder="Email Address" name="email">
+                                    <span id="emailError" class="text-danger error-msg"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <input id="phoneNumber" class="form-control form-control-user" type="tel"
-                                        placeholder="Phone No" name="phone" required>
-                                    <span id="phoneError" class="text-danger"></span>
+                                        placeholder="Phone No" name="phone">
+                                    <span id="phoneError" class="text-danger error-msg"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <input id="Password" class="form-control form-control-user" type="password"
-                                        placeholder="Password" name="password" required>
-                                    <span id="passwordError" class="text-danger"></span>
+                                        placeholder="Password" name="password">
+                                    <span id="passwordError" class="text-danger error-msg"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <input id="password2" class="form-control form-control-user" type="password"
-                                        placeholder="Re-enter Password" name="password2" required>
-                                    <span id="password2Error" class="text-danger"></span>
+                                        placeholder="Re-enter Password" name="password2">
+                                    <span id="password2Error" class="text-danger error-msg"></span>
                                 </div>
                                 <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
                                     Password</span>
@@ -75,6 +75,7 @@
         const handleSubmit = async (event) => {
             event.preventDefault();
             const formData = new FormData(event.target)
+            resetError()
 
             try {
                 const response = await axios.post('/owner/signup', formData, {
@@ -135,6 +136,13 @@
 
                 passwordInput.type = "password";
             }
+        }
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
         }
     </script>
 

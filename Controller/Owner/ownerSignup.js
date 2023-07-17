@@ -1,6 +1,5 @@
 import Owner from "../../model/ownerModel.js";
 import Signup_functions from "../../helper/Signup_functions.js";
-import bcrypt from "bcrypt"
 
 
 
