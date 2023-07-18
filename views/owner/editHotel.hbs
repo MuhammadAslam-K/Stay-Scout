@@ -123,6 +123,38 @@
         {{/each}}
     </div>
 
+    <div id="map" style="height: 400px;"></div> <!-- Add the map container here with a specified height -->
+    <input type="hidden" id="latitude" name="latitude">
+    <input type="hidden" id="longitude" name="longitude">
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css" rel="stylesheet" />
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGs1ZHZqejYwZ3RhM2RudDQ0cmE1NDJuIn0.8MByk6wQU2kWJ60t4K0zIg'; // Replace with your Mapbox access token
+
+        const latitude = {{ hotel.latitude }}; // Latitude from the database
+        const longitude = {{ hotel.longitude }}; // Longitude from the database
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [longitude, latitude], // Set the center using the latitude and longitude from the database
+            zoom: 9
+        });
+
+        const marker = new mapboxgl.Marker({
+            draggable: true
+        }).setLngLat([longitude, latitude]).addTo(map);
+
+        marker.on('dragend', () => {
+            const lngLat = marker.getLngLat();
+            document.getElementById('latitude').value = lngLat.lat;
+            document.getElementById('longitude').value = lngLat.lng;
+        });
+    </script>
+
+
     <div class="image-preview-container" id="newImagePreviewContainer"></div>
 
     <input type="file" id="imageInput" name="image" multiple>
