@@ -50,8 +50,76 @@ async function sendOTP(email, otp) {
     }
 }
 
-///////////// VALIDATION /////////////////////
-function validate(data) {
+///////////// USER VALIDATION /////////////////////
+function validate(signUp, data) {
+    console.log(data);
+    const { name, email, phone, password, password2 } = data;
+    const errors = {}
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^\d{12}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[\w\s@$!%*?&#]{8,}$/;
+
+
+    // /Name validation //
+    if (!name) {
+        errors.nameError = "Please Enter Your Name"
+    } else if (name.length < 3 || name[0] == " ") {
+        errors.nameError = "Enter a Valid Name"
+    }
+
+    // email validation //
+    if (!email) {
+        errors.emailError = "please enter your email address";
+    } else if (email.length < 3 || email.trim() === "" || !emailPattern.test(email)) {
+        errors.emailError = "please Enter a Valid email";
+    }
+
+    // Phone No Validation //
+    if (!phone) {
+        errors.phoneError = "please Enter your mobile number";
+    } else if (!phonePattern.test(phone)) {
+        errors.phoneError = "please check your number and provide a valid one";
+    }
+
+    // Password Validation //
+    if (signUp) {
+        if (!password) {
+            errors.passwordError = "please Enter Your  password"
+        }
+        else if (!passwordPattern.test(password) || password.length < 8) {
+            errors.passwordError = "password must be atleast 8 characters with atleast one uppercase, lowercase, digit and special character";
+        }
+
+        // Comfirm Password Validation //
+        if (password && !password2) {
+            errors.password2Error = "please Enter Your password"
+        } else if (password && password2 && password !== password2) {
+            errors.password2Error = "passwords doesn't match";
+        }
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+}
+
+////////////////OTP DELETION////////////
+function otpRemoval(otpArray, otp) {
+    setTimeout(() => {
+        const index = otpArray.indexOf(otp);
+        if (index !== -1) {
+            otpArray.splice(index, 1);
+            console.log("OTP removed:", otp);
+        }
+    }, 31000);
+}
+
+
+
+///////////// OWNER VALIDATE/////////////
+function Ownervalidate(signUp, data) {
 
     const { name, email, phone, password, password2, bankName, accountNo, ifc } = data;
     const errors = {}
@@ -87,20 +155,21 @@ function validate(data) {
     }
 
     // Password Validation //
-    if (!password) {
-        errors.passwordError = "please Enter Your  password"
-    }
-    else if (!passwordPattern.test(password) || password.length < 8) {
-        errors.passwordError = "password must be atleast 8 characters with atleast one uppercase, lowercase, digit and special character";
-    }
+    if (signUp) {
+        if (!password) {
+            errors.passwordError = "please Enter Your  password"
+        }
+        else if (!passwordPattern.test(password) || password.length < 8) {
+            errors.passwordError = "password must be atleast 8 characters with atleast one uppercase, lowercase, digit and special character";
+        }
 
-    // Comfirm Password Validation //
-    if (password && !password2) {
-        errors.password2Error = "please Enter Your password"
-    } else if (password && password2 && password !== password2) {
-        errors.password2Error = "passwords doesn't match";
+        // Comfirm Password Validation //
+        if (password && !password2) {
+            errors.password2Error = "please Enter Your password"
+        } else if (password && password2 && password !== password2) {
+            errors.password2Error = "passwords doesn't match";
+        }
     }
-
     //Bank Validation
     if (!bankName) {
         errors.bankError = "Enter the Bank name"
@@ -138,59 +207,12 @@ function validate(data) {
 }
 
 
-function otpRemoval(otpArray, otp) {
-    setTimeout(() => {
-        const index = otpArray.indexOf(otp);
-        if (index !== -1) {
-            otpArray.splice(index, 1);
-            console.log("OTP removed:", otp);
-        }
-    }, 31000);
-}
-
-
-const profile_edit = (data) => {
-
-    const { email, name, phone } = data
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phonePattern = /^\d{12}$/;
-    const errors = {}
-    console.log(email, name, phone)
-    // NAME VALIDATION
-
-    if (!name) {
-        errors.nameError = "Please Enter Your Name"
-    } else if (name.length < 3 || name[0] == " ") {
-        errors.nameError = "Enter a Valid Name"
-    }
-
-    // EMAIL VALIDATION
-
-    if (!email) {
-        errors.emailError = "please enter your email address";
-    } else if (email.length < 3 || email.trim() === "" || !emailPattern.test(email)) {
-        errors.emailError = "please Enter a Valid email";
-    }
-
-    //  PHONE VALIDATION 
-    if (!phone) {
-        errors.phoneError = "please Enter your mobile number";
-    } else if (!phonePattern.test(phone)) {
-        errors.phoneError = "please check your number and provide a valid one";
-    }
-
-    return {
-        isValid: Object.keys(errors).length === 0,
-        errors
-    }
-}
-
-
 export default {
     passwordHash,
     generateOTP,
     sendOTP,
-    validate,
     otpRemoval,
-    profile_edit,
+
+    validate,
+    Ownervalidate,
 }

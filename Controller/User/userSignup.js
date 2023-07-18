@@ -28,11 +28,11 @@ let saveOtp = []
 const signupValidation = async (req, res) => {
 
     try {
-
+        // console.log(req.body);
         const { name, email, phone, password } = req.body
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
-        const valid = Signup_functions.validate(req.body)
+        const valid = Signup_functions.validate(true, req.body)
         console.log(valid);
         if (!valid.isValid) {
 
@@ -57,6 +57,7 @@ const signupValidation = async (req, res) => {
             return res.status(200).end();
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
 
     }

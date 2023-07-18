@@ -34,7 +34,7 @@ const signupValidate = async (req, res) => {
         const { name, email, phone, password, bankName, accountNo, ifc } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
-        const valid = Signup_functions.validate(req.body)
+        const valid = Signup_functions.Ownervalidate(true, req.body)
         console.log(valid);
         if (emailExist) {
 

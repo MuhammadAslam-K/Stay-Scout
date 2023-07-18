@@ -30,6 +30,8 @@ owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 owner_route.get("/dashboard", isLogged, isBlocked, dashboard.dashboard)
 owner_route.get("/hotels", isLogged, isBlocked, dashboard.viewHotels)
 owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
+owner_route.get("/profile", isLogged, isBlocked, dashboard.profile)
+owner_route.post("/profile/edit", isLogged, isBlocked, dashboard.profileUpdate)
 
 /////////////////HOTEL MANAGEMENT////////////
 owner_route.get("/addhotel", isLogged, isBlocked, hotelManagment.addHotel)
