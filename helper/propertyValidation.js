@@ -24,7 +24,7 @@ const hotelValidation = ((data) => {
         errors.nameError = "Please Enter Your Name"
     } else if (name.length < 3 || name[0] == " ") {
         errors.nameError = "Enter a Valid Name"
-    } else if (name.length > 20) {
+    } else if (name.length > 30) {
         errors.nameError = "Invalid name"
     }
 
@@ -168,11 +168,32 @@ const bookingValidation = (date) => {
     }
 };
 
+const hotelHomeForm = (data) => {
+    const errors = {}
+    const { checkIn, checkOut } = data
 
+    const currentDate = new Date();
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    if (checkInDate < currentDate) {
+        errors.checkInError = "Check-in date cannot be in the past";
+    }
+
+    if (checkOutDate <= checkInDate) {
+        errors.checkOutError = "Check-out date must be greater than the check-in date";
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+}
 
 
 export default {
     hotelValidation,
     roomValidation,
     bookingValidation,
+    hotelHomeForm,
 }

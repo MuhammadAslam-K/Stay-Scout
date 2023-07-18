@@ -66,7 +66,6 @@ const profile_edit = async (req, res) => {
             user.phone = phone;
 
             const result = await user.save();
-            console.log(result)
             res.status(200).end();
         }
     } catch (error) {

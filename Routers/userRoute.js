@@ -1,18 +1,23 @@
 import express from "express"
+import jwt from 'jsonwebtoken'
+import dotenv from "dotenv";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 import loginController from "../Controller/User/userLogin.js"
 import signupController from "../Controller/User/userSignup.js"
 import passwordUpdation from "../Controller/User/passwordUpdation.js"
 import hotelManagement from "../Controller/User/hotelManagement.js"
 import roomManagement from "../Controller/User/roomManagement.js"
-import checkinRooms from "../Controller/User/checkinRooms.js"
+import booking from "../Controller/User/booking.js"
 import contact from "../Controller/User/contact.js"
 import userController from "../Controller/User/userController.js"
 import auth from "../middleware/userAuthentication.js"
-import googleAuth from "../Controller/User/googleAuth.js"
-import passport from "passport"
-const { isLogged, islogout, isBlocked } = auth
+import User from "../model/userModel.js"
 
+
+dotenv.config({ path: "config.env" });
+const { isLogged, islogout, isBlocked } = auth
 const user_route = express()
 user_route.set("views", "./views/user");
 
@@ -57,8 +62,9 @@ user_route.post("/hotel/checkin", isLogged, isBlocked, hotelManagement.roomAvail
 user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
 user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
 user_route.get("/room/filter", isLogged, isBlocked, roomManagement.roomsFilter)
-user_route.post("/room/checkin", isLogged, isBlocked, checkinRooms.checkAvailability)
-user_route.post("/room/book", isLogged, isBlocked, checkinRooms.book)
+
+user_route.get("/room/checkin", isLogged, isBlocked, booking.roomcheckin)
+user_route.post("/room/book", isLogged, isBlocked, booking.book)
 
 /////////////CONTACT////////////
 user_route.get("/contact", isLogged, isBlocked, contact.contact)
@@ -66,18 +72,73 @@ user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 
 /////// GOOGLE SIGNIN///////
+var userData
 
-// user_route.get(
-//     '/auth/google/callback',
-//     passport.authenticate('google', { failureRedirect: '/login' }),
-//     (req, res) => {
 
-//         res.redirect('/');
-//     }
-// );
-// user_route.get("/auth/google/callback", googleAuth.googleSuccess)
-user_route.get('/auth/google', googleAuth.googleSignup)
+user_route.get('/auth/google/signin', passport.authenticate('google', { scope: ['profile', 'email'] }));
+user_route.get('/auth/google/signup', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
+user_route.get(
+    '/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+
+        const index = userData._id
+        const payload = { index: index };
+        const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
+            expiresIn: "1h",
+        })
+
+        req.session.usertoken = token
+        req.session.user = userData
+
+        res.redirect('/');
+    }
+);
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: '/auth/google/callback',
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                const existingUser = await User.findOne({ email: profile.emails[0].value });
+
+                if (existingUser) {
+                    return done(null, existingUser);
+                }
+
+                const newUser = new User({
+                    name: profile.displayName,
+                    email: profile.emails[0].value,
+                    password: null,
+                });
+
+                const savedUser = await newUser.save();
+                done(null, savedUser);
+            } catch (error) {
+                done(error, null);
+            }
+        }
+    )
+);
+
+passport.serializeUser((user, done) => {
+    userData = user
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
+});
 
 
 export default user_route

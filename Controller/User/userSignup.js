@@ -29,7 +29,6 @@ const signupValidation = async (req, res) => {
 
     try {
 
-        // console.log(req.body)
         const { name, email, phone, password } = req.body
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })

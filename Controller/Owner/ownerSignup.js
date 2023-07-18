@@ -30,19 +30,19 @@ let ownerOtp = []
 
 const signupValidate = async (req, res) => {
     try {
-        console.log(req.body);
-        const { name, email, phone, password } = req.body
+        // console.log(req.body);
+        const { name, email, phone, password, bankName, accountNo, ifc } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
         const valid = Signup_functions.validate(req.body)
-
+        console.log(valid);
         if (emailExist) {
 
             return res.status(409).json({ error: "The owner already Exists please Login" })
         }
         else if (phoneExist) {
 
-            return res.status(409).json({ error: "The owner with same Phone Number already Exist please Re-check" })
+            return res.status(408).json({ error: "The owner with same Phone Number already Exist please Re-check" })
         }
         else if (!valid.isValid) {
 
@@ -55,6 +55,9 @@ const signupValidate = async (req, res) => {
                 email,
                 phone,
                 password,
+                bankName,
+                accountNo,
+                ifc,
             }
             console.log(60);
             return res.status(200).end()
@@ -106,7 +109,7 @@ const verifyOtp = async (req, res) => {
 
                 ownerOtp.splice(i, 1)
 
-                const { name, email, phone, password, upi } = req.session.ownerDetails
+                const { name, email, phone, password, bankName, accountNo, ifc } = req.session.ownerDetails
                 const hashedPassword = await Signup_functions.passwordHash(password);
 
                 const owner = new Owner({
@@ -114,7 +117,9 @@ const verifyOtp = async (req, res) => {
                     email,
                     phone,
                     password: hashedPassword,
-
+                    bankName,
+                    accountNo,
+                    ifc,
                 })
 
                 delete req.session.ownerDetails

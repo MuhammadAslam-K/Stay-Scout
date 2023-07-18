@@ -14,35 +14,59 @@
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
                             <form class="user" id="signupForm">
+                                <div class="form-row m-4">
+                                    <div class="form-group col-md-6">
+                                        <input id="name" class="form-control form-control-user" type="text"
+                                            placeholder="Name" name="name">
+                                        <span id="nameError" class="text-danger error-msg"></span>
 
-                                <div class="form-group">
-                                    <input id="name" class="form-control form-control-user" type="text"
-                                        placeholder="Name" name="name">
-                                    <span id="nameError" class="text-danger error-msg"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input id="email" class="form-control form-control-user" type="email"
+                                            placeholder="Email Address" name="email">
+                                        <span id="emailError" class="text-danger error-msg"></span>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <input id="email" class="form-control form-control-user" type="email"
-                                        placeholder="Email Address" name="email">
-                                    <span id="emailError" class="text-danger error-msg"></span>
+                                <div class="form-row m-4">
+                                    <div class="form-group col-md-6">
+                                        <input id="phoneNumber" class="form-control form-control-user" type="tel"
+                                            placeholder="Phone No" name="phone">
+                                        <span id="phoneError" class="text-danger error-msg"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <input id="Password" class="form-control form-control-user" type="password"
+                                            placeholder="Password" name="password">
+                                        <span id="passwordError" class="text-danger error-msg"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row m-4">
+                                    <div class="form-group col-md-6">
+                                        <input id="password2" class="form-control form-control-user" type="password"
+                                            placeholder="Re-enter Password" name="password2">
+                                        <span id="password2Error" class="text-danger error-msg"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <input id="bank" class="form-control form-control-user" type="text"
+                                            placeholder="Bank Name" name="bankName">
+                                        <span id="bankError" class="text-danger error-msg"></span>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <input id="phoneNumber" class="form-control form-control-user" type="tel"
-                                        placeholder="Phone No" name="phone">
-                                    <span id="phoneError" class="text-danger error-msg"></span>
-                                </div>
+                                <div class="form-row m-4">
+                                    <div class="form-group col-md-6">
+                                        <input id="accountNo" class="form-control form-control-user" type="tel"
+                                            placeholder="Account No" name="accountNo">
+                                        <span id="accountError" class="text-danger error-msg"></span>
+                                    </div>
 
-                                <div class="form-group">
-                                    <input id="Password" class="form-control form-control-user" type="password"
-                                        placeholder="Password" name="password">
-                                    <span id="passwordError" class="text-danger error-msg"></span>
-                                </div>
-
-                                <div class="form-group">
-                                    <input id="password2" class="form-control form-control-user" type="password"
-                                        placeholder="Re-enter Password" name="password2">
-                                    <span id="password2Error" class="text-danger error-msg"></span>
+                                    <div class="form-group col-md-6">
+                                        <input id="ifc" class="form-control form-control-user" type="text"
+                                            placeholder="IFC code" name="ifc">
+                                        <span id="ifcError" class="text-danger error-msg"></span>
+                                    </div>
                                 </div>
                                 <input type="checkbox" id="showPass" onclick="showPassword()"><span>Show
                                     Password</span>
@@ -85,7 +109,6 @@
                 })
 
                 if (response.status === 200) {
-                    alert("ok")
                     window.location.href = '/owner/otp'
                 }
             } catch (error) {
@@ -104,7 +127,11 @@
                 }
                 else if (error.response.status == 409) {
 
-                    document.getElementById('password2Error').textContent = error.response.data.error;
+                    document.getElementById('accountError').textContent = error.response.data.error;
+                }
+                else if (error.response.status == 408) {
+
+                    document.getElementById('phoneError').textContent = error.response.data.error;
                 }
                 else if (error.response.status == 500) {
                     const err = error.response.data.error;
@@ -113,6 +140,7 @@
                     });
                 }
                 else {
+                    console.log(error)
                     alertify.alert("Something went wrong", function () {
                         alertify.message('OK');
                     });

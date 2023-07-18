@@ -24,8 +24,7 @@ const dashboard = ((req, res) => {
 
 const viewHotels = (async (req, res) => {
     try {
-        const ownerId = req.session.owner.id
-
+        const ownerId = req.session.owner._id
         const hotel = await propertyFetching.hotel(ownerId, 0, 0, false)
 
         res.render("viewHotels", (err) => {

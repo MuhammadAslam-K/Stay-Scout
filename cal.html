@@ -1,0 +1,94 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calendar with Check-in/Checkout Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+</head>
+
+<body>
+    <div id="calendar"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Retrieve check-in and checkout data from the database
+            // Replace this with your own logic to fetch data from the backend
+            var eventData = [
+                {
+                    title: 'Checked-in',
+                    start: '2023-07-18',
+                    end: '2023-07-21'
+                },
+                {
+                    title: 'Checked-out',
+                    start: '2023-07-20',
+                    end: '2023-07-21'
+                },
+                {
+                    title: 'Booked',
+                    start: '2023-07-22',
+                    end: '2023-07-25'
+                }
+            ];
+
+            // Generate the calendar
+            $('#calendar').fullCalendar({
+                defaultView: 'month',
+                events: eventData
+            });
+        });
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calendar with Check-in/Checkout Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+</head>
+
+<body>
+    <div id="calendar"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Retrieve check-in and checkout data from the database
+            // Replace this with your own logic to fetch data from the backend
+            var checkInDates = [new Date('2023-07-18T00:00:00.000Z'), new Date('2023-07-21T00:00:00.000Z')];
+            var checkOutDates = [new Date('2023-07-20T00:00:00.000Z'), new Date('2023-07-24T00:00:00.000Z')];
+
+            // Generate the eventData array based on check-in and checkout data
+            var eventData = [];
+
+            for (var i = 0; i < checkInDates.length; i++) {
+                var checkInDate = checkInDates[i];
+                var checkOutDate = checkOutDates[i];
+
+                var event = {
+                    title: 'Checked-in',
+                    start: checkInDate,
+                    end: checkOutDate
+                };
+
+                eventData.push(event);
+            }
+
+            // Generate the calendar
+            $('#calendar').fullCalendar({
+                defaultView: 'month',
+                events: eventData
+            });
+        });
+    </script>
+</body>
+
+</html>

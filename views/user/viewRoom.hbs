@@ -13,62 +13,25 @@
     }
 
     .container-fluid {
-        margin-top: 100px;
         background-color: #f8f9fa;
     }
 
-    .row.m-5.py-5 {
-        align-items: center;
-    }
-
-    .col-lg-5.order-lg-2 {
-        display: flex;
-        align-items: center;
-    }
-
-    .col-md-8.offset-md-2 {
+    .align-form-elements {
         background-color: #fff;
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
-    .col-lg-7.order-lg-1 {
-        text-align: center;
-    }
-
-    .home_slider_container {
-        height: 60vh;
-    }
-
-    .owl-carousel .owl-item img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .mt-3 {
-        margin-top: 1rem;
-    }
-
-    .mb-5 {
-        margin-bottom: 3rem;
-    }
-
-    .amenities-icon {
-        font-size: 24px;
-        color: #555;
-        margin-right: 5px;
-    }
 </style>
+
 
 <!-- Rooms -->
 <div class="container-fluid" style="margin-top: 100px;">
     <div class="row m-5 py-5">
         <div class="col-lg-5 order-lg-2">
             <div class="col-md-8 offset-md-2 form-container" data-aos="fade-up">
-                <form id="checkin" class="align-form-elements">
+
+                <form id="checkin" class="align-form-elements mb-3">
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
                         <input type="date" class="form-control" id="checkin" name="checkIn" required>
@@ -89,9 +52,12 @@
                         <input type="number" class="form-control" id="kids" name="kids" required>
                         <span class="text-danger error-msg" id="kidsError"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Check</button>
                     <button type="button" class="btn btn-primary" id="book">Book</button>
+                    <a href="/room/checkin" class="btn btn-primary">Room status</a>
                 </form>
+                {{#each room.amenities}}
+                <p>{{this}}</p>
+                {{/each}}
             </div>
         </div>
         <div class="col-lg-7 order-lg-1">
@@ -108,13 +74,12 @@
                     </div>
                 </div>
             </div>
-            <p>Max no of Adults: {{room.adults}}</p>
-            <p>Max no of Kids: {{room.childrents}}</p>
             <p class="mt-3">Per night Rs: {{room.price}}</p>
+            <div class="mb-3">
+                <span class="me-2">Max no of Adults: {{room.adults}}</span>
+                <span>Max no of Kids: {{room.childrents}}</span>
+            </div>
             <p class="mb-5">{{room.description}}</p>
-            <p>
-            <h2>Amenities</h2>{{room.amenities}}
-            </p>
         </div>
     </div>
 </div>
@@ -123,54 +88,6 @@
 {{>userSiteFooter}}
 {{>userFooter}}
 
-{{!-- CHECKIN --}}
-<script>
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        resetError()
-
-        try {
-            const response = await axios.post('/room/checkin', Object.fromEntries(formData))
-            if (response.status === 200) {
-                alertify.alert("Rooms are available", function () {
-                    alertify.message('OK');
-                });
-            }
-
-        } catch (error) {
-            console.log(error)
-            if (error.response.status == 400) {
-                alert("ok")
-                const errors = error.response.data.error;
-                Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key).textContent = errors[key];
-                });
-            }
-            else if (error.response.status == 404) {
-                const err = error.response.data.message;
-                alertify.alert(err, function () {
-                    alertify.message('OK');
-                });
-            }
-            else {
-                alertify.alert("Something went wrong, please try again later", function () {
-                    alertify.message('OK');
-                });
-            }
-        }
-    };
-    document.getElementById('checkin').addEventListener('submit', handleSubmit);
-
-    function resetError() {
-        const errorElements = document.querySelectorAll(".error-msg");
-        errorElements.forEach((element) => {
-            element.textContent = "";
-        });
-    }
-</script>
-
 
 {{!-- BOOKING --}}
 <script>
@@ -178,10 +95,11 @@
         event.preventDefault();
 
         const formData = new FormData(document.getElementById('checkin'));
-        resetError()
 
         try {
             const response = await axios.post('/room/book', Object.fromEntries(formData));
+            resetError()
+
             if (response.status === 200) {
                 Notification()
                 function Notification() {
@@ -195,19 +113,22 @@
                 }
             }
         } catch (error) {
+            console.log(error)
             if (error.response.status == 400) {
 
                 const errors = error.response.data.error;
-                alert(error)
                 Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key + 'Error');
-                    if (element) {
-                        element.textContent = errors[key];
-                    }
-                });
+                    let element = document.getElementById(key).textContent = errors[key];
+                })
+            }
+            else if (error.response.status == 401) {
+                document.getElementById('kidsError').textContent = error.response.data.error;
+            }
+            else if (error.response.status == 402) {
+                document.getElementById('adultError').textContent = error.response.data.error;
             }
             else if (error.response.status == 404) {
-                const err = error.response.data.message;
+                const err = error.response.data.error;
                 alertify.alert(err, function () {
                     alertify.message('OK');
                 });
@@ -229,13 +150,6 @@
     }
 
 </script>
-
-
-
-
-
-
-
 
 
 {{>userFooter}}

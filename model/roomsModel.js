@@ -75,6 +75,3 @@ const roomSchema = new mongoose.Schema({
 const Rooms = mongoose.model("Rooms", roomSchema)
 
 export default Rooms
-
-
-

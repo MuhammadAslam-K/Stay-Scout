@@ -48,20 +48,24 @@ const roomDetails = (async (req, res) => {
         const id = req.query.id
         const room = await propertyFetching.room(id)
         req.session.room = id
+
         res.render("viewRoom", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
+                    console.log(err);
                     return res.status(500).render("500");
                 }
             }
             res.render("viewRoom", { room })
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500")
     }
 })
+
 
 
 
@@ -72,4 +76,9 @@ export default {
     rooms,
     roomDetails,
     roomsFilter,
+
 }
+
+// checkInDates: JSON.stringify(room.checkIn),
+// checkOutDates: JSON.stringify(room.checkOut)
+// }

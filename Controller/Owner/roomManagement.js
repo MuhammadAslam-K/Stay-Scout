@@ -199,8 +199,9 @@ const updateRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
+
             if (newAmenities) {
-                amenities = [...oldAmenities, ...newAmenities]
+                amenities = [...oldAmenities, newAmenities]
             }
             else {
                 amenities = [...oldAmenities]

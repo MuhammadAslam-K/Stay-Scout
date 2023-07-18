@@ -1,4 +1,5 @@
 import propertyFetching from "../../helper/propertyFetching.js";
+import propertyValidation from "../../helper/propertyValidation.js";
 import Hotel from "../../model/hotelModel.js";
 import Category from "../../model/roomCategory.js";
 import Rooms from "../../model/roomsModel.js";
@@ -92,11 +93,17 @@ const roomAvailability = (async (req, res) => {
 
     try {
         const id = req.session.hotelID
-
+        const valid = propertyValidation.hotelHomeForm(req.body)
         const { checkIn, checkOut } = req.body
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
         const category = await Category.find()
+        console.log(valid);
+        if (!valid.isValid) {
+            console.log(103);
+            return res.status(400).json({ error: valid.errors })
+
+        }
 
         const rooms = await Rooms.find({
             hotel: id,

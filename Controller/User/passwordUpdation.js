@@ -28,8 +28,14 @@ const emailValidation = (async (req, res) => {
 
         const email = req.session.userEmail
         const emailExits = await User.findOne({ email: email })
+        console.log(emailExits);
+        console.log(emailExits.password);
 
-        if (emailExits) {
+        if (emailExits.password == null) {
+            console.log(37);
+            return res.status(400).json({ error: "This user is registered with google" })
+        }
+        else if (emailExits) {
 
             return res.status(200).end()
         }

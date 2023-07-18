@@ -9,12 +9,10 @@ const hotel = (async (id = null, skip = 0, limit = 0, user = true) => {
     try {
 
         if (user == false) {
-
             if (id) {
                 const hotels = Hotel.find({ owner: id }).populate("type")
                 return hotels
             }
-
             const hotels = Hotel.find().populate("type")
             return hotels
         }

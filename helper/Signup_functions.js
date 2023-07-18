@@ -53,13 +53,17 @@ async function sendOTP(email, otp) {
 ///////////// VALIDATION /////////////////////
 function validate(data) {
 
-    const { name, email, phone, password, password2 } = data;
+    const { name, email, phone, password, password2, bankName, accountNo, ifc } = data;
     const errors = {}
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phonePattern = /^\d{12}$/;
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[\w\s@$!%*?&#]{8,}$/;
-    const upiIdPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    const bankPattern = /^[A-Za-z\s]+$/
+    const accountPattern = /\b\d{9,12}\b/
+    const ifcPattern = /^[A-Z]{4}0[A-Z0-9]{6}$/
+
+
 
     // /Name validation //
     if (!name) {
@@ -96,6 +100,36 @@ function validate(data) {
     } else if (password && password2 && password !== password2) {
         errors.password2Error = "passwords doesn't match";
     }
+
+    //Bank Validation
+    if (!bankName) {
+        errors.bankError = "Enter the Bank name"
+    } else if (bankName[0] == " ") {
+        errors.bankError = "invalid input"
+    } else if (!bankPattern.test(bankName)) {
+        errors.bankError = "enter a valid bank name"
+    }
+
+    // AccountNo validation
+
+    if (!accountNo) {
+        errors.accountError = "Enter the account number"
+    } else if (accountNo[0] == " ") {
+        errors.accountError = "invalid input"
+    }
+    else if (!accountPattern.test(accountNo)) {
+        errors.accountError = "Enter a valid account No"
+    }
+
+    // IFC Validation
+    if (!ifc) {
+        errors.ifcError = "please enter the IFC code"
+    } else if (ifc[0] == " ") {
+        errors.ifcError = "invalid input"
+    } else if (!ifcPattern.test(ifc)) {
+        errors.ifcError = "Enter a valid IFC code"
+    }
+
 
     return {
         isValid: Object.keys(errors).length === 0,

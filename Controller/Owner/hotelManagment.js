@@ -181,10 +181,13 @@ const updateHotel = (async (req, res) => {
                 typeId = type
             }
 
+            console.log(newAmenities);
             if (newAmenities) {
+                console.log(186);
                 amenities = [...oldAmenities, ...newAmenities]
             }
             else {
+                console.log(194)
                 amenities = [...oldAmenities]
             }
 
