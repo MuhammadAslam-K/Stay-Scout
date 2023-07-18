@@ -81,18 +81,14 @@ const profileUpdate = (async (req, res) => {
             return res.status(409).json({ error: valid.errors })
         }
         else {
-            const { name, email, phone, password, bankName, accountNo, ifc } = req.body
+            const { name, email, phone, bankName, accountNo, ifc } = req.body
 
+            const Owner = await owner.findByIdAndUpdate(
+                id,
+                { name, email, phone, bankName, accountNo, ifc },
+                { new: true }
+            )
 
-            Owner.name = name;
-            Owner.email = email;
-            Owner.phone = phone;
-            Owner.password = password;
-            Owner.bankName = bankName;
-            Owner.accountNo = accountNo;
-            Owner.ifc = ifc;
-
-            await Owner.save()
             return res.status(200).end()
         }
 

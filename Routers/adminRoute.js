@@ -26,53 +26,53 @@ admin_route.get("/logout", isLogged, adminAuth.logout)
 
 
 //////////////DASHBOARD///////////
-admin_route.get("/dashboard", adminDashboard.dashboard)
+admin_route.get("/dashboard", isLogged, adminDashboard.dashboard)
 
 
 /////////////USER MANAGEMENT//////////
-admin_route.get("/users", userManagement.viewUser)
-admin_route.post("/users/block", userManagement.blockUser)
+admin_route.get("/users", isLogged, userManagement.viewUser)
+admin_route.post("/users/block", isLogged, userManagement.blockUser)
 
 
 ///////////////Owner MANAGEMENT/////////////
-admin_route.get("/owners", ownerManagement.viewowner)
-admin_route.post("/owners/block", ownerManagement.blockowner)
+admin_route.get("/owners", isLogged, ownerManagement.viewowner)
+admin_route.post("/owners/block", isLogged, ownerManagement.blockowner)
 
 /////////HOTELS////////
-admin_route.get("/owner/hotels", hotelManagement.ownerHotels)
-admin_route.post("/hotel/block", hotelManagement.blockHotel)
-admin_route.post("/hotel/boost", hotelManagement.hotelBoosting)
+admin_route.get("/owner/hotels", isLogged, hotelManagement.ownerHotels)
+admin_route.post("/hotel/block", isLogged, hotelManagement.blockHotel)
+admin_route.post("/hotel/boost", isLogged, hotelManagement.hotelBoosting)
 
 ////////ROOMS///////////
-admin_route.get("/owner/hotel/rooms", roomManagement.ownerRooms)
-admin_route.post("/owner/hotel/room/edit", roomManagement.blockRoom)
-admin_route.post("/room/boost", roomManagement.roomBoosting)
+admin_route.get("/owner/hotel/rooms", isLogged, roomManagement.ownerRooms)
+admin_route.post("/owner/hotel/room/edit", isLogged, roomManagement.blockRoom)
+admin_route.post("/room/boost", isLogged, roomManagement.roomBoosting)
 
 
 ///////////////HOTEL Amenities///////////
-admin_route.get('/hotel/amenities', amenitiesManagement.amenities)
-admin_route.post('/hotel/addamenities', amenitiesManagement.addAmenities)
-admin_route.post('/hotel/editamenities', amenitiesManagement.editAmenities)
-admin_route.post('/hotel/deleteamenities', amenitiesManagement.deleteAmenities)
+admin_route.get('/hotel/amenities', isLogged, amenitiesManagement.amenities)
+admin_route.post('/hotel/addamenities', isLogged, amenitiesManagement.addAmenities)
+admin_route.post('/hotel/editamenities', isLogged, amenitiesManagement.editAmenities)
+admin_route.post('/hotel/deleteamenities', isLogged, amenitiesManagement.deleteAmenities)
 
 //////////ROOM AMENITIES///////////////
-admin_route.get('/room/amenities', roomAmenitiesManagement.amenities)
-admin_route.post('/room/addamenities', roomAmenitiesManagement.addAmenities)
-admin_route.post('/room/editamenities', roomAmenitiesManagement.editAmenities)
-admin_route.post('/room/deleteamenities', roomAmenitiesManagement.deleteAmenities)
+admin_route.get('/room/amenities', isLogged, roomAmenitiesManagement.amenities)
+admin_route.post('/room/addamenities', isLogged, roomAmenitiesManagement.addAmenities)
+admin_route.post('/room/editamenities', isLogged, roomAmenitiesManagement.editAmenities)
+admin_route.post('/room/deleteamenities', isLogged, roomAmenitiesManagement.deleteAmenities)
 
 ////////////////ROOM CANCELLATION/////////////
-admin_route.get('/room/cancellation', cancellationManagement.cancellation)
-admin_route.post('/room/addCancellation', cancellationManagement.addCancellation)
-admin_route.post('/room/editCancellation', cancellationManagement.editCancellation)
-admin_route.post('/room/deleteCancellation', cancellationManagement.deleteCancellation)
+admin_route.get('/room/cancellation', isLogged, cancellationManagement.cancellation)
+admin_route.post('/room/addCancellation', isLogged, cancellationManagement.addCancellation)
+admin_route.post('/room/editCancellation', isLogged, cancellationManagement.editCancellation)
+admin_route.post('/room/deleteCancellation', isLogged, cancellationManagement.deleteCancellation)
 
 
 
 
 ////////////MESSAGE MANAGEMENT///////////
-admin_route.get('/messages', messageManagement.message)
-admin_route.get('/message/delete', messageManagement.messageDelete)
+admin_route.get('/messages', isLogged, messageManagement.message)
+admin_route.get('/message/delete', isLogged, messageManagement.messageDelete)
 
 
 export default admin_route

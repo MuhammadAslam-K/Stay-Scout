@@ -34,8 +34,9 @@ const signupValidate = async (req, res) => {
         const { name, email, phone, password, bankName, accountNo, ifc } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
+        const accountExist = await Owner.findOne({ accountNo: accountNo })
         const valid = Signup_functions.Ownervalidate(true, req.body)
-        console.log(valid);
+
         if (emailExist) {
 
             return res.status(409).json({ error: "The owner already Exists please Login" })
@@ -43,6 +44,10 @@ const signupValidate = async (req, res) => {
         else if (phoneExist) {
 
             return res.status(408).json({ error: "The owner with same Phone Number already Exist please Re-check" })
+        }
+        else if (accountExist) {
+
+            return res.status(409).json({ error: "The owner with same Account Number already Exist please Re-check" })
         }
         else if (!valid.isValid) {
 
@@ -59,7 +64,7 @@ const signupValidate = async (req, res) => {
                 accountNo,
                 ifc,
             }
-            console.log(60);
+
             return res.status(200).end()
         }
     } catch (error) {
@@ -71,7 +76,7 @@ const signupValidate = async (req, res) => {
 
 const enterOtp = async (req, res) => {
     try {
-        console.log(req.session.ownerDetails);
+
         const email = req.session.ownerDetails.email
         const generateOtp = Signup_functions.generateOTP()
 

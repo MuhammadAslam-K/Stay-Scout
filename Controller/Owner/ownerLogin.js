@@ -30,6 +30,7 @@ const login = ((req, res) => {
 
 const loginVerify = (async (req, res) => {
     try {
+
         const { email, password } = req.body
         const ownerExistes = await Owner.findOne({ email: email })
 
@@ -80,7 +81,6 @@ const logout = ((req, res) => {
     }
 })
 
-/////////// owner SignUp /////////
 
 
 

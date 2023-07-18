@@ -59,19 +59,19 @@ const profile_edit = async (req, res) => {
         }
         else {
 
-            const user = await User.findById(id)
+            const user = await User.findByIdAndUpdate(
+                id,
+                { name, email, phone },
+                { new: true }
+            )
 
-            user.name = name;
-            user.email = email;
-            user.phone = phone;
-
-            const result = await user.save();
             res.status(200).end();
         }
     } catch (error) {
         res.render("500");
     }
 }
+
 
 
 
