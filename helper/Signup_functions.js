@@ -67,7 +67,7 @@ function generateRandomString(length) {
 
 ///////////// USER VALIDATION /////////////////////
 function validate(signUp, data) {
-    console.log(data);
+
     const { name, email, phone, password, password2 } = data;
     const errors = {}
 

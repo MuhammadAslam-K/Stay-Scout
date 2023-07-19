@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
 
 
+import Signup_functions from "../../helper/Signup_functions.js"
 import User from "../../model/userModel.js"
 dotenv.config({ path: "config.env" })
 
@@ -36,7 +37,11 @@ const loginVerify = (async (req, res) => {
 
         if (userExists) {
 
-            if (userExists.is_block == true) {
+            if (userExists.validation == false) {
+
+                return res.status(401).json({ error: "The user is not valid" })
+            }
+            else if (userExists.is_block == true) {
 
                 return res.status(400).json({ error: "Your Account is Blocked Please Contact stayscout@gmail.com" })
             }
@@ -69,6 +74,7 @@ const loginVerify = (async (req, res) => {
             return res.status(400).json({ error: 'user not found signup' });
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please try again later" })
     }
 })
@@ -85,8 +91,118 @@ const logout = ((req, res) => {
 
 })
 
+
+const enterEmail = ((req, res) => {
+
+    try {
+        res.render("emailValidation", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("500");
+                }
+            }
+            res.render("emailValidation")
+        })
+    } catch (error) {
+        return res.status(500).render("500");
+    }
+})
+
+const saveOtp = []
+const emailVerfy = (async (req, res) => {
+    try {
+        req.session.userEmail = req.body.email
+
+        const email = req.session.userEmail
+        const emailExits = await User.findOne({ email: email })
+
+        if (!emailExits) {
+            return res.status(400).json({ error: "This Email is Not Registered Please Regester Now!!!" })
+        }
+        if (emailExits.password == null) {
+
+            return res.status(400).json({ error: "This user is registered with google" })
+        }
+        else if (emailExits) {
+
+            return res.status(200).end()
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal server error please try again later" })
+    }
+
+})
+
+
+const recoveryotp = ((req, res) => {
+
+    try {
+        const email = req.session.userEmail
+        const generateOtp = Signup_functions.generateOTP()
+
+        saveOtp.push(generateOtp)
+        Signup_functions.sendOTP(email, generateOtp)
+        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
+
+        res.render("emailValidationOtp", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.status(404).render("404")
+                } else {
+                    return res.status(500).json({ errorMessage: "Internal Server error please try again later" })
+                }
+            }
+            res.render("emailValidationOtp")
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).render("500");
+    }
+})
+
+
+const verifyOtp = (async (req, res) => {
+    try {
+        const enteredOtp = req.body.OTP
+        const email = req.session.userEmail
+
+        let i
+
+        for (i = 0; i < saveOtp.length; i++) {
+
+            if (saveOtp[i] == enteredOtp) {
+                saveOtp.splice(i, 1)
+
+                const user = await User.findOneAndUpdate(
+                    { email: email },
+                    { validation: true },
+                    { new: true }
+                )
+                delete req.session.userEmail
+                return res.status(200).end()
+            }
+        }
+        return res.status(400).json({ error: "Invalid OTP" })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal server error please try again later" })
+    }
+})
+
+
 export default {
     login,
     loginVerify,
-    logout
+    logout,
+
+    emailVerfy,
+    enterEmail,
+
+    recoveryotp,
+    verifyOtp,
 }

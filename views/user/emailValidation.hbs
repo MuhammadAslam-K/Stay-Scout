@@ -1,0 +1,103 @@
+{{>userHeader}}
+
+<body class="bg-gradient-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9" style="margin-top: 100px;">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-email-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-2"></h1>
+                                        <h1>Verify email</h1>
+                                        <p>Please Enter Your Registered Email<br>for the Verification</p>
+                                    </div>
+                                    <form class="user" id="enterEmailForm">
+                                        <div class="form-group">
+                                            <input type="tel" class="form-control form-control-user" name="email"
+                                                placeholder="Email Address" id="userEmail" required>
+                                            <span id="emailError" class="text-danger error-msg"></span>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-user btn-block"
+                                            onclick=" return emailValidation()">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{{>userFooter}}
+
+<style>
+    span {
+        font-size: small
+    }
+</style>
+
+
+<script src="/js/axios.min.js"></script>
+<script>
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        resetError()
+
+        try {
+            const response = await axios.post('/emailveryfy', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status == 200) {
+                window.location.href = '/emailotp'
+            }
+        } catch (error) {
+
+            if (error.response.status == 400) {
+                document.getElementById('emailError').textContent = error.response.data.error;
+            }
+            else if (error.response.status == 500) {
+                const err = error.response.data.error;
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
+            else {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+            }
+
+        }
+    };
+
+    document.getElementById('enterEmailForm').addEventListener('submit', handleSubmit);
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
+</script>
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>

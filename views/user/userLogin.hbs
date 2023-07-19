@@ -30,9 +30,7 @@
                                             Password</span>
                                         <button class="btn btn-primary btn-user btn-block" type="submit">Login</button>
                                     </form>
-                                    {{!-- <a href="/auth/google/signin" class="btn btn-google btn-user btn-block ">
-                                        <i class="fab fa-google fa-fw"></i> Signin with Google
-                                    </a> --}}
+
                                     <a href="/auth/google/signin" class="btn btn-google btn-user btn-block">
                                         <i class="fab fa-google fa-fw"></i> Sign in with Google
                                     </a>
@@ -87,7 +85,10 @@
             }
         } catch (error) {
 
-            if (error.response.status === 400) {
+            if (error.response.status == 401) {
+                window.location.href = '/emailveryfy';
+            }
+            else if (error.response.status === 400) {
                 document.getElementById('passwordError').textContent = error.response.data.error;
             }
             else if (error.response.status == 500) {

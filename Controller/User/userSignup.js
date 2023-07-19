@@ -28,51 +28,79 @@ let saveOtp = []
 const signupValidation = async (req, res) => {
 
     try {
-        // console.log(req.body);
+
         const { name, email, phone, password, refrelCode } = req.body
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
-        let refrelCodeExists
-
-        if (refrelCode) {
-            refrelCodeExists = await User.findOne({ refrelCode: refrelCode })
-        }
-
-
+        const date = new Date();
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
         const valid = Signup_functions.validate(true, req.body)
+
         let wallet = 0
         let referedUser
-
+        let transactions = []
 
         console.log(valid);
+
         if (!valid.isValid) {
 
             return res.status(400).json({ error: valid.errors })
-        }
-        else if (phoneExist) {
-
-            return res.status(409).json({ error: "The user with same Mobile Number already Exist please try another Number" })
         }
         else if (emailExist) {
             return res.status(409).json({ error: "user Exists Please Login" })
 
         }
+        else if (phoneExist) {
 
-
-        if (refrelCodeExists) {
-            wallet = 50
-            referedUser = refrelCodeExists
+            return res.status(409).json({ error: "The user with same Mobile Number already Exist please try another Number" })
         }
 
-        req.session.userDetails = {
+
+        if (refrelCode) {
+
+            wallet = 50
+            const details = `${name} joined using your Referel`
+            referedUser = await User.findOneAndUpdate(
+                { refrelCode: refrelCode },
+                {
+                    $inc: { 'wallet.balance': 100 },
+                    $push: {
+                        'wallet.transactions': {
+                            date: formattedDate,
+                            details: details,
+                            amount: 100
+                        }
+                    }
+                },
+                { new: true }
+            );
+        }
+
+        if (referedUser) {
+            const referedUserName = referedUser.name
+            let data = {
+                date: formattedDate,
+                details: `You joined using ${referedUserName} Referel code`,
+                amount: wallet
+            }
+            transactions.push(data)
+        }
+        const hashedPassword = await Signup_functions.passwordHash(password)
+        const userRefrelCode = Signup_functions.generateRandomString(10);
+
+        const user = new User({
             name,
             email,
             phone,
-            password,
-            wallet,
-            referedUser,
-        }
-
+            password: hashedPassword,
+            refrelCode: userRefrelCode,
+            wallet: {
+                balance: wallet,
+                transactions: transactions,
+            }
+        })
+        const userData = await user.save()
+        req.session.userData = userData
         return res.status(200).end();
 
     } catch (error) {
@@ -86,9 +114,7 @@ const signupValidation = async (req, res) => {
 const enterOtp = (req, res) => {
     try {
 
-
-
-        const email = req.session.userDetails.email
+        const email = req.session.userData.email
         const generateOtp = Signup_functions.generateOTP()
 
         saveOtp.push(generateOtp)
@@ -107,6 +133,7 @@ const enterOtp = (req, res) => {
         })
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
 
     }
@@ -117,77 +144,20 @@ const verifyOtp = async (req, res) => {
     try {
 
         const enteredOtp = req.body.otp
-        let id
-        let referedUserName
-
-        if (req.session.userDetails.referedUser) {
-            id = req.session.userDetails.referedUser._id
-            referedUserName = req.session.userDetails.referedUser.name
-        }
-        const amount = 100
-        const date = new Date()
-        let transactions = []
-
+        const email = req.session.userData.email
         let i
 
         for (i = 0; i < saveOtp.length; i++) {
 
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
-
-                const { name, email, phone, password, wallet } = req.session.userDetails
-                const details = `${name} joined using your Referal`
-                const refrelCode = Signup_functions.generateRandomString(10);
-                const hashedPassword = await Signup_functions.passwordHash(password)
-
-                if (id != null) {
-
-                    const referedUser = await User.findByIdAndUpdate(
-                        id,
-                        {
-                            $inc: { 'wallet.balance': amount },
-                            $push: {
-                                'wallet.transactions': {
-                                    date: date,
-                                    details: details,
-                                    amount: amount
-                                }
-                            }
-                        },
-                        { new: true }
-                    );
-                }
-
-                if (wallet != 0) {
-                    let transactionDetails = {
-                        date: date,
-                        details: `joined using the Referel code of ${referedUserName}`,
-                        amount: wallet
-                    }
-                    transactions.push(transactionDetails)
-                }
-
-                const user = new User({
-                    name,
-                    email,
-                    phone,
-                    password: hashedPassword,
-                    refrelCode,
-                    wallet: {
-                        balance: wallet,
-                        transactions: transactions
-                    }
-                })
-
-                delete req.session.userDetails
-
-                try {
-                    await user.save()
-                    return res.status(200).end();
-
-                } catch (error) {
-                    return res.status(500).json({ error: error })
-                }
+                const user = await User.findOneAndUpdate(
+                    { email: email },
+                    { validation: true },
+                    { new: true }
+                )
+                delete req.session.userData
+                return res.status(200).end()
             }
         }
         return res.status(400).json({ error: "Invalid OTP" })

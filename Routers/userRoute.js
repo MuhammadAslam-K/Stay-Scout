@@ -29,6 +29,11 @@ user_route.get("/login", islogout, loginController.login)
 user_route.post("/login", islogout, loginController.loginVerify)
 user_route.get("/logout", isLogged, loginController.logout)
 
+user_route.get("/emailveryfy", islogout, loginController.enterEmail)
+user_route.post("/emailveryfy", islogout, loginController.emailVerfy)
+user_route.get("/emailotp", islogout, loginController.recoveryotp)
+user_route.post("/emailotp", islogout, loginController.verifyOtp)
+
 
 user_route.get('/signup', islogout, signupController.signUp)
 user_route.post('/signup', islogout, signupController.signupValidation)
