@@ -78,7 +78,3 @@ export default {
     roomsFilter,
 
 }
-
-// checkInDates: JSON.stringify(room.checkIn),
-// checkOutDates: JSON.stringify(room.checkOut)
-// }

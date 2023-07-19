@@ -1,7 +1,9 @@
 {{>userHeader}}
 {{>userNavbar}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
     body {
         margin-top: 20px;
@@ -65,7 +67,7 @@
     }
 </style>
 
-<body>
+<body class="bg-dark bg-gradient">
     <div class="container">
         <div class="main-body" style="margin-top: 100px;">
             <div class="row gutters-sm">
@@ -91,7 +93,8 @@
                                         <h6 class="mb-0">Full Name</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" name="name" value="{{user.name}}" readonly>
+                                        <input type="text" class="form-control border-0" name="name"
+                                            value="{{user.name}}" readonly>
                                         <span class="text-danger error-msg" id="nameError"></span>
                                     </div>
                                 </div>
@@ -101,7 +104,8 @@
                                         <h6 class="mb-0">Email</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" name="email" value="{{user.email}}" readonly>
+                                        <input type="text" name="email" class="form-control border-0"
+                                            value="{{user.email}}" readonly>
                                         <span class="text-danger error-msg" id="emailError"></span>
                                     </div>
                                 </div>
@@ -111,10 +115,49 @@
                                         <h6 class="mb-0">Phone</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" name="phone" value="{{user.phone}}" readonly>
+                                        <input type="text" name="phone" class="form-control border-0"
+                                            value="{{user.phone}}" readonly>
                                         <span class="text-danger error-msg" id="phoneError"></span>
                                     </div>
                                 </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Wallet Balance</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <i class="fa-solid fa-wallet" style="color: #61646b;"></i>
+                                        <span>{{user.wallet.balance}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Referral code</h6>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span id="referralCode">{{user.refrelCode}}</span>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button onclick="copyReferralCode()" class="btn btn-primary"><i
+                                                class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    function copyReferralCode() {
+                                        const referralCode = document.getElementById("referralCode").innerText;
+
+                                        const tempInput = document.createElement("input");
+                                        tempInput.setAttribute("value", referralCode);
+                                        document.body.appendChild(tempInput);
+                                        tempInput.select();
+                                        document.execCommand("copy");
+                                        document.body.removeChild(tempInput);
+
+                                    }
+                                </script>
+
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-12">

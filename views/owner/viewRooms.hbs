@@ -28,6 +28,7 @@
                                             <th>Is Blocked</th>
                                             <th>Is Available</th>
                                             <th>Edit</th>
+                                            <th>Booking</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -57,6 +58,10 @@
                                             <td>
                                                 <a href="/owner/room/edit?id={{this._id}}"
                                                     class="btn btn-block btn-primary">Edit</a>
+                                            </td>
+                                            <td>
+                                                <a href="/owner/room/status?id={{this._id}}"
+                                                    class="btn btn-block btn-primary">status</a>
                                             </td>
                                         </tr>
                                         {{/each}}

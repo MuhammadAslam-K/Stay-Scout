@@ -22,15 +22,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    // wallet: {
-    //     type: Number,
-    //     default: 0,
-    // },
-    // walletHistory: [{
-    //     details: String,
-    //     amount: Number,
-    //     date: new Date(),
-    // }],
+
 
     wallet: {
         balance: {
@@ -53,7 +45,6 @@ const userSchema = new mongoose.Schema({
     },
     refrelCode: {
         type: String,
-        required: true,
         unique: true
     },
     prevVisited: [

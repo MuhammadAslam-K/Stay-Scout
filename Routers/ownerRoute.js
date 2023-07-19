@@ -47,6 +47,7 @@ owner_route.post("/hotel/addrooms", isLogged, isBlocked, upload.array('image', 4
 
 owner_route.post("/room/block", isLogged, isBlocked, roomManagement.blockRoom)
 owner_route.get("/room/edit", isLogged, isBlocked, roomManagement.editRoom)
+owner_route.get("/room/status", isLogged, isBlocked, roomManagement.roomStatus)
 owner_route.post("/room/edit", isLogged, isBlocked, upload.array('image', 4), roomManagement.updateRoom)
 
 

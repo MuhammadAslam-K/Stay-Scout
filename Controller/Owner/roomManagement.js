@@ -161,8 +161,8 @@ const editRoom = (async (req, res) => {
 
 const updateRoom = (async (req, res) => {
     try {
+
         const id = req.session.roomID
-        // const room = await Rooms.findOne({ _id: id })
         const files = req.files;
         const roomImages = [];
         let amenities = []
@@ -225,11 +225,31 @@ const updateRoom = (async (req, res) => {
 })
 
 
+const roomStatus = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        const room = await Rooms.findById(id)
+
+        res.render("calender", {
+            checkInDates: JSON.stringify(room.checkIn),
+            checkOutDates: JSON.stringify(room.checkOut)
+        });
+
+    } catch (error) {
+        res.render("500")
+    }
+
+})
+
+
+
 
 export default {
     addRoom,
     submitRoom,
     viewRooms,
+    roomStatus,
 
     blockRoom,
     editRoom,

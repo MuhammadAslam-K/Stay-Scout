@@ -141,13 +141,13 @@ const verifyOtp = async (req, res) => {
                 const hashedPassword = await Signup_functions.passwordHash(password)
 
                 if (id != null) {
+
                     const referedUser = await User.findByIdAndUpdate(
                         id,
                         {
-                            wallet:
-                            {
-                                balance: amount,
-                                transactions: {
+                            $inc: { 'wallet.balance': amount },
+                            $push: {
+                                'wallet.transactions': {
                                     date: date,
                                     details: details,
                                     amount: amount
@@ -155,7 +155,7 @@ const verifyOtp = async (req, res) => {
                             }
                         },
                         { new: true }
-                    )
+                    );
                 }
 
                 if (wallet != 0) {

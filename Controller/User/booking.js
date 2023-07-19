@@ -46,13 +46,20 @@ const book = (async (req, res) => {
 
 
 const roomcheckin = async (req, res) => {
-    const id = req.session.room
-    const room = await Room.findById(id)
 
-    res.render("calender", {
-        checkInDates: JSON.stringify(room.checkIn),
-        checkOutDates: JSON.stringify(room.checkOut)
-    });
+    try {
+        const id = req.session.room
+        const room = await Room.findById(id)
+
+        res.render("calender", {
+            checkInDates: JSON.stringify(room.checkIn),
+            checkOutDates: JSON.stringify(room.checkOut)
+        });
+
+    } catch (error) {
+        res.render("500")
+    }
+
 };
 
 
