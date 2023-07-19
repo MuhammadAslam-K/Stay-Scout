@@ -101,7 +101,7 @@
     <div class="m-3">
         <p>Available Amenities</p>
         {{#each hotel.amenities}}
-        <input type="checkbox" name="oldAmenities" value="{{this}}">
+        <input type="checkbox" name="oldAmenities" value="{{this}}" checked>
         <span class="me-3">{{this}}</span>
         {{/each}}
     </div>
@@ -118,7 +118,7 @@
         {{#each hotel.images}}
         <div>
             <img class="image-preview" src="{{this.url}}" alt="Image Preview">
-            <input type="checkbox" name="selectedImages" value="{{this.url}}">
+            <input type="checkbox" checked name="selectedImages" value="{{this.url}}">
         </div>
         {{/each}}
     </div>

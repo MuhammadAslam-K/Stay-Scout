@@ -1,5 +1,9 @@
 import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
 
+
+
+dotenv.config({ path: "config.env" })
 
 const login = ((req, res) => {
     try {
@@ -28,11 +32,11 @@ const loginVerify = ((req, res) => {
     try {
         const { email, password } = req.body
 
-        if (email != admin.email) {
+        if (email != process.env.ADMIN_EMAIL) {
 
             return res.status(401).json({ error: "Unauthorized Admin" })
         }
-        else if (password != admin.password) {
+        else if (password != process.env.ADMIN_PASSWORD) {
 
             return res.status(400).json({ error: "Wrong Password" })
         }

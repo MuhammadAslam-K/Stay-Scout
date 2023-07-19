@@ -162,7 +162,7 @@ const editRoom = (async (req, res) => {
 const updateRoom = (async (req, res) => {
     try {
         const id = req.session.roomID
-        const room = await Rooms.findOne({ _id: id })
+        // const room = await Rooms.findOne({ _id: id })
         const files = req.files;
         const roomImages = [];
         let amenities = []
@@ -207,17 +207,13 @@ const updateRoom = (async (req, res) => {
                 amenities = [...oldAmenities]
             }
 
-            room.price = price
-            room.adults = adults
-            room.childrents = childrents
-            room.bed = bed
-            room.Cancellation = Cancellation
-            room.description = description
-            room.amenities = amenities
-            room.images = images
-            room.category = categoryId
+            const room = await Rooms.findByIdAndUpdate(
+                id,
+                { price, adults, childrents, bed, Cancellation, description, amenities, images, category: categoryId },
+                { new: true }
+            )
 
-            const resu = await room.save()
+
             return res.send(200).end()
         }
 

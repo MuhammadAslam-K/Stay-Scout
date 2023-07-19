@@ -141,7 +141,7 @@ const updateHotel = (async (req, res) => {
 
     try {
         const id = req.session.HOTELID
-        const hotel = await Hotel.findById(id)
+        // const hotel = await Hotel.findById(id)
         const files = req.files
         const hotelImages = []
         let amenities = []
@@ -167,8 +167,8 @@ const updateHotel = (async (req, res) => {
 
             const images = hotelImages.concat(oldImages.map((url) => ({ url })));
 
-            const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address } = req.body
-
+            const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address, latitude, longitude } = req.body
+            // console.log(req.body);
             let typeId
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
@@ -181,28 +181,21 @@ const updateHotel = (async (req, res) => {
                 typeId = type
             }
 
-            console.log(newAmenities);
             if (newAmenities) {
-                console.log(186);
+
                 amenities = [...oldAmenities, ...newAmenities]
             }
             else {
-                console.log(194)
+
                 amenities = [...oldAmenities]
             }
 
-            hotel.name = name
-            hotel.title = title
-            hotel.startingPrice = startingPrice
-            hotel.city = city
-            hotel.pincode = pincode
-            hotel.description = description
-            hotel.address = address
-            hotel.type = typeId
-            hotel.images = images
-            hotel.amenities = amenities
+            const hotel = await Hotel.findByIdAndUpdate(
+                id,
+                { name, title, startingPrice, city, pincode, description, type: typeId, images, amenities, address, latitude, longitude },
+                { new: true }
+            )
 
-            const reu = await hotel.save()
             return res.status(200).end()
         }
     } catch (error) {

@@ -195,9 +195,10 @@ function Ownervalidate(signUp, data) {
         errors.ifcError = "please enter the IFC code"
     } else if (ifc[0] == " ") {
         errors.ifcError = "invalid input"
-    } else if (!ifcPattern.test(ifc)) {
-        errors.ifcError = "Enter a valid IFC code"
     }
+    // else if (!ifcPattern.test(ifc)) {
+    //     errors.ifcError = "Enter a valid IFC code"
+    // }
 
 
     return {
