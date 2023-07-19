@@ -33,13 +33,16 @@ const signupValidation = async (req, res) => {
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
         let refrelCodeExists
+
         if (refrelCode) {
             refrelCodeExists = await User.findOne({ refrelCode: refrelCode })
         }
-        console.log(refrelCodeExists);
+
+
         const valid = Signup_functions.validate(true, req.body)
         let wallet = 0
-        let walletHistory = []
+        let referedUser
+
 
         console.log(valid);
         if (!valid.isValid) {
@@ -58,7 +61,7 @@ const signupValidation = async (req, res) => {
 
         if (refrelCodeExists) {
             wallet = 50
-            walletHistory.push(refrelCodeExists.name)
+            referedUser = refrelCodeExists
         }
 
         req.session.userDetails = {
@@ -67,7 +70,7 @@ const signupValidation = async (req, res) => {
             phone,
             password,
             wallet,
-            walletHistory,
+            referedUser,
         }
 
         return res.status(200).end();
@@ -83,7 +86,7 @@ const signupValidation = async (req, res) => {
 const enterOtp = (req, res) => {
     try {
 
-        console.log(req.session.userDetails)
+
 
         const email = req.session.userDetails.email
         const generateOtp = Signup_functions.generateOTP()
@@ -114,11 +117,16 @@ const verifyOtp = async (req, res) => {
     try {
 
         const enteredOtp = req.body.otp
-        console.log(req.session.userDetails.walletHistory);
-        console.log(req.session.userDetails.walletHistory[0]);
-        const name = req.session.userDetails.walletHistory[0]
+        let id
+        let referedUserName
+
+        if (req.session.userDetails.referedUser) {
+            id = req.session.userDetails.referedUser._id
+            referedUserName = req.session.userDetails.referedUser.name
+        }
         const amount = 100
-        const referedUser = await User.findOneAndUpdate({ name: name }, { wallet: amount })
+        const date = new Date()
+        let transactions = []
 
         let i
 
@@ -127,10 +135,37 @@ const verifyOtp = async (req, res) => {
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
 
-                const { name, email, phone, password, wallet, walletHistory } = req.session.userDetails
+                const { name, email, phone, password, wallet } = req.session.userDetails
+                const details = `${name} joined using your Referal`
                 const refrelCode = Signup_functions.generateRandomString(10);
-                console.log(refrelCode);
                 const hashedPassword = await Signup_functions.passwordHash(password)
+
+                if (id != null) {
+                    const referedUser = await User.findByIdAndUpdate(
+                        id,
+                        {
+                            wallet:
+                            {
+                                balance: amount,
+                                transactions: {
+                                    date: date,
+                                    details: details,
+                                    amount: amount
+                                }
+                            }
+                        },
+                        { new: true }
+                    )
+                }
+
+                if (wallet != 0) {
+                    let transactionDetails = {
+                        date: date,
+                        details: `joined using the Referel code of ${referedUserName}`,
+                        amount: wallet
+                    }
+                    transactions.push(transactionDetails)
+                }
 
                 const user = new User({
                     name,
@@ -138,8 +173,10 @@ const verifyOtp = async (req, res) => {
                     phone,
                     password: hashedPassword,
                     refrelCode,
-                    wallet,
-                    walletHistory,
+                    wallet: {
+                        balance: wallet,
+                        transactions: transactions
+                    }
                 })
 
                 delete req.session.userDetails
@@ -155,6 +192,7 @@ const verifyOtp = async (req, res) => {
         }
         return res.status(400).json({ error: "Invalid OTP" })
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
     }
 }
