@@ -12,15 +12,28 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        // require: true
+
     },
     password: {
         type: String,
-        // require: true
+
     },
     is_block: {
         type: Boolean,
         default: false
+    },
+    wallet: {
+        type: Number,
+        default: 0,
+    },
+    walletHistory: {
+        type: Array,
+        default: []
+    },
+    refrelCode: {
+        type: String,
+        required: true,
+        unique: true
     },
     prevVisited: [
         {

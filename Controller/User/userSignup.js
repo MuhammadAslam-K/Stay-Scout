@@ -29,10 +29,18 @@ const signupValidation = async (req, res) => {
 
     try {
         // console.log(req.body);
-        const { name, email, phone, password } = req.body
+        const { name, email, phone, password, refrelCode } = req.body
         const emailExist = await User.findOne({ email: email })
         const phoneExist = await User.findOne({ phone: phone })
+        let refrelCodeExists
+        if (refrelCode) {
+            refrelCodeExists = await User.findOne({ refrelCode: refrelCode })
+        }
+        console.log(refrelCodeExists);
         const valid = Signup_functions.validate(true, req.body)
+        let wallet = 0
+        let walletHistory = []
+
         console.log(valid);
         if (!valid.isValid) {
 
@@ -46,16 +54,24 @@ const signupValidation = async (req, res) => {
             return res.status(409).json({ error: "user Exists Please Login" })
 
         }
-        else {
-            req.session.userDetails = {
-                name,
-                email,
-                phone,
-                password
-            }
 
-            return res.status(200).end();
+
+        if (refrelCodeExists) {
+            wallet = 50
+            walletHistory.push(refrelCodeExists.name)
         }
+
+        req.session.userDetails = {
+            name,
+            email,
+            phone,
+            password,
+            wallet,
+            walletHistory,
+        }
+
+        return res.status(200).end();
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
@@ -96,9 +112,14 @@ const enterOtp = (req, res) => {
 
 const verifyOtp = async (req, res) => {
     try {
-        console.log(req.body)
+
         const enteredOtp = req.body.otp
-        console.log(enteredOtp);
+        console.log(req.session.userDetails.walletHistory);
+        console.log(req.session.userDetails.walletHistory[0]);
+        const name = req.session.userDetails.walletHistory[0]
+        const amount = 100
+        const referedUser = await User.findOneAndUpdate({ name: name }, { wallet: amount })
+
         let i
 
         for (i = 0; i < saveOtp.length; i++) {
@@ -106,7 +127,9 @@ const verifyOtp = async (req, res) => {
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
 
-                const { name, email, phone, password } = req.session.userDetails
+                const { name, email, phone, password, wallet, walletHistory } = req.session.userDetails
+                const refrelCode = Signup_functions.generateRandomString(10);
+                console.log(refrelCode);
                 const hashedPassword = await Signup_functions.passwordHash(password)
 
                 const user = new User({
@@ -114,6 +137,9 @@ const verifyOtp = async (req, res) => {
                     email,
                     phone,
                     password: hashedPassword,
+                    refrelCode,
+                    wallet,
+                    walletHistory,
                 })
 
                 delete req.session.userDetails

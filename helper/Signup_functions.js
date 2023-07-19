@@ -50,6 +50,21 @@ async function sendOTP(email, otp) {
     }
 }
 
+/////////RANDOM STRING////////
+function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+}
+
+
+
 ///////////// USER VALIDATION /////////////////////
 function validate(signUp, data) {
     console.log(data);
@@ -212,6 +227,7 @@ export default {
     passwordHash,
     generateOTP,
     sendOTP,
+    generateRandomString,
     otpRemoval,
 
     validate,
