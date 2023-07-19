@@ -73,10 +73,34 @@ const profile_edit = async (req, res) => {
 }
 
 
+const walletHistory = (async (req, res) => {
+
+    try {
+        const id = req.session.user._id
+        const user = await User.findById(id)
+
+        res.render("walletHistory", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("500");
+                }
+            }
+            res.render("walletHistory", { user })
+        })
+    } catch (error) {
+        res.render("500")
+    }
+
+})
+
+
 
 
 export default {
     home,
     profile,
     profile_edit,
+    walletHistory,
 }

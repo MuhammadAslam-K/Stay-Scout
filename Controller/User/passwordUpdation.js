@@ -28,9 +28,10 @@ const emailValidation = (async (req, res) => {
 
         const email = req.session.userEmail
         const emailExits = await User.findOne({ email: email })
-        console.log(emailExits);
-        console.log(emailExits.password);
 
+        if (!emailExits) {
+            return res.status(400).json({ error: "This Email is Not Registered Please Regester Now!!!" })
+        }
         if (emailExits.password == null) {
             console.log(37);
             return res.status(400).json({ error: "This user is registered with google" })
@@ -39,10 +40,9 @@ const emailValidation = (async (req, res) => {
 
             return res.status(200).end()
         }
-        else {
-            return res.status(400).json({ error: "This Email is Not Registered Please Regester Now!!!" })
-        }
+
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal server error please try again later" })
     }
 

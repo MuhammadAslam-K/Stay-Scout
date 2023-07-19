@@ -50,6 +50,7 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 user_route.get("/", userController.home)
 user_route.get("/profile", isLogged, isBlocked, userController.profile)
 user_route.post("/profile/edit", isLogged, isBlocked, userController.profile_edit)
+user_route.get("/wallethistory", userController.walletHistory)
 
 
 //////// HOTELS /////////////isLogged, isBlocked, 
@@ -69,6 +70,14 @@ user_route.post("/room/book", isLogged, isBlocked, booking.book)
 /////////////CONTACT////////////
 user_route.get("/contact", isLogged, isBlocked, contact.contact)
 user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
+
+
+//////////////PAYMENT/////////
+user_route.get("/payment", booking.payment)
+
+
+
+
 
 
 /////// GOOGLE SIGNIN///////

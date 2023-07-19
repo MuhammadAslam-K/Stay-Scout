@@ -44,6 +44,29 @@ const book = (async (req, res) => {
 })
 
 
+const payment = (req, res) => {
+
+    try {
+        res.render("payment", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("500");
+                }
+            }
+            res.render("payment")
+        })
+
+    } catch (error) {
+        res.render("500")
+    }
+
+}
+
+
+
+
 
 const roomcheckin = async (req, res) => {
 
@@ -59,11 +82,11 @@ const roomcheckin = async (req, res) => {
     } catch (error) {
         res.render("500")
     }
-
-};
+}
 
 
 export default {
     book,
     roomcheckin,
+    payment,
 }

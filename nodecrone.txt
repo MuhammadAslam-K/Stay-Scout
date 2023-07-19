@@ -1,0 +1,45 @@
+const cron = require('node-cron');
+const Rooms = require('./path/to/your/Rooms/model'); // Replace with the path to your Rooms model
+
+// Schedule the job to run every day at midnight (you can adjust the schedule as needed)
+cron.schedule('0 0 * * *', async () => {
+  const currentDate = new Date();
+
+  // Find rooms where any check-out date is before or equal to the current date
+  const roomsToUpdate = await Rooms.find({
+    checkOut: { $lte: currentDate }
+  });
+
+  if (roomsToUpdate.length > 0) {
+    // Remove expired check-out dates from the checkOut array
+    for (const room of roomsToUpdate) {
+      room.checkOut = room.checkOut.filter(date => date > currentDate);
+      await room.save();
+    }
+
+    console.log(`Removed expired check-out dates from ${roomsToUpdate.length} rooms.`);
+  }
+}, {
+  scheduled: true,
+  timezone: 'Your_Timezone' // Replace with your timezone (e.g., 'America/New_York')
+});
+
+
+server
+
+const mongoose = require('mongoose');
+const scheduledJob = require('./scheduledJob'); // Replace with the path to the scheduled job file
+
+// Connect to your MongoDB database
+mongoose.connect('mongodb://localhost:27017/your_database', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+    // Start the scheduled job
+    scheduledJob.start();
+  })
+  .catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+  });
