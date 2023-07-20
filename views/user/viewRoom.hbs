@@ -31,7 +31,7 @@
         <div class="col-lg-5 order-lg-2">
             <div class="col-md-8 offset-md-2 form-container" data-aos="fade-up">
 
-                <form id="checkin" class="align-form-elements mb-3">
+                <form id="checkinForm" class="align-form-elements mb-3">
                     <div class="form-group">
                         <label for="checkin">Check-in Date</label>
                         <input type="date" class="form-control" id="checkin" name="checkIn" required>
@@ -47,12 +47,14 @@
                         <input type="number" class="form-control" id="adults" name="adults" required>
                         <span class="text-danger error-msg" id="adultError"></span>
                     </div>
+                    {{#if childrents}}
                     <div class="form-group">
                         <label for="kids">Kids</label>
                         <input type="number" class="form-control" id="kids" name="kids" required>
                         <span class="text-danger error-msg" id="kidsError"></span>
                     </div>
-                    <button type="button" class="btn btn-primary" id="book">Book</button>
+                    {{/if}}
+                    <button type="submit" class="btn btn-primary" id="book">Book</button>
                     <a href="/room/checkin" class="btn btn-primary">Room status</a>
                 </form>
                 {{#each room.amenities}}
@@ -89,16 +91,20 @@
 {{>userFooter}}
 
 
-{{!-- BOOKING --}}
 <script>
     const handleBook = async (event) => {
         event.preventDefault();
+        resetError()
 
-        const formData = new FormData(document.getElementById('checkin'));
+        const formData = new FormData(event.target);
+
 
         try {
-            const response = await axios.post('/room/book', Object.fromEntries(formData));
-            resetError()
+            const response = await axios.post('/room/book', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
             if (response.status === 200) {
                 Notification()
@@ -140,7 +146,7 @@
             }
         }
     };
-    document.getElementById('book').addEventListener('click', handleBook);
+    document.getElementById('checkinForm').addEventListener('submit', handleBook);
 
     function resetError() {
         const errorElements = document.querySelectorAll(".error-msg");

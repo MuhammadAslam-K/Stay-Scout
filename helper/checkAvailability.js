@@ -3,9 +3,11 @@ import Room from "../model/roomsModel.js";
 
 
 const formValidation = async (id, data) => {
+
     let errors = {}
     const room = await Room.findById(id)
-    const { checkIn, checkOut, adults, kids } = data
+    const { checkIn, checkOut, } = data
+
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
     let booking

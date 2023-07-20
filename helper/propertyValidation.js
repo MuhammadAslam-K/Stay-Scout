@@ -137,8 +137,10 @@ function roomValidation(data) {
 }
 
 
-const bookingValidation = (date) => {
-    const { checkIn, checkOut, adults, kids } = date;
+const bookingValidation = (data) => {
+
+    const { checkIn, checkOut, adults } = data;
+    console.log(data);
     const numberPattern = /^[0-9]+$/;
     const errors = {};
 
@@ -146,9 +148,9 @@ const bookingValidation = (date) => {
         errors.adultsError = "Invalid input for adults";
     }
 
-    if (!numberPattern.test(kids)) {
-        errors.kidsError = "Invalid input for kids";
-    }
+    // if (!numberPattern.test(kids)) {
+    //     errors.kidsError = "Invalid input for kids";
+    // }
 
     const currentDate = new Date();
     const checkInDate = new Date(checkIn);

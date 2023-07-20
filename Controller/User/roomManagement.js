@@ -48,6 +48,10 @@ const roomDetails = (async (req, res) => {
         const id = req.query.id
         const room = await propertyFetching.room(id)
         req.session.room = id
+        let childrents = true
+        if (room.childrents == 0) {
+            childrents = false
+        }
 
         res.render("viewRoom", (err) => {
             if (err) {
@@ -58,7 +62,7 @@ const roomDetails = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("viewRoom", { room })
+            res.render("viewRoom", { room, childrents })
         })
     } catch (error) {
         console.log(error);

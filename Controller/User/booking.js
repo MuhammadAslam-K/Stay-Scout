@@ -9,11 +9,9 @@ const book = (async (req, res) => {
         const id = req.session.room;
         const room = await Room.findById(id)
         const { checkIn, checkOut, adults, kids } = req.body;
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
+        console.log(req.body);
         const valid = propertyValidation.bookingValidation(req.body)
         const available = await availability.formValidation(id, req.body)
-
 
         if (!valid.isValid) {
 
@@ -22,15 +20,21 @@ const book = (async (req, res) => {
         else if (adults > room.adults) {
             return res.status(402).json({ error: `The room cancontain only ${room.adults} Adults` })
         }
-        else if (kids > room.childrents) {
-            return res.status(401).json({ error: `The room cancontain only ${room.childrents} kids` })
+
+        if (kids !== "") {
+
+            if (kids > room.childrents) {
+                return res.status(401).json({ error: `The room cancontain only ${room.childrents} kids` })
+            }
         }
 
-        else if (available === true) {
+        if (available === true) {
+
+            const checkInDate = new Date(checkIn);
+            const checkOutDate = new Date(checkOut);
             room.checkIn.push(checkInDate)
             room.checkOut.push(checkOutDate)
             await room.save()
-
             return res.status(200).json({ message: "The Room is Available" })
         }
         else if (available === false) {
