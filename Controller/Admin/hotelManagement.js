@@ -61,8 +61,62 @@ const hotelBoosting = async (req, res) => {
 }
 
 
+const hotelForApproval = async (req, res) => {
+
+    try {
+        const hotels = await Hotel.find({
+            adminApproval: { $in: ['Pending', 'Rejected'] }
+        }).populate("owner")
+
+        res.render("hotelForApproval", { hotels })
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+}
+
+
+
+const hotelForApproval_post = async (req, res) => {
+
+    try {
+        const { status, hotelId } = req.body
+
+        const hotel = await Hotel.findByIdAndUpdate(
+            hotelId,
+            { adminApproval: status },
+            { new: true }
+        )
+        res.status(200).end()
+    } catch (error) {
+        res.render("500")
+    }
+
+}
+
+
+const hotelDetails = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        const hotel = await Hotel.findById(id).populate("type")
+        res.render("viewHotelDetails", { hotel })
+
+    } catch (error) {
+        res.render("500")
+    }
+})
+
+
+
+
+
 export default {
     ownerHotels,
     blockHotel,
-    hotelBoosting
+    hotelBoosting,
+
+    hotelForApproval,
+    hotelForApproval_post,
+    hotelDetails
 }

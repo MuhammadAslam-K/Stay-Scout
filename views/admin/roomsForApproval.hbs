@@ -1,0 +1,109 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<style>
+    <style>.boost-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .boost-arrow {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .boost-value {
+        margin: 0 10px;
+    }
+</style>
+
+
+
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+                </nav>
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">HOTELS</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Hotel</th>
+                                            <th>Owner</th>
+                                            <th>Approval status</th>
+                                            <th>Approv</th>
+                                            <th>Detailas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each rooms}}
+                                        <tr>
+                                            <td>{{this.hotel.name}}</td>
+                                            <td>{{this.owner.name}}</td>
+                                            <td>{{this.adminApproval}}</td>
+                                            <td>
+                                                <button class="btn btn-success" data-status="Approved"
+                                                    data-room-id="{{this._id}}">Approve</button>
+                                                <button class="btn btn-danger" data-status="Rejected"
+                                                    data-room-id="{{this._id}}">Reject</button>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/room/details?id={{this._id}}"
+                                                    class="btn btn-primary">Details</a>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+{{>userFooter}}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable(); // Initialize DataTables if needed
+
+        // Handle click event for approval or rejected buttons
+        $('body').on('click', '.btn-success, .btn-danger', function () {
+            const status = $(this).data('status');
+            const roomId = $(this).data('room-id');
+
+            // Send the data to the server using Axios
+            axios.post('/admin/room/approval', { status, roomId })
+                .then(response => {
+                    // Handle the response if needed (optional)
+                    location.reload()
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    // Handle errors if the request fails
+                    console.error('Error:', error);
+                });
+        });
+    });
+</script>

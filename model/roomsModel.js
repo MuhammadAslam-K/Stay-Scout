@@ -55,6 +55,10 @@ const roomSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    adminApproval: {
+        type: String,
+        default: "Pending",
+    },
     hotel: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hotels',

@@ -78,6 +78,52 @@ const roomBoosting = async (req, res) => {
 
 }
 
+const roomForApproval = async (req, res) => {
+
+    try {
+        const rooms = await Rooms.find({
+            adminApproval: { $in: ['Pending', 'Rejected'] }
+        }).populate("hotel").populate("owner")
+
+        res.render("roomsForApproval", { rooms })
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+}
+
+
+
+const roomForApproval_post = async (req, res) => {
+
+    try {
+        const { status, roomId } = req.body
+        console.log(req.body);
+        const room = await Rooms.findByIdAndUpdate(
+            roomId,
+            { adminApproval: status },
+            { new: true }
+        )
+
+        res.status(200).end()
+    } catch (error) {
+        res.render("500")
+    }
+
+}
+
+
+const roomDetails = (async (req, res) => {
+
+    try {
+        const id = req.query.id
+        const room = await Rooms.findById(id).populate("category")
+        res.render("viewRoomDetails", { room })
+
+    } catch (error) {
+        res.render("500")
+    }
+})
 
 
 
@@ -85,4 +131,8 @@ export default {
     ownerRooms,
     blockRoom,
     roomBoosting,
+
+    roomForApproval,
+    roomForApproval_post,
+    roomDetails
 }

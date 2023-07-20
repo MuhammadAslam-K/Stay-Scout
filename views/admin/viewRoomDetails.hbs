@@ -1,0 +1,107 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<style>
+    .image-preview-container {
+        display: flex;
+        margin-bottom: 20px;
+        width: 200px;
+        max-width: 400px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .image-preview {
+        height: 200px;
+        width: 300px;
+        margin-bottom: 10px;
+        margin-left: 2rem;
+        border-radius: 5px;
+        object-fit: cover;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        margin: 0 10px 10px 0;
+    }
+</style>
+
+
+<div id="content-wrapper" class="justify-content-center m-5">
+    <div id="content">
+        <form id="updateForm" enctype="multipart/form-data">
+            <input type="text" name="id" value="{{room._id}}" style="display: none;">
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>Price</label>
+                    <input type="text" class="form-control" name="price" value="{{room.price}}" readonly>
+                    <span id="priceError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Max Adults</label>
+                    <input type="tel" class="form-control" name="adults" value="{{room.adults}}" readonly>
+                    <span id="adultsError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Max Childrents</label>
+                    <input type="tel" class="form-control" name="childrents" value="{{room.childrents}}" readonly>
+                    <span id="childrentsError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>Bed Type</label>
+                    <input type="text" class="form-control" name="bed" value="{{room.bed}}" readonly>
+                    <span id="bedError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Category</label>
+                    <input type="text" class="form-control" name="bed" value="{{room.category.name}}" readonly>
+                    <span id="bedError" class="text-danger error-msg"></span>
+                </div>
+
+            </div>
+
+            <div class="form-row m-4">
+
+                <div class="form-group col-md-6">
+                    <label for="description">Rooms Description</label>
+                    <textarea id="description" class="form-control" name="description"
+                        style="height: 150px; resize: vertical;" readonly>{{room.description}}</textarea>
+                    <span id="descriptionError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Cancellation</label>
+                    <input type="text" class="form-control" name="bed" value="{{room.Cancellation}}" readonly>
+                    <span id="bedError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="m-3">
+                    <p>Available Amenities</p>
+                    {{#each room.amenities}}
+                    <input type="checkbox" name="oldAmenities" value="{{this}}" checked disabled>
+                    <span class="me-3">{{this}}</span>
+                    {{/each}}
+                </div>
+            </div>
+    </div>
+
+
+
+    <div class="image-preview-container">
+        {{#each room.images}}
+        <div>
+            <img class="image-preview" src="{{this.url}}" alt="Image Preview">
+            <input type="checkbox" name="selectedImages" value="{{this.url}}" checked disabled>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="image-preview-container" id="newImagePreviewContainer"></div>
+    </form>
+</div>
+
+{{>userFooter}}

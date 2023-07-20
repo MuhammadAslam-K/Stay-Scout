@@ -1,7 +1,7 @@
 import Hotel from "../model/hotelModel.js";
 import Rooms from "../model/roomsModel.js";
 
-const query = { is_Available: true, is_block: false }
+const query = { is_Available: true, is_block: false, adminApproval: "Approved" }
 const sort = { booste: -1 }
 
 const hotel = (async (id = null, skip = 0, limit = 0, user = true) => {

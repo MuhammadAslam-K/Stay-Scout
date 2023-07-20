@@ -42,11 +42,18 @@ admin_route.post("/owners/block", isLogged, ownerManagement.blockowner)
 admin_route.get("/owner/hotels", isLogged, hotelManagement.ownerHotels)
 admin_route.post("/hotel/block", isLogged, hotelManagement.blockHotel)
 admin_route.post("/hotel/boost", isLogged, hotelManagement.hotelBoosting)
+admin_route.get("/hotel/approval", isLogged, hotelManagement.hotelForApproval)
+admin_route.post("/hotel/approval", isLogged, hotelManagement.hotelForApproval_post)
+admin_route.get("/hotel/viewdetails", isLogged, hotelManagement.hotelDetails)
 
 ////////ROOMS///////////
 admin_route.get("/owner/hotel/rooms", isLogged, roomManagement.ownerRooms)
 admin_route.post("/owner/hotel/room/edit", isLogged, roomManagement.blockRoom)
 admin_route.post("/room/boost", isLogged, roomManagement.roomBoosting)
+
+admin_route.get("/room/approval", isLogged, roomManagement.roomForApproval)
+admin_route.post("/room/approval", isLogged, roomManagement.roomForApproval_post)
+admin_route.get("/room/details", isLogged, roomManagement.roomDetails)
 
 
 ///////////////HOTEL Amenities///////////

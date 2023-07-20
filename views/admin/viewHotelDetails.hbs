@@ -1,0 +1,159 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+
+<style>
+    .image-preview-container {
+        display: flex;
+        margin-bottom: 20px;
+        width: 200px;
+        max-width: 400px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .image-preview {
+        height: 200px;
+        width: 300px;
+        margin-bottom: 10px;
+        margin-left: 2rem;
+        border-radius: 5px;
+        object-fit: cover;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        margin: 0 10px 10px 0;
+    }
+</style>
+
+
+<div id="content-wrapper" class="justify-content-center m-5">
+    <div id="content">
+        <form id="updateForm" enctype="multipart/form-data">
+            <input type="text" name="id" value="{{hotel._id}}" style="display: none;">
+            <div class="form-row m-4 ">
+                <div class="form-group col-md-6">
+                    <label>Name of the Hotel</label>
+                    <input type="text" class="form-control" name="name" readonly value="{{hotel.name}}">
+                    <span id="nameError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Title (max 10 words)</label>
+                    <input type="text" class="form-control" name="title" readonly value="{{hotel.title}}">
+                    <span id="titleError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>Starting Price of the Room</label>
+                    <input type="tel" class="form-control" name="startingPrice" readonly
+                        value="{{hotel.startingPrice}}">
+                    <span id="priceError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Starting Price of the Room</label>
+                    <input type="tel" class="form-control" name="startingPrice" readonly value="{{hotel.type.name}}">
+                    <span id="priceError" class="text-danger error-msg"></span>
+                </div>
+
+
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="city" readonly value="{{hotel.city}}">
+                    <span id="cityError" class="text-danger error-msg"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Pincode</label>
+                    <input type="text" class="form-control" name="pincode" readonly value="{{hotel.pincode}}">
+                    <span id="pincodeError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+                <div class="form-group col-md-6">
+                    <label for="description">Description....</label>
+                    <textarea id="description" class="form-control" readonly name="description"
+                        style="height: 150px; resize: vertical;">{{hotel.description}}</textarea>
+                    <span id="descriptionError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="description">Address</label>
+                    <textarea id="address" class="form-control" readonly name="address"
+                        style="height: 150px; resize: vertical;">{{hotel.address}}</textarea>
+                    <span id="addressError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+    </div>
+
+    <div class="m-3">
+        <p>Available Amenities</p>
+        {{#each hotel.amenities}}
+        <input type="checkbox" name="oldAmenities" value="{{this}}" checked disabled>
+        <span class="me-3">{{this}}</span>
+        {{/each}}
+    </div>
+
+
+    <div class="image-preview-container">
+        {{#each hotel.images}}
+        <div>
+            <img class="image-preview" src="{{this.url}}" alt="Image Preview">
+            <input type="checkbox" checked name="selectedImages" value="{{this.url}}" disabled>
+        </div>
+        {{/each}}
+    </div>
+
+    <div id="map" style="height: 400px;"></div> <!-- Add the map container here with a specified height -->
+    <input type="hidden" id="latitude" name="latitude">
+    <input type="hidden" id="longitude" name="longitude">
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css" rel="stylesheet" />
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGs1ZHZqejYwZ3RhM2RudDQ0cmE1NDJuIn0.8MByk6wQU2kWJ60t4K0zIg'; // Replace with your Mapbox access token
+
+        const latitude = {{ hotel.latitude }}; // Latitude from the database
+        const longitude = {{ hotel.longitude }}; // Longitude from the database
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [longitude, latitude], // Set the center using the latitude and longitude from the database
+            zoom: 9
+        });
+
+        const marker = new mapboxgl.Marker({
+
+        }).setLngLat([longitude, latitude]).addTo(map);
+
+
+    </script>
+
+
+    <div class="image-preview-container" id="newImagePreviewContainer"></div>
+
+    </form>
+</div>
+
+{{>userFooter}}
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/dist/js/alertify.min.js"></script>
+
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>
