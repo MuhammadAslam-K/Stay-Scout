@@ -60,9 +60,9 @@ const hotelHome = (async (req, res) => {
 const hotelSearch = (async (req, res) => {
     console.log(60);
     try {
-        console.log(req.body.search)
+        // console.log(req.body.search)
         const value = req.body.search
-        console.log(value);
+        // console.log(value);
         const regexValue = new RegExp(value, "i")
 
         const hotel = await Hotel.find({
@@ -71,7 +71,7 @@ const hotelSearch = (async (req, res) => {
                 { city: { $regex: regexValue } }
             ]
         })
-        console.log(hotel);
+        // console.log(hotel);
         res.render("userViewHotels", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {

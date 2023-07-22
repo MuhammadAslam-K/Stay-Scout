@@ -1,7 +1,6 @@
 import Room from "../model/roomsModel.js";
 
 
-
 const formValidation = async (id, data) => {
 
     let errors = {}

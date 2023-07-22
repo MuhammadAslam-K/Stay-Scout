@@ -1,0 +1,190 @@
+{{>userHeader}}
+{{>navBar2}}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                </nav>
+
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Booking History</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Hotel</th>
+                                            <th>Check-in/Check-out</th>
+                                            <th>Amount</th>
+                                            <th>No of days</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each booking}}
+                                        <tr>
+                                            <td>{{this.hotel.name}}</td>
+                                            <td>
+                                                <p>Check-in: {{this.checkInDate}}</p>
+                                                <p>Check-out: {{this.checkOutDate}}</p>
+                                            </td>
+                                            <td>{{this.paymentAmount}}</td>
+                                            <td>{{this.totalDays}}</td>
+                                            <td>
+                                                <div class="action-buttons" data-booking-id="{{this._id}}"
+                                                    data-check-in-date="{{this.checkInDate}}"
+                                                    data-check-out-date="{{this.checkOutDate}}">
+                                                    <!-- The "Cancellation" button will be shown if the check-in date is not over -->
+                                                    <button class="btn btn-primary btn-cancel">Cancellation</button>
+                                                    <!-- The "Rating" and "Report" buttons will be shown if the checkout date is over -->
+                                                    <button class="btn btn-danger btn-report">Report</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Report -->
+    <div class="modal" id="ratingModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Report</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Your review:</p>
+                    <textarea class="form-control" rows="5" id="reportText"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- Pass the booking ID to the "Submit" button using data attribute -->
+                    <button type="button" class="btn btn-primary" id="submitReview" data-booking-id="">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{>userFooter}}
+</body>
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // DataTables initialization
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "pageLength": 10
+        });
+
+        // Function to check if the check-in date is not over
+        function isCheckInNotOver(checkInDate) {
+            const now = new Date();
+            const checkIn = new Date(checkInDate);
+            return now < checkIn;
+        }
+
+        // Function to check if the checkout date is over
+        function isCheckOutOver(checkOutDate) {
+            const now = new Date();
+            const checkOut = new Date(checkOutDate);
+            return now >= checkOut;
+        }
+
+        // Loop through each row to update the action buttons
+        $('.action-buttons').each(function () {
+            const checkInDate = $(this).data('check-in-date');
+            const checkOutDate = $(this).data('check-out-date');
+            const checkInNotOver = isCheckInNotOver(checkInDate);
+            const checkOutOver = isCheckOutOver(checkOutDate);
+
+            if (checkInNotOver) {
+                $(this).find('.btn-cancel').show();
+            } else {
+                $(this).find('.btn-cancel').hide();
+            }
+
+            if (checkOutOver) {
+                $(this).find('.btn-report').show(); // Set visibility to show
+            } else {
+                $(this).find('.btn-report').hide(); // Set visibility to hide
+            }
+        });
+
+        // Bind click event for "Report" button
+        $('.btn-report').on('click', function () {
+            const bookingId = $(this).closest('.action-buttons').data('booking-id');
+            $('#ratingModal').modal('show').find('#submitReview').data('booking-id', bookingId);
+            // Set the data-booking-id attribute value for the "Submit" button
+        });
+
+        $('.btn-secondary').on('click', function () {
+            $('#ratingModal').modal('hide');
+        });
+
+        $('#submitReview').on('click', function () {
+            const reportText = $('#reportText').val();
+            const bookingId = $(this).data('booking-id'); // Retrieve the booking ID from the "Submit" button's data attribute
+
+            const reviewData = {
+                reportText: reportText,
+                bookingId: bookingId // Use the retrieved booking ID in the review data
+            };
+
+            const serverEndpoint = '/hotel/report';
+
+            axios.post(serverEndpoint, reviewData)
+                .then(function (response) {
+                    if (response.status === 200) {
+                        Notification()
+                        function Notification() {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Report Submited successfully",
+                                showConfirmButton: true,
+                                confirmButtonColor: "#00A300",
+                            });
+                        }
+                        window.location.href = '/bookinghistory'
+                    }
+                    console.log(response.data);
+                    $('#ratingModal').modal('hide');
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alertify.alert("Something went wrong", function () {
+                        alertify.message('OK');
+                    });
+
+                    $('#ratingModal').modal('hide');
+                });
+        });
+
+    });
+</script>

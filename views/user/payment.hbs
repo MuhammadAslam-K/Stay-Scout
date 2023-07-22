@@ -1,4 +1,13 @@
 {{>userHeader}}
+{{>userNavbar}}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -7,138 +16,175 @@
                 <div class="row d-flex justify-content-center pb-5">
                     <div class="col-md-7 col-xl-5 mb-4 mb-md-0">
                         <div class="py-4 d-flex flex-row">
-                            <h5><span class="far fa-check-square pe-2"></span><b>ELIGIBLE</b> |</h5>
-                            <span class="ps-2">Pay</span>
+                            <h5></span><b>Stay Scout</b> |</h5>
                         </div>
-                        <h4 class="text-success">$85.00</h4>
-                        <h4>Diabetes Pump & Supplies</h4>
-                        <div class="d-flex pt-2">
-                            <div>
-                                <p>
-                                    <b>Insurance Responsibility <span class="text-success">$71.76</span></b>
-                                </p>
-                            </div>
-                            <div class="ms-auto">
-                                <p class="text-primary">
-                                    <i class="fas fa-plus-circle text-primary pe-1"></i>Add insurance card
-                                </p>
-                            </div>
-                        </div>
-                        <p>
-                            Insurance claims and all necessary dependencies will be submitted to your
-                            insurer for the coverred portion of this order
-                        </p>
-                        <div class="rounded d-flex" style="background-color: #f8f9fa;">
-                            <div class="p-2">Aetna-Open Access</div>
-                            <div class="ms-auto p-2">OAP</div>
-                        </div>
-                        <hr />
                         <div class="pt-2">
-                            <div class="d-flex pb-2">
-                                <div>
-                                    <p>
-                                        <b>Patient Balance <span class="text-success">$13.24</span></b>
-                                    </p>
-                                </div>
-                                <div class="ms-auto">
-                                    <p class="text-primary">
-                                        <i class="fas fa-plus-circle text-primary pe-1"></i>Add payment card
-                                    </p>
-                                </div>
-                            </div>
-                            <p>
-                                This is an estimate for the portion of your order (not covered by
-                                insurance) due today . once insurance finalizes their review refunds
-                                and/or balances will reconcile automatically.
-                            </p>
-                            <form class="pb-3">
+                            <form class="pb-3" id="paymentForm">
                                 <div class="d-flex flex-row pb-3">
                                     <div class="d-flex align-items-center pe-2">
                                         <input class="form-check-input" type="radio" name="radioNoLabel"
-                                            id="radioNoLabel1" value="" aria-label="..." checked />
+                                            id="radioNoLabel1" value="razorpay" aria-label="..." checked />
                                     </div>
                                     <div class="rounded border d-flex w-100 p-3 align-items-center">
                                         <p class="mb-0">
-                                            <i class="fab fa-cc-visa fa-lg text-primary pe-2"></i>Visa Debit
-                                            Card
+                                            Razorpay
                                         </p>
-                                        <div class="ms-auto">************3456</div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex flex-row">
                                     <div class="d-flex align-items-center pe-2">
-                                        <input class="form-check-input" type="radio" name="radioNoLabel"
-                                            id="radioNoLabel2" value="" aria-label="..." />
+                                        <input class="form-check-input" type="radio" onclick="walletPayment()"
+                                            name="radioNoLabel" id="radioNoLabel2" value="walletpayment"
+                                            aria-label="..." />
                                     </div>
                                     <div class="rounded border d-flex w-100 p-3 align-items-center">
                                         <p class="mb-0">
-                                            <i class="fab fa-cc-mastercard fa-lg text-dark pe-2"></i>Mastercard
-                                            Office
+                                            <i class="fa-solid fa-wallet" style="color: #61646b;"></i>Wallet
                                         </p>
-                                        <div class="ms-auto">************1038</div>
+                                        <div class="ms-auto">{{user.wallet.balance}}</div>
                                     </div>
                                 </div>
-                            </form>
-                            <input type="button" value="Proceed to payment" class="btn btn-primary btn-block btn-lg" />
+                                <span id="insufficientMessage" class="text-danger" style="font-size: smaller;"></span>
+
+                                <input type="button" value="Proceed to payment" class="btn btn-primary btn-block btn-lg"
+                                    onclick="processPayment()" />
+
                         </div>
                     </div>
-
                     <div class="col-md-5 col-xl-4 offset-xl-1">
-                        <div class="py-4 d-flex justify-content-end">
-                            <h6><a href="#!">Cancel and return to website</a></h6>
-                        </div>
+
                         <div class="rounded d-flex flex-column p-2" style="background-color: #f8f9fa;">
                             <div class="p-2 me-3">
-                                <h4>Order Recap</h4>
+                                <h4>Booking</h4>
                             </div>
                             <div class="p-2 d-flex">
-                                <div class="col-8">Contracted Price</div>
-                                <div class="ms-auto">$186.76</div>
+                                <div class="col-8">Price per Day</div>
+                                <input class="ms-auto " value="{{room.price}}" name="roomPrice" readonly></input>
                             </div>
                             <div class="p-2 d-flex">
-                                <div class="col-8">Amount toward deductible</div>
-                                <div class="ms-auto">$0.00</div>
+                                <div class="col-8">No of Days</div>
+                                <input class="ms-auto" name="noOfDays" value="{{days}}" readonly></input>
                             </div>
-                            <div class="p-2 d-flex">
-                                <div class="col-8">Coinsurance( 0% )</div>
-                                <div class="ms-auto">+ $0.00</div>
-                            </div>
-                            <div class="p-2 d-flex">
-                                <div class="col-8">Copayment</div>
-                                <div class="ms-auto">+ $40.00</div>
-                            </div>
-                            <div class="border-top px-2 mx-2"></div>
-                            <div class="p-2 d-flex pt-3">
-                                <div class="col-8">Total Deductible, Coinsurance, and Copay</div>
-                                <div class="ms-auto">$40.00</div>
-                            </div>
-                            <div class="p-2 d-flex">
-                                <div class="col-8">
-                                    Maximum out-of-pocket on Insurance Policy (not reached)
-                                </div>
-                                <div class="ms-auto">$6500.00</div>
-                            </div>
-                            <div class="border-top px-2 mx-2"></div>
-                            <div class="p-2 d-flex pt-3">
-                                <div class="col-8">Insurance Responsibility</div>
-                                <div class="ms-auto"><b>$71.76</b></div>
-                            </div>
-                            <div class="p-2 d-flex">
-                                <div class="col-8">
-                                    Patient Balance <span class="fa fa-question-circle text-dark"></span>
-                                </div>
-                                <div class="ms-auto"><b>$71.76</b></div>
-                            </div>
+
                             <div class="border-top px-2 mx-2"></div>
                             <div class="p-2 d-flex pt-3">
                                 <div class="col-8"><b>Total</b></div>
-                                <div class="ms-auto"><b class="text-success">$85.00</b></div>
+                                <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
+                                        value="{{total}}" readonly></input></div>
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+{{!-- PAYMENT OPTION --}}
+<script>
+    function processPayment() {
+        const selectedPayment = document.querySelector('input[name="radioNoLabel"]:checked').id;
+
+        if (selectedPayment === 'radioNoLabel1') {
+            razorpay();
+        } else if (selectedPayment === 'radioNoLabel2') {
+            walletPayment();
+        } else {
+            alert('Please select a payment option.');
+        }
+    }
+
+    // Rest of your script code...
+
+</script>
+{{>userSiteFooter}}
+
+{{!-- RAZORPAY --}}
+<script>
+    async function razorpay(selectedPayment) {
+
+        try {
+
+            const subTotal = Number(document.getElementById('subTotalValue').value);
+
+
+            var options = {
+                "key": "rzp_test_G2uFOSlScJa8TV", // Enter the Key ID generated from the Dashboard
+                "amount": subTotal * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "Stay Scout",
+                "description": "Booking payment",
+                "image": "/public/img/login.jpg",
+                "order_id": undefined, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+
+                    payment(selectedPayment)
+                    console.log(response);
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            }
+
+            var rzp1 = new Razorpay(options);
+
+            rzp1.open();
+
+        } catch (error) {
+        }
+    }
+</script>
+
+{{!-- PAYMENT --}}
+<script>
+    async function payment(selectedPayment) {
+
+        const formElement = document.getElementById('paymentForm');
+        const formData = new FormData(formElement);
+        console.log(formData)
+        try {
+
+            const response = await axios.post('/payment', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status === 200) {
+                window.location.href = '/'
+            }
+
+        } catch (error) {
+            console.log(error)
+            alertify.alert("Something went wrong, please try again later", function () {
+                alertify.message('OK');
+            });
+        }
+    }
+</script>
+
+{{!-- WALLET --}}
+
+<script>
+    function walletPayment() {
+        try {
+            const subTotal = Number(document.getElementById('subTotalValue').value);
+            const walletBalance = Number("{{user.wallet.balance}}");
+
+            if (subTotal > walletBalance) {
+                document.getElementById("insufficientMessage").innerText = "Insufficient Amount";
+                return;
+            }
+            else {
+                payment()
+                document.getElementById("insufficientMessage").innerText = "";
+
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+</script>

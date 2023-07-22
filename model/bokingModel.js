@@ -1,14 +1,19 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from "mongoose"
 
-const bookingSchema = new Schema({
+
+const bookingSchema = new mongoose.Schema({
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
+    hotel: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hotels',
+        required: true
+    },
     room: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Room',
         required: true
     },
@@ -26,6 +31,9 @@ const bookingSchema = new Schema({
     paymentAmount: {
         type: Number
     },
+    totalDays: {
+        type: Number
+    },
     bookedAt: {
         type: Date,
         default: Date.now
@@ -34,4 +42,4 @@ const bookingSchema = new Schema({
 
 const Booking = mongoose.model('Booking', bookingSchema);
 
-module.exports = Booking;
+export default Booking

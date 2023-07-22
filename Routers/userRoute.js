@@ -12,6 +12,7 @@ import roomManagement from "../Controller/User/roomManagement.js"
 import booking from "../Controller/User/booking.js"
 import contact from "../Controller/User/contact.js"
 import userController from "../Controller/User/userController.js"
+import review from "../Controller/User/review.js"
 import auth from "../middleware/userAuthentication.js"
 import User from "../model/userModel.js"
 
@@ -79,8 +80,11 @@ user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 //////////////PAYMENT/////////
 user_route.get("/payment", booking.payment)
+user_route.post("/payment", booking.paymentSuccess)
 
-
+////////////////BOOKING AND REVIEW AND REPORT///////////
+user_route.get("/bookinghistory", review.bookingHistory)
+user_route.post("/hotel/report", review.submitReport)
 
 
 

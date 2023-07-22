@@ -140,7 +140,7 @@ function roomValidation(data) {
 const bookingValidation = (data) => {
 
     const { checkIn, checkOut, adults } = data;
-    console.log(data);
+    // console.log(data);
     const numberPattern = /^[0-9]+$/;
     const errors = {};
 

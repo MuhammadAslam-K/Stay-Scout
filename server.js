@@ -10,6 +10,7 @@ import hbs from "hbs"
 import Handlebars from "hbs"
 import passport from "passport"
 import nocache from "nocache"
+import Razorpay from "razorpay"
 
 
 import user_route from "./Routers/userRoute.js"

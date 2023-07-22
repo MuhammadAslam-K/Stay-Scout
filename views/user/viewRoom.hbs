@@ -107,16 +107,7 @@
             });
 
             if (response.status === 200) {
-                Notification()
-                function Notification() {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Booked Successfully",
-                        showConfirmButton: true,
-                        confirmButtonColor: "#00A300",
-                    });
-                }
+                window.location.href = "/payment"
             }
         } catch (error) {
             console.log(error)
