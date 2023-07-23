@@ -1,12 +1,20 @@
-import propertyFetching from "../../helper/propertyFetching.js";
 import owner from "../../model/ownerModel.js"
-import Signup_functions from "../../helper/Signup_functions.js";
+import Signup_functions from "../../helper/Signup_functions.js"
+import Hotel from "../../model/hotelModel.js"
+import Rooms from "../../model/roomsModel.js"
 
 
 
-const dashboard = ((req, res) => {
+const dashboard = (async (req, res) => {
 
     try {
+        const ownerId = req.session.owner
+        const [hotels, rooms] = await Promise.all([
+            Hotel.find({ owner: ownerId }).count(),
+            Rooms.find({ owner: ownerId }).count()
+        ]);
+        // console.log(hotels, rooms, ownerId);
+
         res.render("ownerDashboard", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -15,7 +23,7 @@ const dashboard = ((req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("ownerDashboard")
+            res.render("ownerDashboard", { revenue: req.session.owner.revenue, hotels, rooms })
         })
     } catch (error) {
         console.log(error);
@@ -23,27 +31,6 @@ const dashboard = ((req, res) => {
     }
 })
 
-
-const viewHotels = (async (req, res) => {
-    try {
-        const ownerId = req.session.owner._id
-        const hotel = await propertyFetching.hotel(ownerId, 0, 0, false)
-
-        res.render("viewHotels", (err) => {
-            if (err) {
-                if (err.message.includes("Failed to lookup view")) {
-                    return res.status(404).render("404");
-                } else {
-                    return res.status(500).render("500");
-                }
-            }
-            res.render("viewHotels", { hotel })
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).render("500");
-    }
-})
 
 
 const profile = async (req, res) => {
@@ -95,12 +82,14 @@ const profileUpdate = (async (req, res) => {
     } catch (error) {
         res.render("500")
     }
-
 })
 
+
+
+
 export default {
-    viewHotels,
     dashboard,
     profile,
-    profileUpdate
+    profileUpdate,
+
 }
