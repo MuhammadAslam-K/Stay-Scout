@@ -34,6 +34,10 @@ const bookingSchema = new mongoose.Schema({
     totalDays: {
         type: Number
     },
+    review: {
+        type: Boolean,
+        default: false,
+    },
     bookedAt: {
         type: Date,
         default: Date.now

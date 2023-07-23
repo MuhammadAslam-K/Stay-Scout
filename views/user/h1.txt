@@ -27,19 +27,6 @@
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
-    .rating-stars {
-        font-size: 30px;
-    }
-
-    .star {
-        cursor: pointer;
-        color: #ccc;
-    }
-
-    .star.active {
-        color: gold;
-    }
 </style>
 
 <!-- HOTEL -->
@@ -88,7 +75,7 @@
             <h4 class="my-4">Location: {{hotel.address}}</h4>
             <button id="navigateBtn" class="btn btn-primary">Navigate <i
                     class="fas fa-map-marker-alt ml-2"></i></button>
-            <button class="btn btn-primary" id="writeReviewBtn">Write a Review</button>
+            <button class="btn btn-primary" onclick="return review()">Write a Review</button>
         </div>
     </div>
 </div>
@@ -200,20 +187,21 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Rate the hotel:</p>
-                <div class="rating-stars">
-                    <i class="fa-solid fa-star star" data-rating="1"></i>
-                    <i class="fa-solid fa-star star" data-rating="2"></i>
-                    <i class="fa-solid fa-star star" data-rating="3"></i>
-                    <i class="fa-solid fa-star star" data-rating="4"></i>
-                    <i class="fa-solid fa-star star" data-rating="5"></i>
-                </div>
-                <p>Your review:</p>
-                <textarea class="form-control" rows="5" id="reviewText"></textarea>
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label for="rating">Rating:</label>
+                        <!-- You can use star-rating library or create your own rating inputs -->
+                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewText">Review:</label>
+                        <textarea class="form-control" id="reviewText" name="reviewText" rows="4" required></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="submitReview">Submit</button>
+                <button type="button" class="btn btn-primary" id="submitReviewBtn">Submit</button>
             </div>
         </div>
     </div>
@@ -406,73 +394,41 @@
 </script>
 
 <script>
+    // Show the review modal when status 200 is received in the review function
+    function showReviewModal() {
+        const reviewModal = document.getElementById('reviewModal');
+        const submitReviewBtn = document.getElementById('submitReviewBtn');
 
-    let selectedRating = 0;
+        submitReviewBtn.addEventListener('click', async () => {
+            try {
+                const rating = document.getElementById('rating').value;
+                const reviewText = document.getElementById('reviewText').value;
 
-    // Function to update the star colors based on the selected rating
-    function updateStarColors() {
-        const stars = document.querySelectorAll('.star');
-        stars.forEach((star, index) => {
-            if (index < selectedRating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
+                // Send the rating and review text to the server using axios POST request
+                const response = await axios.post('/hotel/review', {
+                    rating: rating,
+                    reviewText: reviewText
+                });
+
+                if (response.status === 200) {
+                    alertify.alert("Review submitted successfully", function () {
+                        alertify.message('OK');
+                        reviewModal.style.display = 'none';
+                    });
+                } else {
+                    alertify.alert("Failed to submit review", function () {
+                        alertify.message('OK');
+                    });
+                }
+            } catch (error) {
+                alertify.alert("Something went wrong, please try again later", function () {
+                    alertify.message('OK');
+                });
             }
         });
+
+        reviewModal.style.display = 'block';
     }
-
-    // Function to handle star click event
-    function handleStarClick(event) {
-        const clickedRating = parseInt(event.target.getAttribute('data-rating'));
-        if (selectedRating === clickedRating) {
-            selectedRating = 0; // Clear rating if the same star is clicked again
-        } else {
-            selectedRating = clickedRating;
-        }
-        updateStarColors();
-    }
-
-    // Add event listeners to the star elements
-    const stars = document.querySelectorAll('.star');
-    stars.forEach(star => {
-        star.addEventListener('click', handleStarClick);
-    });
-
-    $('.btn-secondary').on('click', function () {
-        $('#reviewModal').modal('hide');
-    });
-
-    // Function to submit the review with the selected rating and review text
-    async function submitReview() {
-        const reviewText = document.getElementById('reviewText').value;
-        // Send the rating and review text to the server using axios POST request
-        try {
-            const response = await axios.post('/hotel/review', {
-                rating: selectedRating,
-                reviewText: reviewText
-            });
-
-            if (response.status === 200) {
-                alertify.alert("Review submitted successfully", function () {
-                    alertify.message('OK');
-                    document.getElementById('reviewModal').style.display = 'none';
-                });
-            } else {
-                alertify.alert("Failed to submit review", function () {
-                    alertify.message('OK');
-                });
-            }
-        } catch (error) {
-            console.log(error);
-            alertify.alert("Something went wrong, please try again later", function () {
-                alertify.message('OK');
-            });
-        }
-    }
-
-    // Add event listener to the submit review button in the review modal
-    document.getElementById('submitReview').addEventListener('click', submitReview);
-
 
     async function review() {
         event.preventDefault()
@@ -484,14 +440,11 @@
             });
 
             if (response.status === 200) {
-                reviewModal.style.display = 'block'
-                //submitReview()
+                showReviewModal();
             }
         } catch (error) {
-
             if (error.response.status == 401) {
-                const errors = error.response.data.error;
-                alertify.alert(errors, function () {
+                alertify.alert("You can't write the review", function () {
                     alertify.message('OK');
                 });
             } else {
@@ -501,7 +454,5 @@
             }
         }
     }
-    document.getElementById('writeReviewBtn').addEventListener('click', review);
-
 
 </script>

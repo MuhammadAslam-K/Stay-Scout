@@ -26,7 +26,6 @@ const bookingHistory = async (req, res) => {
 
 const submitReport = async (req, res) => {
     try {
-        console.log(req.body);
         const { bookingId, reportText } = req.body
         const userId = req.session.user._id
 
@@ -41,11 +40,80 @@ const submitReport = async (req, res) => {
         console.log(error);
         res.render("500")
     }
+}
+
+const Hotelreview = (async (req, res) => {
+
+    try {
+        const userId = req.session.user._id
+        const hotelId = req.session.hotelID
+        const currentDate = new Date();
+        const bookings = await Booking.find({ user: userId, hotel: hotelId, checkOutDate: { $gte: currentDate } });
+
+        console.log(bookings)
+
+        if (bookings.length == 0) {
+            return res.status(401).json({ error: "Invalid User" })
+        }
+        else {
+            if (bookings.review == false) {
+                console.log(65);
+                req.session.bookingId = bookings[0]._id;
+                return res.status(200).end()
+            }
+            else {
+                return res.status(401).json({ error: "You already submitted the review" })
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+})
+
+
+const submitReview = async (req, res) => {
+
+    try {
+        console.log(81);
+        const userId = req.session.user._id
+        const hotelId = req.session.hotelID
+        const bookingId = req.session.bookingId
+        console.log(bookingId);
+        console.log(req.body);
+        const { rating, reviewText } = req.body
+
+        const review = new Review({
+            review: reviewText,
+            rating: rating,
+            hotel: hotelId,
+            user: userId
+        })
+
+        // console.log(review);
+        await review.save()
+        const boo = await Booking.findByIdAndUpdate(
+            bookingId,
+            { review: true },
+            { new: true }
+        )
+        console.log(boo);
+        return res.status(200).end()
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
 
 }
+
+
 
 
 export default {
     bookingHistory,
     submitReport,
+
+    Hotelreview,
+    submitReview
 }

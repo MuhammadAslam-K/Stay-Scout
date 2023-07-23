@@ -84,6 +84,8 @@ user_route.post("/payment", booking.paymentSuccess)
 
 ////////////////BOOKING AND REVIEW AND REPORT///////////
 user_route.get("/bookinghistory", review.bookingHistory)
+user_route.get("/hotel/review", review.Hotelreview)
+user_route.post("/hotel/review", review.submitReview)
 user_route.post("/hotel/report", review.submitReport)
 
 

@@ -36,7 +36,7 @@ const hotelHome = (async (req, res) => {
         req.session.hotelID = id
         const hotel = await propertyFetching.hotel(id)
         const rooms = await propertyFetching.hotelRoom(id)
-        console.log(hotel);
+        // console.log(hotel);
         res.render("hotelHome", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {

@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const reviewSchema = new mongoose.Schema({
+const reportSchema = new mongoose.Schema({
     report: {
         type: String,
         require: true
@@ -16,6 +16,6 @@ const reviewSchema = new mongoose.Schema({
         required: true
     }
 })
-const Report = mongoose.model("Report", reviewSchema);
+const Report = mongoose.model("Report", reportSchema);
 
 export default Report
