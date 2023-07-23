@@ -19,6 +19,8 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
+
+
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
@@ -43,10 +45,19 @@
                                                 <div class="action-buttons" data-booking-id="{{this._id}}"
                                                     data-check-in-date="{{this.checkInDate}}"
                                                     data-check-out-date="{{this.checkOutDate}}">
-                                                    <!-- The "Cancellation" button will be shown if the check-in date is not over -->
-                                                    <button class="btn btn-primary btn-cancel">Cancellation</button>
-                                                    <!-- The "Rating" and "Report" buttons will be shown if the checkout date is over -->
+                                                    {{#if this.cancel}}
+                                                    <p>You have cancelled this booking.</p>
+                                                    {{else}}
+                                                    <button class="btn btn-primary btn-cancel"
+                                                        onclick="cancellation('{{this._id}}', '{{this.room.Cancellation}}')">
+                                                        Cancellation
+                                                    </button>
+                                                    {{#if this.report}}
+                                                    <p>You already submitted the report.</p>
+                                                    {{else}}
                                                     <button class="btn btn-danger btn-report">Report</button>
+                                                    {{/if}}
+                                                    {{/if}}
                                                 </div>
                                             </td>
                                         </tr>
@@ -70,12 +81,11 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>Your review:</p>
+                    <p>Your Report:</p>
                     <textarea class="form-control" rows="5" id="reportText"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <!-- Pass the booking ID to the "Submit" button using data attribute -->
                     <button type="button" class="btn btn-primary" id="submitReview" data-booking-id="">Submit</button>
                 </div>
             </div>
@@ -88,6 +98,61 @@
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+<script>
+    async function cancellation(bookingId, roomCancellation) {
+
+        console.log(roomCancellation)
+        console.log(bookingId)
+        try {
+            alertify.confirm(roomCancellation,
+                function () {
+                    alertify.success('Ok');
+                    handleCancellation(bookingId, roomCancellation)
+                },
+                function () {
+                    alertify.error('Cancel');
+                });
+
+        } catch (error) {
+            console.error('Error fetching cancellation policy:', error);
+        }
+    }
+
+    async function handleCancellation(bookingId, roomCancellation) {
+        try {
+            // Perform the cancellation and send data to the server.
+            const response = await axios.post('/cancellation', {
+                bookingId, roomCancellation
+            });
+
+            // Show success message to the user if required.
+            Swal.fire({
+                title: 'Cancellation Successful',
+                text: 'Your booking has been canceled the amout will be added to your wallet',
+                icon: 'success',
+            });
+        } catch (error) {
+            if (error.response.status == 401) {
+                Swal.fire({
+                    title: 'Cancellation Sucessful',
+                    text: 'According to the Cancellation policy the amout will not be added to the wallet.',
+                    icon: 'success',
+                });
+            }
+            else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to cancel the booking. Please try again later.',
+                    icon: 'error',
+                });
+            }
+
+        }
+    }
+</script>
+
+
 
 <script>
     $(document).ready(function () {

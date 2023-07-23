@@ -74,7 +74,6 @@ const roomSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-
 })
 const Rooms = mongoose.model("Rooms", roomSchema)
 

@@ -14,7 +14,7 @@ const bookingSchema = new mongoose.Schema({
     },
     room: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Room',
+        ref: 'Rooms',
         required: true
     },
     checkInDate: {
@@ -35,6 +35,14 @@ const bookingSchema = new mongoose.Schema({
         type: Number
     },
     review: {
+        type: Boolean,
+        default: false,
+    },
+    report: {
+        type: Boolean,
+        default: false,
+    },
+    cancel: {
         type: Boolean,
         default: false,
     },

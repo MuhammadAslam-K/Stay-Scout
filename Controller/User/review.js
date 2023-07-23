@@ -8,9 +8,8 @@ import Hotel from "../../model/hotelModel.js";
 const bookingHistory = async (req, res) => {
     try {
         const userId = req.session.user._id;
-        const bookings = await Booking.find({ user: userId }).populate("hotel");
+        const bookings = await Booking.find({ user: userId }).populate("hotel").populate("room")
 
-        // Update the date format to 'YYYY-MM-DD' or convert to Date objects if needed
         const formattedBookings = bookings.map((booking) => ({
             ...booking.toObject(),
             checkInDate: booking.checkInDate.toISOString().slice(0, 10),
@@ -35,6 +34,13 @@ const submitReport = async (req, res) => {
             booking: bookingId
         })
         await report.save()
+
+        await Booking.findByIdAndUpdate(
+            bookingId,
+            { report: true },
+            { new: true }
+        )
+
         return res.status(200).end()
     } catch (error) {
         console.log(error);
@@ -48,7 +54,13 @@ const Hotelreview = (async (req, res) => {
         const userId = req.session.user._id
         const hotelId = req.session.hotelID
         const currentDate = new Date();
-        const bookings = await Booking.find({ user: userId, hotel: hotelId, checkOutDate: { $gte: currentDate } });
+        const bookings = await Booking.find(
+            {
+                user: userId,
+                hotel: hotelId,
+                checkOutDate: { $lte: currentDate },
+                cancel: false
+            });
 
         // console.log(bookings)
 

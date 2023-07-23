@@ -13,6 +13,7 @@ import booking from "../Controller/User/booking.js"
 import contact from "../Controller/User/contact.js"
 import userController from "../Controller/User/userController.js"
 import review from "../Controller/User/review.js"
+import cancellation from "../Controller/User/cancellation.js";
 import auth from "../middleware/userAuthentication.js"
 import User from "../model/userModel.js"
 
@@ -88,6 +89,8 @@ user_route.get("/hotel/review", review.Hotelreview)
 user_route.post("/hotel/review", review.submitReview)
 user_route.post("/hotel/report", review.submitReport)
 
+///////////////////CANCELLATION//////////////////
+user_route.post("/cancellation", cancellation.cancellation)
 
 
 
