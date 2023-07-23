@@ -4,6 +4,8 @@ import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
 import User from "../../model/userModel.js"
 import Booking from "../../model/bokingModel.js";
+import Owner from "../../model/ownerModel.js";
+import adminRevenue from "../../model/adminRevenue.js";
 
 
 
@@ -72,7 +74,6 @@ const payment = async (req, res) => {
                 }
             }
 
-            // res.render("payment", { room, days: daysDifference, total })
             res.render("payment", { room, days: daysDifference, total, user })
         })
 
@@ -120,6 +121,12 @@ const paymentSuccess = (async (req, res) => {
         const newWalletBalance = user.wallet.balance - totalPrice;
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        const adminAmount = (30 / 100) * totalPrice;
+        const ownerAmount = (70 / 100) * totalPrice;
+
+
+
+
 
         if (radioNoLabel == "walletpayment") {
 
@@ -158,9 +165,30 @@ const paymentSuccess = (async (req, res) => {
 
         await Hotel.findByIdAndUpdate(
             { _id: room.hotel._id },
-            { $inc: { revenue: totalPrice } },
+            { $inc: { revenue: ownerAmount } },
             { new: true }
         );
+
+        const owner = await Owner.findByIdAndUpdate(
+            { _id: room.owner },
+            { $inc: { revenue: ownerAmount } },
+            { new: true }
+        )
+        const adminrevenue = await adminRevenue.find({ owner: owner._id })
+        if (adminrevenue.length != 0) {
+            await adminRevenue.findOneAndUpdate(
+                { owner: owner._id },
+                { $inc: { revenue: adminAmount } },
+                { new: true }
+            )
+        }
+        else {
+            const newAdminRevenue = new adminRevenue({
+                owner: owner._id,
+                revenue: adminAmount
+            })
+            await newAdminRevenue.save()
+        }
 
     } catch (error) {
         console.log(error)

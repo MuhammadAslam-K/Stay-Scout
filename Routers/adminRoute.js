@@ -10,6 +10,7 @@ import amenitiesManagement from "../Controller/Admin/amenitiesManagement.js"
 import roomAmenitiesManagement from "../Controller/Admin/roomAmenitiesManagement.js"
 import messageManagement from "../Controller/Admin/messageManagement.js"
 import cancellationManagement from "../Controller/Admin/cancellationManagement.js"
+import report from "../Controller/Admin/report.js"
 import auth from "../middleware/adminAuth.js"
 
 
@@ -74,12 +75,17 @@ admin_route.post('/room/addCancellation', isLogged, cancellationManagement.addCa
 admin_route.post('/room/editCancellation', isLogged, cancellationManagement.editCancellation)
 admin_route.post('/room/deleteCancellation', isLogged, cancellationManagement.deleteCancellation)
 
-
-
-
 ////////////MESSAGE MANAGEMENT///////////
 admin_route.get('/messages', isLogged, messageManagement.message)
 admin_route.get('/message/delete', isLogged, messageManagement.messageDelete)
+
+//////////////REPORTS//////////////////
+admin_route.get("/report", isLogged, report.report)
+admin_route.get("/report/delete", isLogged, report.deleteReport)
+admin_route.get("/report/deltails", isLogged, report.reportDetails)
+
+
+
 
 
 export default admin_route

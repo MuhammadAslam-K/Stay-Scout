@@ -12,31 +12,35 @@
                 <div class="container">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 font-weight-bold text-primary">Messages</h4>
+                            <h4 class="m-0 font-weight-bold text-primary">Reports</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Messages</th>
                                             <th>User Name</th>
+                                            <th>Messages</th>
+                                            <th>Details</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{#each message}}
+                                        {{#each report}}
                                         <tr>
-                                            <td>
-                                                <textarea id="description" class="form-control" name="Cancellation"
-                                                    style="height: 50px; resize: vertical;"
-                                                    readonly>{{this.message}}</textarea>
-                                            </td>
                                             <td>
                                                 <span>{{this.user.name}}</span>
                                             </td>
                                             <td>
-                                                <a href="/admin/message/delete?id={{this._id}}"
+                                                <textarea id="description" class="form-control" name="Cancellation"
+                                                    style="height: 50px; resize: vertical;">{{this.report}}</textarea>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/report/deltails?id={{this._id}}"
+                                                    class="btn btn-primary">Details</a>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/report/delete?id={{this._id}}"
                                                     class="btn btn-primary btn-delete">Delete</a>
 
                                             </td>

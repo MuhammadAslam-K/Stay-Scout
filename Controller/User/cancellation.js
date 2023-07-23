@@ -1,6 +1,7 @@
 import Booking from "../../model/bokingModel.js"
 import User from "../../model/userModel.js";
-
+import Hotel from "../../model/hotelModel.js"
+import Owner from "../../model/ownerModel.js";
 
 
 const cancellation = async (req, res) => {
@@ -91,6 +92,21 @@ async function userWallet(userId, amout, bookingId) {
             { cancel: true },
             { new: true }
         )
+
+        const hotelId = booking.hotel
+        const hotel = await Hotel.findByIdAndUpdate(
+            hotelId,
+            { $inc: { revenue: -amout } },
+            { new: true }
+        );
+
+        const ownerId = hotel.owner
+        await Owner.findByIdAndUpdate(
+            ownerId,
+            { $inc: { revenue: -amout } },
+            { new: true }
+        )
+
     } catch (error) {
         return res.render("500")
     }
