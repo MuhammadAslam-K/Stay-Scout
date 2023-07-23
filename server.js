@@ -10,7 +10,6 @@ import hbs from "hbs"
 import Handlebars from "hbs"
 import passport from "passport"
 import nocache from "nocache"
-import Razorpay from "razorpay"
 
 
 import user_route from "./Routers/userRoute.js"
@@ -89,6 +88,14 @@ app.use("/admin", admin_route)
 //     res.render("404")
 // })
 
+
+hbs.registerHelper('times', function (n, block) {
+    let accum = '';
+    for (let i = 0; i < n; i++) {
+        accum += block.fn(i);
+    }
+    return accum;
+});
 
 
 connect().then(() => {

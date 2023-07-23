@@ -83,6 +83,12 @@
                 </div>
             </div>
             <div class="home_title h1 my-4">{{hotel.name}}</div>
+            <div>
+                <h4 style="display: inline;">Rating:</h4>
+                {{#times ratings}}
+                <i class="fa-solid fa-star" style="color: gold;"></i>
+                {{/times}}
+            </div>
             <p class="mb-4">{{hotel.description}}</p>
 
             <h4 class="my-4">Location: {{hotel.address}}</h4>
@@ -94,7 +100,9 @@
 </div>
 <!-- END HOTELS -->
 {{!-- review--}}
-
+<div class="text-center">
+    <h1>Review</h1>
+</div>
 <div class="testimonials">
     <div class="parallax_background parallax-window" data-parallax="scroll" data-image-src="images/testimonials.jpg"
         data-speed="0.8"></div>
@@ -108,43 +116,19 @@
                     <div class="owl-carousel owl-theme test_slider">
 
                         <!-- Slide -->
+                        {{#each reviews}}
                         <div class="test_slider_item text-center">
-                            <div class="rating rating_5 d-flex flex-row align-items-start justify-content-center">
-                                <i></i><i></i><i></i><i></i><i></i>
+                            {{#times rating}}
+                            <div style="display: inline;">
+                                <i class="fa-solid fa-star" style="color: gold;"></i>
                             </div>
-                            <div class="testimonial_title"><a href="#">Perfect Stay</a></div>
+                            {{/times}}
                             <div class="testimonial_text">
-                                <p>Etiam nec odio vestibulum est mattis effic iturut magna. Pellentesque sit
-                                    amet tellus blandit. Etiam nec odio vestibulum est mattis effic.</p>
+                                <p>{{this.review}}</p>
                             </div>
-                            <div class="testimonial_author"><a href="#">Samantha Smith</a>, Greece</div>
+                            <div class="testimonial_author">{{this.user.name}}</div>
                         </div>
-
-                        <!-- Slide -->
-                        <div class="test_slider_item text-center">
-                            <div class="rating rating_5 d-flex flex-row align-items-start justify-content-center">
-                                <i></i><i></i><i></i><i></i><i></i>
-                            </div>
-                            <div class="testimonial_title"><a href="#">Nice place</a></div>
-                            <div class="testimonial_text">
-                                <p>Etiam nec odio vestibulum est mattis effic iturut magna. Pellentesque sit
-                                    amet tellus blandit. Etiam nec odio vestibulum est mattis effic.</p>
-                            </div>
-                            <div class="testimonial_author"><a href="#">Michael Doe</a>, Italy</div>
-                        </div>
-
-                        <!-- Slide -->
-                        <div class="test_slider_item text-center">
-                            <div class="rating rating_5 d-flex flex-row align-items-start justify-content-center">
-                                <i></i><i></i><i></i><i></i><i></i>
-                            </div>
-                            <div class="testimonial_title"><a href="#">We loved it</a></div>
-                            <div class="testimonial_text">
-                                <p>Etiam nec odio vestibulum est mattis effic iturut magna. Pellentesque sit
-                                    amet tellus blandit. Etiam nec odio vestibulum est mattis effic.</p>
-                            </div>
-                            <div class="testimonial_author"><a href="#">Luis Garcia</a>, Spain</div>
-                        </div>
+                        {{/each}}
 
                     </div>
                 </div>
@@ -209,7 +193,7 @@
                     <i class="fa-solid fa-star star" data-rating="5"></i>
                 </div>
                 <p>Your review:</p>
-                <textarea class="form-control" rows="5" id="reviewText"></textarea>
+                <textarea class="form-control" rows="5" id="reviewText" required></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -230,6 +214,7 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet" />
 
+{{!-- MAP --}}
 <script>
     // Function to get user's current location
     function getUserLocation() {
@@ -405,6 +390,7 @@
     }
 </script>
 
+{{!-- REVIEW --}}
 <script>
 
     let selectedRating = 0;

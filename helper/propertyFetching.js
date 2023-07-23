@@ -1,5 +1,7 @@
 import Hotel from "../model/hotelModel.js";
 import Rooms from "../model/roomsModel.js";
+import Review from "../model/review.js";
+import mongoose from "mongoose";
 
 const query = { is_Available: true, is_block: false, adminApproval: "Approved" }
 const sort = { booste: -1 }
@@ -100,10 +102,38 @@ const filterRoom = (async (id) => {
     }
 
 })
+// $match: { hotel: mongoose.Types.ObjectId(id) },
+
+
+async function hotelRating(id) {
+
+    try {
+        const reviews = await Review.find({ hotel: id });
+        console.log(reviews);
+
+        if (reviews.length === 0) {
+            return null; // No reviews found for the hotel
+        }
+
+        // Calculate the average rating
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = totalRating / reviews.length;
+        const roundedRating = Math.round(averageRating);
+
+        return roundedRating
+
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
+        throw error;
+    }
+}
+
 
 export default {
     hotel,
     room,
     filterRoom,
     hotelRoom,
+
+    hotelRating,
 }

@@ -3,7 +3,7 @@ import propertyValidation from "../../helper/propertyValidation.js";
 import Hotel from "../../model/hotelModel.js";
 import Category from "../../model/roomCategory.js";
 import Rooms from "../../model/roomsModel.js";
-import hbs from 'handlebars'
+import Review from "../../model/review.js"
 
 
 
@@ -36,7 +36,10 @@ const hotelHome = (async (req, res) => {
         req.session.hotelID = id
         const hotel = await propertyFetching.hotel(id)
         const rooms = await propertyFetching.hotelRoom(id)
-        // console.log(hotel);
+        const ratings = await propertyFetching.hotelRating(id)
+        const reviews = await Review.find({ hotel: id }).populate("user")
+
+
         res.render("hotelHome", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -46,9 +49,7 @@ const hotelHome = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            // res.render("hotelHome", { hotel, rooms })
-            res.render("hotelHome", { hotel, rooms, latitude: hotel.latitude, longitude: hotel.longitude });
-
+            res.render("hotelHome", { hotel, rooms, latitude: hotel.latitude, longitude: hotel.longitude, ratings, reviews });
         })
     } catch (error) {
         console.log(error);
