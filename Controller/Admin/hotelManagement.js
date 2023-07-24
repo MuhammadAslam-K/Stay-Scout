@@ -1,5 +1,6 @@
 import propertyFetching from "../../helper/propertyFetching.js"
 import Hotel from "../../model/hotelModel.js"
+import adminRevenue from "../../model/adminRevenue.js"
 
 
 

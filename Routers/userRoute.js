@@ -81,17 +81,17 @@ user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 
 //////////////PAYMENT/////////
-user_route.get("/payment", booking.payment)
-user_route.post("/payment", booking.paymentSuccess)
+user_route.get("/payment", isLogged, isBlocked, booking.payment)
+user_route.post("/payment", isLogged, isBlocked, booking.paymentSuccess)
 
 ////////////////BOOKING AND REVIEW AND REPORT///////////
-user_route.get("/bookinghistory", review.bookingHistory)
-user_route.get("/hotel/review", review.Hotelreview)
-user_route.post("/hotel/review", review.submitReview)
-user_route.post("/hotel/report", review.submitReport)
+user_route.get("/bookinghistory", isLogged, isBlocked, review.bookingHistory)
+user_route.get("/hotel/review", isLogged, isBlocked, review.Hotelreview)
+user_route.post("/hotel/review", isLogged, isBlocked, review.submitReview)
+user_route.post("/hotel/report", isLogged, isBlocked, review.submitReport)
 
 ///////////////////CANCELLATION//////////////////
-user_route.post("/cancellation", cancellation.cancellation)
+user_route.post("/cancellation", isLogged, isBlocked, cancellation.cancellation)
 
 
 

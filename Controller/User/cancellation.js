@@ -22,7 +22,7 @@ const cancellation = async (req, res) => {
             const hoursDifference = timeDifference / (1000 * 3600);
 
             if (hoursDifference <= 24) {
-                userWallet(userId, amountRefund, bookingId)
+                await userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
             }
             else {
@@ -56,7 +56,7 @@ const cancellation = async (req, res) => {
             const daysDifference = timeDifference / (1000 * 3600 * 24);
 
             if (daysDifference <= 7) {
-                userWallet(userId, amountRefund, bookingId)
+                await userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
 
             }
@@ -69,13 +69,16 @@ const cancellation = async (req, res) => {
             const currentDate = new Date();
 
             if (currentDate < checkinDate) {
-                userWallet(userId, amountRefund, bookingId)
+                await userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
 
             }
             else {
                 return res.status(401).end()
             }
+        }
+        else {
+            res.render("500")
         }
     } catch (error) {
         console.error('Error during cancellation:', error);
@@ -113,16 +116,16 @@ async function userWallet(userId, amout, bookingId) {
             { new: true }
         )
 
-        await Rooms.findByIdAndDelete(
+        const room = await Rooms.findByIdAndUpdate(
             booking.room,
             {
                 $pull: {
-                    checkin: booking.checkInDate,
-                    checkout: booking.checkOutDate,
-                }
+                    checkIn: booking.checkInDate,
+                    checkOut: booking.checkOutDate,
+                },
             },
             { new: true }
-        )
+        );
 
         const hotelId = booking.hotel
         const hotel = await Hotel.findByIdAndUpdate(
@@ -140,7 +143,7 @@ async function userWallet(userId, amout, bookingId) {
 
         await adminRevenue.findOneAndUpdate(
             { owner: ownerId },
-            { revenue: -adminAmount },
+            { $inc: { revenue: -adminAmount } },
             { new: true }
         )
 

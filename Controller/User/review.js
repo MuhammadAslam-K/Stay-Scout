@@ -62,16 +62,17 @@ const Hotelreview = (async (req, res) => {
                 cancel: false
             });
 
-
         if (bookings.length == 0) {
             return res.status(401).json({ error: "Invalid User" })
         }
         else {
-            if (bookings.review == false) {
+            if (bookings[0].review === false) {
+                console.log(71);
                 req.session.bookingId = bookings[0]._id;
                 return res.status(200).end()
             }
             else {
+                console.log(76);
                 return res.status(401).json({ error: "You already submitted the review" })
             }
         }

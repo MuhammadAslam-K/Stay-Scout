@@ -102,8 +102,6 @@
 <script>
     async function cancellation(bookingId, roomCancellation) {
 
-        console.log(roomCancellation)
-        console.log(bookingId)
         try {
             alertify.confirm(roomCancellation,
                 function () {
@@ -121,19 +119,19 @@
 
     async function handleCancellation(bookingId, roomCancellation) {
         try {
-            // Perform the cancellation and send data to the server.
             const response = await axios.post('/cancellation', {
                 bookingId, roomCancellation
             });
-
-            // Show success message to the user if required.
-            Swal.fire({
-                title: 'Cancellation Successful',
-                text: 'Your booking has been canceled the amout will be added to your wallet',
-                icon: 'success',
-            });
-            window.location.reload()
+            if (response.status == 200) {
+                Swal.fire({
+                    title: 'Cancellation Successful',
+                    text: 'Your booking has been canceled the amout will be added to your wallet',
+                    icon: 'success',
+                });
+                window.location.reload()
+            }
         } catch (error) {
+            console.log(error)
             if (error.response.status == 401) {
                 Swal.fire({
                     title: 'Cancellation Sucessful',

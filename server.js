@@ -15,7 +15,7 @@ import nocache from "nocache"
 import user_route from "./Routers/userRoute.js"
 import owner_route from "./Routers/ownerRoute.js"
 import admin_route from "./Routers/adminRoute.js"
-import connect from "./config/mongodbConnection.js"
+import mongodbConnection from "./config/mongodbConnection.js"
 
 
 dotenv.config({ path: "config.env" })
@@ -98,11 +98,12 @@ hbs.registerHelper('times', function (n, block) {
 });
 
 
-connect().then(() => {
+mongodbConnection.connect().then(() => {
     try {
+
         app.listen(port, () => console.log(`App listening on port http://localhost:${port}`))
 
     } catch (error) {
-        console.log("Unable to connect to the server");
+        console.log(error);
     }
 })
