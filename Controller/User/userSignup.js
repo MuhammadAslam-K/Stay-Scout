@@ -40,7 +40,6 @@ const signupValidation = async (req, res) => {
         let referedUser
         let transactions = []
 
-        console.log(valid);
 
         if (!valid.isValid) {
 

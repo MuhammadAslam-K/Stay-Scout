@@ -30,7 +30,7 @@ let ownerOtp = []
 
 const signupValidate = async (req, res) => {
     try {
-        // console.log(req.body);
+
         const { name, email, phone, password, bankName, accountNo, ifc } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
@@ -60,9 +60,6 @@ const signupValidate = async (req, res) => {
                 email,
                 phone,
                 password,
-                bankName,
-                accountNo,
-                ifc,
             }
 
             return res.status(200).end()

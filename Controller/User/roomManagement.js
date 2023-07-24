@@ -58,7 +58,6 @@ const roomDetails = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    console.log(err);
                     return res.status(500).render("500");
                 }
             }

@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 
 
-
 const ownerSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -20,17 +19,9 @@ const ownerSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    bankName: {
-        type: String,
-        require: true,
-    },
-    accountNo: {
+    revenue: {
         type: Number,
-        require: true,
-    },
-    ifc: {
-        type: String,
-        require: true,
+        default: 0,
     },
     is_block: {
         type: Boolean,

@@ -86,25 +86,6 @@ const payment = async (req, res) => {
 
 
 
-
-const roomcheckin = async (req, res) => {
-
-    try {
-        const id = req.session.room
-        const room = await Room.findById(id)
-
-        res.render("calender", {
-            checkInDates: JSON.stringify(room.checkIn),
-            checkOutDates: JSON.stringify(room.checkOut)
-        });
-
-    } catch (error) {
-        res.render("500")
-    }
-}
-
-
-
 const paymentSuccess = (async (req, res) => {
 
     try {
@@ -174,6 +155,7 @@ const paymentSuccess = (async (req, res) => {
             { $inc: { revenue: ownerAmount } },
             { new: true }
         )
+
         const adminrevenue = await adminRevenue.find({ owner: owner._id })
         if (adminrevenue.length != 0) {
             await adminRevenue.findOneAndUpdate(
@@ -190,6 +172,7 @@ const paymentSuccess = (async (req, res) => {
             await newAdminRevenue.save()
         }
 
+        return res.status(200).end()
     } catch (error) {
         console.log(error)
         res.render("500")
@@ -197,6 +180,24 @@ const paymentSuccess = (async (req, res) => {
 
 })
 
+
+
+
+const roomcheckin = async (req, res) => {
+
+    try {
+        const id = req.session.room
+        const room = await Room.findById(id)
+
+        res.render("calender", {
+            checkInDates: JSON.stringify(room.checkIn),
+            checkOutDates: JSON.stringify(room.checkOut)
+        });
+
+    } catch (error) {
+        res.render("500")
+    }
+}
 
 
 

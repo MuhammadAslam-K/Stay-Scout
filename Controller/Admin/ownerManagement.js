@@ -13,7 +13,6 @@ const viewowner = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            console.log(ownerDetails);
             res.render("viewowners", { owner: ownerDetails })
         })
 

@@ -14,6 +14,7 @@ const contact = ((req, res) => {
             res.render("contact")
         })
     } catch (error) {
+        console.log(error);
         res.render("500")
     }
 
@@ -30,6 +31,7 @@ const submitContact = (async (req, res) => {
         await contact.save()
         return res.status(200).end()
     } catch (error) {
+        console.log(error);
         res.render("500")
     }
 

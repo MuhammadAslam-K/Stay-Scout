@@ -81,7 +81,7 @@ const room = (async (id = null, skip = 0, limit = 0, user = true) => {
 const hotelRoom = (async (id) => {
 
     try {
-        const room = await Rooms.find({ hotel: id }).sort(sort)
+        const room = await Rooms.find({ hotel: id, ...query }).sort(sort)
         return room
     } catch (error) {
         console.log(error);
@@ -94,7 +94,7 @@ const filterRoom = (async (id) => {
     try {
 
         const categoryId = id
-        const rooms = await Rooms.find({ category: categoryId }).populate('category').populate('hotel')
+        const rooms = await Rooms.find({ category: categoryId, ...query }).populate('category').populate('hotel')
 
         return rooms
     } catch (error) {
@@ -102,20 +102,18 @@ const filterRoom = (async (id) => {
     }
 
 })
-// $match: { hotel: mongoose.Types.ObjectId(id) },
 
 
 async function hotelRating(id) {
 
     try {
         const reviews = await Review.find({ hotel: id });
-        console.log(reviews);
+
 
         if (reviews.length === 0) {
-            return null; // No reviews found for the hotel
+            return null;
         }
 
-        // Calculate the average rating
         const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
         const averageRating = totalRating / reviews.length;
         const roundedRating = Math.round(averageRating);

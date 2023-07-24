@@ -23,7 +23,7 @@ const amenities = (async (req, res) => {
 
 
 const addAmenities = (async (req, res) => {
-    console.log(11);
+
     try {
         const amenitiesName = req.body.amenitiesName
         const existingAmenities = await roomAmenities.find({ amenities: amenitiesName })
@@ -33,11 +33,8 @@ const addAmenities = (async (req, res) => {
         }
         else {
             const amenitie = new roomAmenities({ amenities: amenitiesName })
-            console.log(amenitie)
             await amenitie.save()
 
-            // const amenities = await roomAmenities.find()
-            // return res.send(amenities)
             return res.status(200).end()
         }
     } catch (error) {

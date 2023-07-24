@@ -39,10 +39,6 @@ const hotelSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    users: {
-        type: Number,
-        default: 0
-    },
     booste: {
         type: Number,
         default: 1

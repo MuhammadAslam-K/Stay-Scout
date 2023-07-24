@@ -98,7 +98,7 @@ const roomForApproval_post = async (req, res) => {
 
     try {
         const { status, roomId } = req.body
-        console.log(req.body);
+
         const room = await Rooms.findByIdAndUpdate(
             roomId,
             { adminApproval: status },

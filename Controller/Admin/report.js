@@ -6,7 +6,6 @@ const report = async (req, res) => {
     try {
         const report = await Report.find().populate("user")
 
-        console.log(report);
         res.render("report", { report })
 
     } catch (error) {

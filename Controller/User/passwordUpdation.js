@@ -33,7 +33,6 @@ const emailValidation = (async (req, res) => {
             return res.status(400).json({ error: "This Email is Not Registered Please Regester Now!!!" })
         }
         if (emailExits.password == null) {
-            console.log(37);
             return res.status(400).json({ error: "This user is registered with google" })
         }
         else if (emailExits) {
@@ -69,6 +68,7 @@ const recoveryotp = ((req, res) => {
             res.render("passwordRecoveryOtp")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -77,7 +77,6 @@ const recoveryotp = ((req, res) => {
 const verifyOtp = (async (req, res) => {
     try {
         const enteredOtp = req.body.OTP
-        console.log(req.body);
         let i
 
         for (i = 0; i < saveOtp.length; i++) {
@@ -91,6 +90,7 @@ const verifyOtp = (async (req, res) => {
         return res.status(400).json({ error: "Invalid OTP" })
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Internal server error please try again later" })
     }
 })
@@ -108,6 +108,7 @@ const updatePassword = ((req, res) => {
             res.render("updatePassword")
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 })
@@ -135,6 +136,7 @@ const passwordUpdation = (async (req, res) => {
         return res.status(200).end()
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: "Internal server error please try again later" })
 
     }

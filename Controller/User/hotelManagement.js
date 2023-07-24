@@ -45,7 +45,6 @@ const hotelHome = (async (req, res) => {
                 if (err.message.includes("Failed to lookup view")) {
                     return res.render("404");
                 } else {
-                    console.log(err);
                     return res.status(500).render("500");
                 }
             }
@@ -59,11 +58,9 @@ const hotelHome = (async (req, res) => {
 
 
 const hotelSearch = (async (req, res) => {
-    console.log(60);
+
     try {
-        // console.log(req.body.search)
         const value = req.body.search
-        // console.log(value);
         const regexValue = new RegExp(value, "i")
 
         const hotel = await Hotel.find({
@@ -72,7 +69,7 @@ const hotelSearch = (async (req, res) => {
                 { city: { $regex: regexValue } }
             ]
         })
-        // console.log(hotel);
+
         res.render("userViewHotels", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -99,9 +96,8 @@ const roomAvailability = (async (req, res) => {
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
         const category = await Category.find()
-        console.log(valid);
+
         if (!valid.isValid) {
-            console.log(103);
             return res.status(400).json({ error: valid.errors })
 
         }

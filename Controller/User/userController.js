@@ -5,10 +5,9 @@ import User from "../../model/userModel.js"
 
 const home = (async (req, res) => {
 
-    // res.render("contact")
     try {
         const banner = await propertyFetching.hotel(null, 0, 2)
-        const hotel = await propertyFetching.hotel(null, 0, 2)
+        const hotel = await propertyFetching.hotel(null, 2, 2)
         const rooms = await propertyFetching.room(null, 0, 6)
 
         res.render("home", (err) => {

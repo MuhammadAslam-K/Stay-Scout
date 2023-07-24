@@ -62,14 +62,12 @@ const Hotelreview = (async (req, res) => {
                 cancel: false
             });
 
-        // console.log(bookings)
 
         if (bookings.length == 0) {
             return res.status(401).json({ error: "Invalid User" })
         }
         else {
             if (bookings.review == false) {
-                // console.log(65);
                 req.session.bookingId = bookings[0]._id;
                 return res.status(200).end()
             }
@@ -88,7 +86,7 @@ const Hotelreview = (async (req, res) => {
 const submitReview = async (req, res) => {
 
     try {
-        console.log(81);
+
         const userId = req.session.user._id
         const hotelId = req.session.hotelID
         const bookingId = req.session.bookingId
@@ -102,8 +100,8 @@ const submitReview = async (req, res) => {
             user: userId
         })
 
-        // console.log(review);
         await review.save()
+
         await Booking.findByIdAndUpdate(
             bookingId,
             { review: true },

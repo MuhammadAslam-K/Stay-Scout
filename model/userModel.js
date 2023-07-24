@@ -49,12 +49,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    prevVisited: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Hotels",
-        },
-    ],
 })
 const User = mongoose.model("User", userSchema);
 

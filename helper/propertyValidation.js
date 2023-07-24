@@ -1,7 +1,6 @@
 
 
 const hotelValidation = ((data) => {
-    // console.log(data);
     const errors = {}
 
     const { name, title, startingPrice, city, pincode, description, address } = data
@@ -93,7 +92,7 @@ const hotelValidation = ((data) => {
 function roomValidation(data) {
     const errors = {}
     const { price, adults, childrents, bed, description } = data
-    console.log(data);
+
     const numberPattern = /^[0-9]+$/
 
 
@@ -140,7 +139,7 @@ function roomValidation(data) {
 const bookingValidation = (data) => {
 
     const { checkIn, checkOut, adults } = data;
-    // console.log(data);
+
     const numberPattern = /^[0-9]+$/;
     const errors = {};
 

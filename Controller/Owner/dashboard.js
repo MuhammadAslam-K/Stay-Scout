@@ -13,7 +13,6 @@ const dashboard = (async (req, res) => {
             Hotel.find({ owner: ownerId }).count(),
             Rooms.find({ owner: ownerId }).count()
         ]);
-        // console.log(hotels, rooms, ownerId);
 
         res.render("ownerDashboard", (err) => {
             if (err) {

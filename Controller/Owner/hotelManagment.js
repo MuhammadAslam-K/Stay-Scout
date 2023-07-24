@@ -1,6 +1,7 @@
 import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
 import propertyValidation from "../../helper/propertyValidation.js"
+import propertyFetching from "../../helper/propertyFetching.js"
 import Type from "../../model/hotelType.js"
 import Amenities from "../../model/hotelAmenities.js"
 
@@ -55,7 +56,6 @@ const addHotel = (async (req, res) => {
 
 const submitHotel = (async (req, res) => {
     try {
-        console.log(req.body);
         const files = req.files;
         const hotelImages = [];
         const valid = propertyValidation.hotelValidation(req.body)
@@ -92,7 +92,7 @@ const submitHotel = (async (req, res) => {
             else {
                 typeId = type
             }
-            console.log(70);
+
             const hotel = new Hotel({
                 name,
                 title,
@@ -109,7 +109,7 @@ const submitHotel = (async (req, res) => {
                 images: hotelImages
             })
             const result = await hotel.save()
-            console.log(result);
+
             return res.send(200).end()
         }
     } catch (error) {
@@ -193,8 +193,8 @@ const updateHotel = (async (req, res) => {
             const images = hotelImages.concat(oldImages.map((url) => ({ url })));
 
             const { name, title, startingPrice, type, newtype, city, oldAmenities, newAmenities, pincode, description, address, latitude, longitude } = req.body
-            // console.log(req.body);
             let typeId
+
             if (type == "new" && newtype) {
                 const newTypeData = new Type({
                     name: newtype

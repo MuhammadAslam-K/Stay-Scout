@@ -86,7 +86,7 @@ const submitRoom = (async (req, res) => {
             })
 
             hotel.rooms += 1
-            console.log(hotel.rooms)
+
             await hotel.save()
             await room.save()
             return res.send(200).end()

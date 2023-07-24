@@ -2,6 +2,8 @@ import Booking from "../../model/bokingModel.js"
 import User from "../../model/userModel.js";
 import Hotel from "../../model/hotelModel.js"
 import Owner from "../../model/ownerModel.js";
+import adminRevenue from "../../model/adminRevenue.js";
+import Rooms from "../../model/roomsModel.js";
 
 
 const cancellation = async (req, res) => {
@@ -19,11 +21,12 @@ const cancellation = async (req, res) => {
             const timeDifference = checkin.getTime() - currentDate.getTime();
             const hoursDifference = timeDifference / (1000 * 3600);
 
-            if (hoursDifference >= 24) {
+            if (hoursDifference <= 24) {
                 userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
             }
             else {
+                cancelBooking(bookingId)
                 return res.status(401).end()
             }
         }
@@ -33,7 +36,19 @@ const cancellation = async (req, res) => {
                 { cancel: true },
                 { new: true }
             )
+
+            await Rooms.findByIdAndDelete(
+                booking.room,
+                {
+                    $pull: {
+                        checkin: booking.checkInDate,
+                        checkout: booking.checkOutDate,
+                    }
+                },
+                { new: true }
+            )
             return res.status(401).end()
+
         }
         else if (roomCancellation === "Canceling within 7 days before checkin") {
 
@@ -43,6 +58,7 @@ const cancellation = async (req, res) => {
             if (daysDifference <= 7) {
                 userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
+
             }
             else {
                 return res.status(401).end()
@@ -55,6 +71,7 @@ const cancellation = async (req, res) => {
             if (currentDate < checkinDate) {
                 userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
+
             }
             else {
                 return res.status(401).end()
@@ -72,6 +89,9 @@ async function userWallet(userId, amout, bookingId) {
     try {
         const date = new Date()
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        const adminAmount = (30 / 100) * amout;
+        const ownerAmount = (70 / 100) * amout;
+
         const user = await User.findByIdAndUpdate(
             userId,
             {
@@ -93,24 +113,52 @@ async function userWallet(userId, amout, bookingId) {
             { new: true }
         )
 
+        await Rooms.findByIdAndDelete(
+            booking.room,
+            {
+                $pull: {
+                    checkin: booking.checkInDate,
+                    checkout: booking.checkOutDate,
+                }
+            },
+            { new: true }
+        )
+
         const hotelId = booking.hotel
         const hotel = await Hotel.findByIdAndUpdate(
             hotelId,
-            { $inc: { revenue: -amout } },
+            { $inc: { revenue: -ownerAmount } },
             { new: true }
         );
 
         const ownerId = hotel.owner
         await Owner.findByIdAndUpdate(
             ownerId,
-            { $inc: { revenue: -amout } },
+            { $inc: { revenue: -ownerAmount } },
+            { new: true }
+        )
+
+        await adminRevenue.findOneAndUpdate(
+            { owner: ownerId },
+            { revenue: -adminAmount },
             { new: true }
         )
 
     } catch (error) {
-        return res.render("500")
+        console.log(error);
     }
 }
+
+
+async function cancelBooking(bookingId) {
+
+    const booking = await Booking.findByIdAndUpdate(
+        bookingId,
+        { cancel: true },
+        { new: true }
+    )
+}
+
 
 
 export default {

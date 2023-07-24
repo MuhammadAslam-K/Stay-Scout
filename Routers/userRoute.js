@@ -15,6 +15,7 @@ import userController from "../Controller/User/userController.js"
 import review from "../Controller/User/review.js"
 import cancellation from "../Controller/User/cancellation.js";
 import auth from "../middleware/userAuthentication.js"
+import Signup_functions from "../helper/Signup_functions.js";
 import User from "../model/userModel.js"
 
 
@@ -133,14 +134,18 @@ passport.use(
                 if (existingUser) {
                     return done(null, existingUser);
                 }
+                const refrel = Signup_functions.generateRandomString(10)
 
                 const newUser = new User({
                     name: profile.displayName,
                     email: profile.emails[0].value,
                     password: null,
+                    refrelCode: refrel,
+                    validation: true,
                 });
 
                 const savedUser = await newUser.save();
+
                 done(null, savedUser);
             } catch (error) {
                 done(error, null);

@@ -132,6 +132,7 @@
                 text: 'Your booking has been canceled the amout will be added to your wallet',
                 icon: 'success',
             });
+            window.location.reload()
         } catch (error) {
             if (error.response.status == 401) {
                 Swal.fire({
