@@ -66,6 +66,7 @@ user_route.get("/hotels", isLogged, isBlocked, hotelManagement.hotels)
 user_route.get("/hotel/home", isLogged, isBlocked, hotelManagement.hotelHome)
 user_route.post("/hotel/search", isLogged, isBlocked, hotelManagement.hotelSearch)
 user_route.post("/hotel/checkin", isLogged, isBlocked, hotelManagement.roomAvailability)
+user_route.get("/findNearestHotel/:latitude/:longitude", hotelManagement.nearestHotel)
 
 //////////Rooms/////////////
 user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)

@@ -135,10 +135,49 @@ const roomAvailability = (async (req, res) => {
 })
 
 
+const nearestHotel = async (req, res) => {
+    console.log(139);
+    try {
+        const userLat = parseFloat(req.params.latitude);
+        const userLong = parseFloat(req.params.longitude);
+        let nearestHotel = null;
+        let minDistance = Infinity;
+        const hotels = await Hotel.find({ is_Available: true, is_block: false, adminApproval: "Approved" });
+
+        hotels.forEach((hotel) => {
+            const distance = propertyFetching.calculateDistance(
+                userLat,
+                userLong,
+                hotel.latitude,
+                hotel.longitude
+            );
+
+            if (distance < minDistance) {
+                nearestHotel = hotel;
+                minDistance = distance;
+            }
+        });
+
+        if (nearestHotel) {
+            res.render("viewNearestHotel", { hotel: nearestHotel })
+        } else {
+            res.status(404).json({ message: 'No nearby hotels found.' });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+}
+
+
+
+
 export default {
     hotels,
     hotelHome,
     hotelSearch,
 
     roomAvailability,
+    nearestHotel,
 }

@@ -1,3 +1,4 @@
+{{>userHeader}}
 <header class="header">
     <div class="header_content d-flex flex-row align-items-center justify-content-start">
         <div class="logo"><a href="/">Stay Scout</a></div>
@@ -9,6 +10,7 @@
                     <li><a href="/hotels">Hotels</a></li>
                     <li><a href="/rooms">Rooms</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <li><a href="/findNearestHotel" id="nearestBtn">Nearest Hotel</a></li>
                     <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
                     <li>
                         <form action="/hotel/search" method="post">
@@ -38,12 +40,13 @@
                 <li><a href="/hotels">Hotels</a></li>
                 <li><a href="/rooms">Rooms</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="#" id="neare">Nearest Hotel</a></li>
                 <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
             </ul>
         </nav>
     </div>
 </div>
-
+{{>userFooter}}
 <style>
     .search_container {
         position: relative;
@@ -71,3 +74,71 @@
         width: 250px;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+{{!--
+<script>
+    document.getElementById('nearestBtn').addEventListener('click', async (event) => {
+        // Check if geolocation is available in the browser
+        if ("geolocation" in navigator) {
+            // Get user's current location
+            navigator.geolocation.getCurrentPosition(await handlePosition, handleError);
+        } else {
+            alert("Geolocation is not available in your browser.");
+        }
+
+        // Async function to handle the position
+        async function handlePosition(position) {
+            const { latitude, longitude } = position.coords;
+            console.log(latitude, longitude);
+            try {
+                // Send the user's current location to the backend using Axios
+                const response = await axios.get(`/findNearestHotel/${latitude}/${longitude}`);
+                //const data = response.data;
+
+                if (response.status === 200) {
+                    alert(101)
+                    document.body.innerHTML = response.data;
+                }
+                //console.log(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to handle errors
+        function handleError(error) {
+            console.error('Error getting user location:', error);
+        }
+    });
+</script> --}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nearestBtn = document.getElementById("nearestBtn");
+
+        nearestBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        const url = `/findNearestHotel/${latitude}/${longitude}`;
+                        window.location.href = url;
+                    },
+                    function (error) {
+                        console.error("Error getting user's location:", error);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+    });
+
+</script>

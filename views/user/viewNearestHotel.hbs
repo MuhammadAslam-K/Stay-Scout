@@ -1,0 +1,177 @@
+{{>userHeader}}
+{{>navBar2}}
+
+
+<style>
+    /* Fonts */
+    body {
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    /* Container styles */
+    .container1 {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Slider styles */
+    .slider1 {
+        margin-bottom: 20px;
+    }
+
+    .slide {
+        height: 50vh;
+        background-size: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .background_image {
+        opacity: unset;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .slide:hover .background_image {
+        opacity: 0.8;
+    }
+
+    /* Title and description styles */
+    h4 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    /* Rating styles */
+    .rating-container {
+        margin-bottom: 10px;
+    }
+
+    .star {
+        fill: #ffc107;
+        width: 1em;
+        margin-top: 5px;
+        margin-right: 3px;
+    }
+
+    /* Booking container styles */
+    .booking-container1 {
+        margin-top: 20px;
+    }
+
+    h5 {
+        font-size: 18px;
+        margin-right: 10px;
+        color: #333;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    /* Additional styles */
+    .container1 {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+    }
+
+    @media (min-width: 576px) {
+        .container1 {
+            grid-template-columns: 1fr 2fr;
+            align-items: center;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .container1 {
+            grid-template-columns: 2fr 3fr;
+        }
+    }
+
+    .description-container1 {
+        border-left: 2px solid #007bff;
+        padding-left: 20px;
+    }
+
+    .slider1 .owl-nav {
+        display: none;
+    }
+
+    .booking-container1 .btn-primary {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .booking-container1 .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+
+
+
+
+
+
+
+<div class="container container1" style="margin-top: 100px;">
+    <div class="slider-container1">
+        <div class="slider1">
+            <div class="owl-carousel owl-theme home_slider">
+                {{#each hotel.images}}
+                <div class="slide" style="height: 50vh;background-size: cover;">
+                    <div class="background_image" style="opacity: unset; background-image:url({{this.url}})"></div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="description-container1">
+        <h3>{{hotel.name}}</h3>
+        <h4>{{hotel.title}}</h4>
+        <p class="mt-3">{{hotel.description}}</p>
+
+    </div>
+    <div class="booking-container1 d-flex align-items-center">
+        <h5>Starts From RS{{hotel.startingPrice}}</h5>
+        <a href="/hotel/home?id={{hotel._id}}" class="btn btn-primary">Check
+            Availability</a>
+    </div>
+</div>
+
+{{>userFooter}}
+
+
+
+<script>
+    const errorMessage = "{{errorMessage}}";
+    if (errorMessage) {
+        alertify.alert(errorMessage, function () {
+            alertify.message('OK');
+        });
+    }
+</script>
