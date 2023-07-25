@@ -67,12 +67,12 @@ const Hotelreview = (async (req, res) => {
         }
         else {
             if (bookings[0].review === false) {
-                console.log(71);
+
                 req.session.bookingId = bookings[0]._id;
                 return res.status(200).end()
             }
             else {
-                console.log(76);
+
                 return res.status(401).json({ error: "You already submitted the review" })
             }
         }
@@ -118,6 +118,22 @@ const submitReview = async (req, res) => {
 }
 
 
+const editReview = (async (req, res) => {
+
+    try {
+        const { id, rating, reviewText } = req.body
+
+        await Review.findByIdAndUpdate(
+            id,
+            { review: reviewText, rating: rating },
+            { new: true },
+        )
+        return res.status(200).end()
+    } catch (error) {
+        res.render("500")
+    }
+})
+
 
 
 export default {
@@ -125,5 +141,6 @@ export default {
     submitReport,
 
     Hotelreview,
-    submitReview
+    submitReview,
+    editReview,
 }

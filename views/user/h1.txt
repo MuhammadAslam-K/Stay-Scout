@@ -117,8 +117,7 @@
             <button id="navigateBtn" class="btn btn-primary">Navigate <i
                     class="fas fa-map-marker-alt ml-2"></i></button>
             {{#if reviewExist}}
-            <button class="btn btn-primary" type="button" id="editReviewBtn" data-rating="{{reviewExist.rating}}">Edit
-                the Review</button>
+            <button class="btn btn-primary" id="editReviewBtn">Edit the Review</button>
             {{else}}
             <button class="btn btn-primary" id="writeReviewBtn">Write a Review</button>
             {{/if}}
@@ -230,8 +229,10 @@
         </div>
     </div>
 </div>
+{{!-- END REVIEW POPUP --}}
 
 {{!-- EDIT REVIEW POPUP --}}
+
 <div class="modal" id="editReviewModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -244,11 +245,11 @@
             <div class="modal-body">
                 <p>Rate the hotel:</p>
                 <div class="rating-stars">
-                    <i class="fa-solid fa-star star" data-rating="1"></i>
-                    <i class="fa-solid fa-star star" data-rating="2"></i>
-                    <i class="fa-solid fa-star star" data-rating="3"></i>
-                    <i class="fa-solid fa-star star" data-rating="4"></i>
-                    <i class="fa-solid fa-star star" data-rating="5"></i>
+                    <!-- Display stars based on the existing rating -->
+                    {{#times reviewEdit.rating}}
+                    <i class="fa-solid fa-star star active" data-rating="{{this}}"></i>
+                    {{/times}}
+
                 </div>
                 <p>Your review:</p>
                 <textarea class="form-control" rows="5" id="editReviewText" required>{{reviewEdit.review}}</textarea>
@@ -260,7 +261,9 @@
         </div>
     </div>
 </div>
+
 {{!-- END OF EDIT REVIEW POPUP --}}
+
 
 <!-- Mapbox map container -->
 <div id="map"></div>
@@ -268,8 +271,6 @@
 {{>userSiteFooter}}
 {{>userFooter}}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -351,10 +352,7 @@
     }
 
     // Add event listener to the submit review button in the review modal
-    const submitReviewBtn = document.getElementById('submitReview')
-    if (submitReviewBtn) {
-        submitReviewBtn.addEventListener('click', submitReview);
-    }
+    document.getElementById('submitReview').addEventListener('click', submitReview);
 
 
     async function review() {
@@ -384,92 +382,10 @@
             }
         }
     }
-    const writeReviewBtn = document.getElementById('writeReviewBtn')
-    if (writeReviewBtn) {
-        writeReviewBtn.addEventListener('click', review);
-    }
-</script>
+    document.getElementById('writeReviewBtn').addEventListener('click', review);
 
-<script>
-
-    let selectedEditRating = 0
-
-    function showEditReviewModal() {
-        $('#editReviewModal').modal('show');
-    }
-
-    // Add event listener to the "Edit Review" button
-    const editReviewBtn = document.getElementById('editReviewBtn')
-    if (editReviewBtn) {
-        editReviewBtn.addEventListener('click', showEditReviewModal);
-    }
-
-
-
-    // Add event listeners to the star elements
-    const editStars = document.querySelectorAll('.star');
-    editStars.forEach(star => {
-        star.addEventListener('click', handleEditStarClick);
-    });
-
-    // Function to update the star colors based on the selected rating for edit review
-    function updateEditStarColors() {
-        const editStars = document.querySelectorAll('#editReviewModal .star');
-        editStars.forEach((star, index) => {
-            if (index < selectedEditRating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
-        });
-    }
-
-    // Function to handle star click event for edit review
-    function handleEditStarClick(event) {
-        const clickedRating = parseInt(event.target.getAttribute('data-rating'));
-        if (selectedEditRating === clickedRating) {
-            selectedEditRating = 0;
-        } else {
-            selectedEditRating = clickedRating;
-        }
-        updateEditStarColors();
-    }
-
-
-    // Function to handle the "Submit" button click for edit review
-    async function handleEditReviewSubmit() {
-        const editedRating = selectedEditRating; // Get the edited rating from the global variable or wherever you have stored it.
-        const editedReviewText = document.getElementById('editReviewText').value;
-        console.log(editedRating, editedReviewText)
-        try {
-            // Send the updated review data to the server using an axios PUT request
-            const response = await axios.put('/review/edit', {
-                id: "{{reviewEdit._id}}",
-                rating: editedRating,
-                reviewText: editedReviewText
-            });
-
-            if (response.status === 200) {
-                // If the review update is successful, close the modal and update the frontend as needed.
-                alertify.alert("Review updated successfully", function () {
-                    alertify.message('OK');
-                    $('#editReviewModal').modal('hide');
-                });
-            }
-        } catch (error) {
-            alertify.alert("Something went wrong please try again later", function () {
-                alertify.message('OK')
-            })
-        }
-    }
-
-    // Add event listener to the "Submit" button in the "Edit Review" modal
-    document.getElementById('submitEditReview').addEventListener('click', handleEditReviewSubmit);
 
 </script>
-
-
-
 
 
 {{!-- MAP --}}

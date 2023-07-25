@@ -34,11 +34,17 @@ const hotelHome = (async (req, res) => {
     try {
         const id = req.query.id
         req.session.hotelID = id
+        const userId = req.session.user._id
         const hotel = await propertyFetching.hotel(id)
         const rooms = await propertyFetching.hotelRoom(id)
         const ratings = await propertyFetching.hotelRating(id)
         const reviews = await Review.find({ hotel: id }).populate("user")
+        const reviewEdit = await Review.findOne({ user: userId, hotel: id })
+        let reviewExist = false
 
+        if (reviewEdit) {
+            reviewExist = true
+        }
 
         res.render("hotelHome", (err) => {
             if (err) {
@@ -48,7 +54,7 @@ const hotelHome = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("hotelHome", { hotel, rooms, latitude: hotel.latitude, longitude: hotel.longitude, ratings, reviews });
+            res.render("hotelHome", { hotel, rooms, latitude: hotel.latitude, longitude: hotel.longitude, ratings, reviews, reviewEdit, reviewExist });
         })
     } catch (error) {
         console.log(error);
@@ -82,6 +88,7 @@ const hotelSearch = (async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         res.render("500")
     }
 })

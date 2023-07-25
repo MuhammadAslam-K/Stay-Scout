@@ -89,6 +89,7 @@ user_route.post("/payment", isLogged, isBlocked, booking.paymentSuccess)
 user_route.get("/bookinghistory", isLogged, isBlocked, review.bookingHistory)
 user_route.get("/hotel/review", isLogged, isBlocked, review.Hotelreview)
 user_route.post("/hotel/review", isLogged, isBlocked, review.submitReview)
+user_route.put("/review/edit", isLogged, isBlocked, review.editReview)
 user_route.post("/hotel/report", isLogged, isBlocked, review.submitReport)
 
 ///////////////////CANCELLATION//////////////////
