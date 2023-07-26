@@ -126,12 +126,13 @@
                                             <td>{{this.paymentAmount}}</td>
                                             <td>
                                                 {{#if this.report}}
-                                                <p>Submitted a report</p>
+                                                <p class="text-warning">Submitted a report</p>
                                                 {{/if}}
                                                 {{#if this.cancel}}
-                                                <p>The user Cancelled this booking</p>
+                                                <p class="text-danger">The user Cancelled this booking <i
+                                                        class="fa-solid fa-ban" style="color: #eb0f0f;"></i></p>
                                                 {{else}}
-                                                <p>No actions still</p>
+                                                <p class="text-success">Happy Customer</p>
                                                 {{/if}}
                                             </td>
                                         </tr>

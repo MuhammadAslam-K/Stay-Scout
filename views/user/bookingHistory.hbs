@@ -46,14 +46,15 @@
                                                     data-check-in-date="{{this.checkInDate}}"
                                                     data-check-out-date="{{this.checkOutDate}}">
                                                     {{#if this.cancel}}
-                                                    <p>You have cancelled this booking.</p>
+                                                    <p class="text-danger">You have cancelled this booking.<i
+                                                            class="fa-solid fa-ban" style="color: #eb0f0f;"></i></p>
                                                     {{else}}
                                                     <button class="btn btn-primary btn-cancel"
                                                         onclick="cancellation('{{this._id}}', '{{this.room.Cancellation}}')">
                                                         Cancellation
                                                     </button>
                                                     {{#if this.report}}
-                                                    <p>You already submitted the report.</p>
+                                                    <p class="text-warning">You already submitted the report.</p>
                                                     {{else}}
                                                     <button class="btn btn-danger btn-report">Report</button>
                                                     {{/if}}
