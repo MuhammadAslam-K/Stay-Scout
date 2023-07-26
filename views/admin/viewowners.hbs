@@ -24,6 +24,7 @@
                                             <th>Revenue</th>
                                             <th>Blocked</th>
                                             <th>Hotel</th>
+                                            <th>Details</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -47,6 +48,10 @@
                                             <td>
                                                 <a href="/admin/owner/hotels?id={{this._id}}"
                                                     class="btn btn-primary btn-block">view</a>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/owner/details?id={{this._id}}"
+                                                    class="btn btn-primary btn-block">Details</a>
                                             </td>
                                         </tr>
                                         {{/each}}

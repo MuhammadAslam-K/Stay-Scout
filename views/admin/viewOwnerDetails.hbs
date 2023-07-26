@@ -1,5 +1,5 @@
 {{> userHeader}}
-{{> adminDashboardSide}}
+{{> dashbordSide}}
 
 <style>
     body {
@@ -83,103 +83,67 @@
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
+
+                <div class="container d-flex justify-content-center mt-3">
+                    <div class="btn-group" role="group" aria-label="View Options">
+                        <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
+                        <button type="button" class="btn btn-secondary" id="monthBtn">Month</button>
+                        <button type="button" class="btn btn-secondary" id="weekBtn">Week</button>
+                    </div>
+                </div>
+
+                <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
+                    <div style="width: 100%;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
                 <div class="container-fluid">
-                    <nav
-                        class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
-                        <h1 class="h3 mb-0 text-primary font-weight-bold p-3">Dashboard</h1>
-                        <a href="/owner/logout" class="btn btn-primary">Logout</a>
-                    </nav>
-
-                    <div class="row">
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-primary  shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="text-xs font-weight-bold text-uppercase">Total Revenue</div>
-                                    <div class="h5 mb-0 font-weight-bold">RS:{{revenue}}</div>
-                                </div>
-                            </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <a href="#" class="m-0 font-weight-bold text-primary">Details</a>
                         </div>
-
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-success  shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="text-xs font-weight-bold text-uppercase">Total Number of Hotels</div>
-                                    <div class="h5 mb-0 font-weight-bold">{{hotels}}</div>
-                                </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>User Name</th>
+                                            <th>Hotel name</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each details}}
+                                        <tr>
+                                            <td>{{this.user.name}}</td>
+                                            <td>{{this.hotel.name}}</td>
+                                            <td>
+                                                <p>checkIn: {{dateFormat this.checkInDate}}</p>
+                                                <p>checkOut: {{dateFormat this.checkOutDate}}</p>
+                                            </td>
+                                            <td>{{this.paymentAmount}}</td>
+                                            <td>
+                                                {{#if this.report}}
+                                                <p>Submitted a report</p>
+                                                {{/if}}
+                                                {{#if this.cancel}}
+                                                <p>The user Cancelled this booking</p>
+                                                {{else}}
+                                                <p>No actions still</p>
+                                                {{/if}}
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-
-                        <div class="col-xl-4 col-md-6 mb-4">
-                            <div class="card border-left-danger  shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="text-xs font-weight-bold text-uppercase">Total Number of Rooms</div>
-                                    <div class="h5 mb-0 font-weight-bold">{{rooms}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container d-flex justify-content-center mt-3">
-                <div class="btn-group" role="group" aria-label="View Options">
-                    <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
-                    <button type="button" class="btn btn-secondary" id="monthBtn">Month</button>
-                    <button type="button" class="btn btn-secondary" id="weekBtn">Week</button>
-                </div>
-            </div>
-
-            <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
-                <div style="width: 100%;">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <a href="#" class="m-0 font-weight-bold text-primary">Bookings</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>User name</th>
-                                        <th>Hotel name</th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each booking}}
-                                    <tr>
-                                        <td>{{this.user.name}}</td>
-                                        <td>{{this.hotel.name}}</td>
-                                        <td>
-                                            <p>checkIn: {{dateFormat this.checkInDate}}</p>
-                                            <p>checkOut: {{dateFormat this.checkOutDate}}</p>
-                                        </td>
-                                        <td>{{this.paymentAmount}}</td>
-                                        <td>
-                                            {{#if this.report}}
-                                            <p>Submitted a report</p>
-                                            {{/if}}
-                                            {{#if this.cancel}}
-                                            <p>The user Cancelled this booking</p>
-                                            {{else}}
-                                            <p>No actions still</p>
-                                            {{/if}}
-                                        </td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </body>
 {{>userFooter}}
@@ -230,7 +194,7 @@
                 }
 
                 // Make an asynchronous HTTP GET request to fetch revenue data based on the selected view
-                const response = await axios.get(`/owner/revenue?view=${view}`);
+                const response = await axios.get(`/admin/owner/revenue?view=${view}`);
 
                 // Extract data from the response
                 const data = response.data;
@@ -262,7 +226,7 @@
 
         try {
             // Make an asynchronous HTTP GET request to fetch revenue data
-            const response = await axios.get('/owner/revenue');
+            const response = await axios.get('/admin/owner/revenue');
 
             const data = response.data;
             const lineChartData = {
@@ -340,14 +304,4 @@
             console.error('Failed to fetch revenue data:', error);
         }
     });
-</script>
-
-
-<script>
-    const errorMessage = "{{errorMessage}}";
-    if (errorMessage) {
-        alertify.alert(errorMessage, function () {
-            alertify.message('OK');
-        });
-    }
 </script>

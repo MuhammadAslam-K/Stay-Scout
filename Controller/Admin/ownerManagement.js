@@ -1,3 +1,4 @@
+import Booking from "../../model/bokingModel.js";
 import Owner from "../../model/ownerModel.js"
 
 
@@ -41,10 +42,26 @@ const blockowner = (async (req, res) => {
 })
 
 
+const ownerDetails = async (req, res) => {
+
+    try {
+        const ownerId = req.query.id
+        req.session.OwnerID = ownerId
+        const details = await Booking.find({ owner: ownerId }).populate("user").populate("hotel").populate("owner")
+
+        res.render("viewOwnerDetails", { details })
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+
+}
+
+
 
 
 export default {
     viewowner,
     blockowner,
-
+    ownerDetails,
 }

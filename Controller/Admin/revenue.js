@@ -55,60 +55,59 @@ const adminRevenueChart = async (req, res) => {
 };
 
 
-// const ownerRevenue = async (req, res) => {
-//     console.log(59);
-//     try {
-//         const { view } = req.query;
-//         const ownerId = req.session.OWNERID;
-//         console.log(ownerId);
-//         const bookings = await Booking.find({ owner: ownerId }).select('bookedAt paymentAmount').sort({ bookedAt: 1 });
+const ownerRevenue = async (req, res) => {
 
-//         const labels = [];
-//         const revenue = [];
-//         const groupedData = {};
+    try {
+        const { view } = req.query;
+        const ownerId = req.session.OwnerID
+        const bookings = await Booking.find({ owner: ownerId }).select('bookedAt paymentAmount').sort({ bookedAt: 1 });
 
-//         const getWeekNumber = (date) => {
-//             const onejan = new Date(date.getFullYear(), 0, 1);
-//             const weekNumber = Math.ceil(((date - onejan) / 86400000 + onejan.getDay() + 1) / 7);
-//             return weekNumber;
-//         };
+        const labels = [];
+        const revenue = [];
+        const groupedData = {};
 
-//         const getTimeUnit = (date) => {
-//             switch (view) {
-//                 case 'year':
-//                     return date.getFullYear();
-//                 case 'month':
-//                     return date.getMonth() + 1;
-//                 case 'week':
-//                     return getWeekNumber(date);
-//                 default:
-//                     return date.getMonth() + 1;
-//             }
-//         };
-//         console.log(bookings);
-//         bookings.forEach((booking) => {
-//             const timeUnit = getTimeUnit(booking.bookedAt);
-//             if (!groupedData[timeUnit]) {
-//                 groupedData[timeUnit] = 0;
-//             }
-//             groupedData[timeUnit] += booking.paymentAmount;
-//         });
+        const getWeekNumber = (date) => {
+            const onejan = new Date(date.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil(((date - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+            return weekNumber;
+        };
 
-//         for (const timeUnit in groupedData) {
-//             labels.push(timeUnit);
-//             revenue.push(groupedData[timeUnit]);
-//         }
+        const getTimeUnit = (date) => {
+            switch (view) {
+                case 'year':
+                    return date.getFullYear();
+                case 'month':
+                    return date.getMonth() + 1;
+                case 'week':
+                    return getWeekNumber(date);
+                default:
+                    return date.getMonth() + 1;
+            }
+        };
 
-//         res.json({ labels, revenue });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Failed to fetch revenue data' });
-//     }
-// }
+        bookings.forEach((booking) => {
+            const timeUnit = getTimeUnit(booking.bookedAt);
+            if (!groupedData[timeUnit]) {
+                groupedData[timeUnit] = 0;
+            }
+            groupedData[timeUnit] += booking.paymentAmount;
+        });
+
+        for (const timeUnit in groupedData) {
+            labels.push(timeUnit);
+            revenue.push(groupedData[timeUnit]);
+        }
+
+        res.json({ labels, revenue });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch revenue data' });
+    }
+}
 
 
 
 export default {
     adminRevenueChart,
-    // ownerRevenue,
+    ownerRevenue,
 }

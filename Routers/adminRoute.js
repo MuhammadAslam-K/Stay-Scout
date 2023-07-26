@@ -40,6 +40,7 @@ admin_route.post("/users/block", isLogged, userManagement.blockUser)
 ///////////////Owner MANAGEMENT/////////////
 admin_route.get("/owners", isLogged, ownerManagement.viewowner)
 admin_route.post("/owners/block", isLogged, ownerManagement.blockowner)
+admin_route.get("/owner/details", isLogged, ownerManagement.ownerDetails)
 
 /////////HOTELS////////
 admin_route.get("/owner/hotels", isLogged, hotelManagement.ownerHotels)
@@ -88,7 +89,7 @@ admin_route.get("/report/deltails", isLogged, report.reportDetails)
 
 //////////////REVENUE//////////////////
 admin_route.get("/revenue", isLogged, revenue.adminRevenueChart)
-// admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
+admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 
 
 
