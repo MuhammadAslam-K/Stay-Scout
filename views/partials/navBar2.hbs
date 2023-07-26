@@ -8,6 +8,7 @@
                     <li><a href="/hotels">Hotels</a></li>
                     <li><a href="/rooms">Rooms</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <li><a href="/findNearestHotel" id="nearestBtn">Nearest Hotel</a></li>
                     <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
                     <li>
                         <form action="/hotel/search" method="post">
@@ -38,6 +39,7 @@
                 <li><a href="/hotels">Hotels</a></li>
                 <li><a href="/rooms">Rooms</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="#" id="neare">Nearest Hotel</a></li>
                 <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
             </ul>
         </nav>
@@ -72,3 +74,33 @@
         width: 250px;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nearestBtn = document.getElementById("nearestBtn");
+
+        nearestBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        const url = `/findNearestHotel/${latitude}/${longitude}`;
+                        window.location.href = url;
+                    },
+                    function (error) {
+                        console.error("Error getting user's location:", error);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+    });
+
+</script>

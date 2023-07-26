@@ -4,32 +4,16 @@
 
 
 <body id="page-top">
-
-    <!-- Page Wrapper -->
     <div id="wrapper">
-
-        <!-- Sidebar -->
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
                         <a href="/admin/logout" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                             Logout</a>
                     </div>
-
-                    <!-- Content Row -->
                     <div class="row">
-
-                        <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
@@ -43,8 +27,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
@@ -85,18 +67,163 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-
                     </div>
-
                 </div>
-
+            </div>
+            <div class="container d-flex justify-content-center mt-3">
+                <div class="btn-group" role="group" aria-label="View Options">
+                    <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
+                    <button type="button" class="btn btn-secondary" id="monthBtn">Month</button>
+                    <button type="button" class="btn btn-secondary" id="weekBtn">Week</button>
+                </div>
             </div>
 
+            <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
+                <div style="width: 100%;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
         </div>
-
     </div>
+    </div>
+</body>
+{{>userFooter}}
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    {{>userFooter}}
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        let lineChart;
+
+        const updateChartData = async (view) => {
+            try {
+                let timeUnit;
+                switch (view) {
+                    case 'year':
+                        timeUnit = '$year';
+                        break;
+                    case 'month':
+                        timeUnit = '$month';
+                        break;
+                    case 'week':
+                        timeUnit = '$week';
+                        break;
+                    default:
+                        timeUnit = '$month'; // Default to 'month' view
+                        break;
+                }
+
+                // Make an asynchronous HTTP GET request to fetch revenue data based on the selected view
+                const response = await axios.get(`/admin/revenue?view=${view}`);
+
+                // Extract data from the response
+                const data = response.data;
+
+                // Convert revenue data to rupees
+                const revenueInRupees = data.revenue.map((value) => value * 74.5);
+
+                // Update the chart data for line chart
+                lineChart.data.labels = data.labels;
+                lineChart.data.datasets[0].data = data.revenue;
+
+                // Update the x-axis title based on the selected view
+                lineChart.options.scales.x.title.text = `${view.charAt(0).toUpperCase()}${view.slice(1)}`;
+
+                // Re-render the chart
+                lineChart.update();
+
+            } catch (error) {
+                console.log(error)
+            }
+        };
+
+        // Add event listeners for the view selection buttons
+        document.getElementById('yearBtn').addEventListener('click', () => updateChartData('year'));
+        document.getElementById('monthBtn').addEventListener('click', () => updateChartData('month'));
+        document.getElementById('weekBtn').addEventListener('click', () => updateChartData('week'));
+
+        // Initially load the chart with the default 'month' view
+        await updateChartData('month');
+
+        try {
+            // Make an asynchronous HTTP GET request to fetch revenue data
+            const response = await axios.get('/admin/revenue');
+
+            const data = response.data;
+            const lineChartData = {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Revenue',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    data: data.revenue,
+                    fill: true,
+                }]
+            };
+
+            // Get the chart context
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            // Create the line chart with a logarithmic y-axis scale
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: lineChartData,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue Chart',
+                            font: {
+                                size: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return '₹' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Months and Years',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'logarithmic', // Set the y-axis scale to logarithmic
+                            title: {
+                                display: true,
+                                text: 'Revenue (INR)',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return '₹' + value.toLocaleString(); // Format tick labels as rupee values
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add interactivity: Update the chart on window resize
+            window.addEventListener('resize', function () {
+                lineChart.resize();
+            });
+
+        } catch (error) {
+            // Handle errors in case the data retrieval fails
+            console.error('Failed to fetch revenue data:', error);
+        }
+    });
+</script>

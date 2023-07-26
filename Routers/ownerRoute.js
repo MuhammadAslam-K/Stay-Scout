@@ -28,9 +28,9 @@ owner_route.post("/submitOtp", islogout, ownerSignup.verifyOtp)
 
 /////////////////DASHBOARD////////////////
 owner_route.get("/dashboard", isLogged, isBlocked, dashboard.dashboard)
-owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 owner_route.get("/profile", isLogged, isBlocked, dashboard.profile)
 owner_route.post("/profile/edit", isLogged, isBlocked, dashboard.profileUpdate)
+owner_route.get("/revenue", isLogged, isBlocked, dashboard.revenueChart)
 
 /////////////////HOTEL MANAGEMENT////////////
 owner_route.get("/hotels", isLogged, isBlocked, hotelManagment.viewHotels)
@@ -42,6 +42,7 @@ owner_route.get("/hotel/update", isLogged, isBlocked, hotelManagment.editHotel)
 owner_route.post("/hotel/edit", upload.array('image', 4), isLogged, isBlocked, hotelManagment.updateHotel)
 
 ///////////// ROOM MANAGEMENT///////////////
+owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 owner_route.get("/hotel/addrooms", isLogged, isBlocked, roomManagement.addRoom)
 owner_route.post("/hotel/addrooms", isLogged, isBlocked, upload.array('image', 4), roomManagement.submitRoom)
 

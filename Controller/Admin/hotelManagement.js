@@ -8,7 +8,9 @@ const ownerHotels = (async (req, res) => {
 
     try {
         const id = req.query.id
+        req.session.OWNERID = id
         const hotel = await propertyFetching.hotel(id, 0, 0, false)
+
         res.render("viewHotel", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {

@@ -77,44 +77,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-
-{{!--
-<script>
-    document.getElementById('nearestBtn').addEventListener('click', async (event) => {
-        // Check if geolocation is available in the browser
-        if ("geolocation" in navigator) {
-            // Get user's current location
-            navigator.geolocation.getCurrentPosition(await handlePosition, handleError);
-        } else {
-            alert("Geolocation is not available in your browser.");
-        }
-
-        // Async function to handle the position
-        async function handlePosition(position) {
-            const { latitude, longitude } = position.coords;
-            console.log(latitude, longitude);
-            try {
-                // Send the user's current location to the backend using Axios
-                const response = await axios.get(`/findNearestHotel/${latitude}/${longitude}`);
-                //const data = response.data;
-
-                if (response.status === 200) {
-                    alert(101)
-                    document.body.innerHTML = response.data;
-                }
-                //console.log(data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // Function to handle errors
-        function handleError(error) {
-            console.error('Error getting user location:', error);
-        }
-    });
-</script> --}}
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const nearestBtn = document.getElementById("nearestBtn");

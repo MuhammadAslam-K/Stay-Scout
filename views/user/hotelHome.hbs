@@ -333,10 +333,17 @@
             });
 
             if (response.status === 200) {
-                alertify.alert("Review submitted successfully", function () {
-                    alertify.message('OK');
+                successNotification()
+                function successNotification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Review submitted successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
                     document.getElementById('reviewModal').style.display = 'none';
-                });
+                }
             } else {
                 alertify.alert("Failed to submit review", function () {
                     alertify.message('OK');
@@ -451,10 +458,17 @@
 
             if (response.status === 200) {
                 // If the review update is successful, close the modal and update the frontend as needed.
-                alertify.alert("Review updated successfully", function () {
-                    alertify.message('OK');
+                notification()
+                function notification() {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Review Edited successfully",
+                        showConfirmButton: true,
+                        confirmButtonColor: "#00A300",
+                    });
                     $('#editReviewModal').modal('hide');
-                });
+                }
             }
         } catch (error) {
             alertify.alert("Something went wrong please try again later", function () {

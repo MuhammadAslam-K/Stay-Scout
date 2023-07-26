@@ -11,6 +11,7 @@ import roomAmenitiesManagement from "../Controller/Admin/roomAmenitiesManagement
 import messageManagement from "../Controller/Admin/messageManagement.js"
 import cancellationManagement from "../Controller/Admin/cancellationManagement.js"
 import report from "../Controller/Admin/report.js"
+import revenue from "../Controller/Admin/revenue.js"
 import auth from "../middleware/adminAuth.js"
 
 
@@ -84,7 +85,9 @@ admin_route.get("/report", isLogged, report.report)
 admin_route.get("/report/delete", isLogged, report.deleteReport)
 admin_route.get("/report/deltails", isLogged, report.reportDetails)
 
-
+//////////////REVENUE//////////////////
+admin_route.get("/revenue", isLogged, revenue.adminRevenueChart)
+admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 
 
 

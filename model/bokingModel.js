@@ -17,6 +17,11 @@ const bookingSchema = new mongoose.Schema({
         ref: 'Rooms',
         required: true
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Owner',
+        required: true
+    },
     checkInDate: {
         type: Date,
         required: true

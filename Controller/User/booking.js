@@ -131,6 +131,7 @@ const paymentSuccess = (async (req, res) => {
             user: id,
             room: ID,
             hotel: room.hotel._id,
+            owner: room.owner,
             checkInDate: checkIn,
             checkOutDate: checkOut,
             paymentMethod: radioNoLabel,
