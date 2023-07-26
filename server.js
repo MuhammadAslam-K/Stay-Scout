@@ -83,16 +83,6 @@ hbs.registerHelper('dateFormat', function (date) {
 
 
 
-
-app.use("/", user_route)
-app.use("/owner", owner_route)
-app.use("/admin", admin_route)
-
-// app.get('*', (req, res) => {
-//     res.render("404")
-// })
-
-
 hbs.registerHelper('times', function (n, block) {
     let accum = '';
     for (let i = 0; i < n; i++) {
@@ -100,6 +90,17 @@ hbs.registerHelper('times', function (n, block) {
     }
     return accum;
 });
+
+
+app.use("/", user_route)
+app.use("/owner", owner_route)
+app.use("/admin", admin_route)
+
+app.get('*', (req, res) => {
+    res.render("404")
+})
+
+
 
 
 mongodbConnection.connect().then(() => {
