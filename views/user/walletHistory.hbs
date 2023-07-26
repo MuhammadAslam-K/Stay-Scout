@@ -28,7 +28,7 @@
                                         {{#each user.wallet.transactions}}
                                         <tr>
                                             <td>{{this.details}}</td>
-                                            <td>{{this.date}}</td>
+                                            <td>{{dateFormat this.date}}</td>
                                             <td>{{this.amount}}</td>
                                         </tr>
                                         {{/each}}

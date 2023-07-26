@@ -66,6 +66,7 @@ const hotelSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+
     adminApproval: {
         type: String,
         default: "Pending",

@@ -10,6 +10,7 @@ const dashboard = (async (req, res) => {
 
     try {
         const ownerId = req.session.owner
+        const booking = await Booking.find({ owner: ownerId }).populate("hotel").populate("user")
         const [hotels, rooms] = await Promise.all([
             Hotel.find({ owner: ownerId }).count(),
             Rooms.find({ owner: ownerId }).count()
@@ -23,7 +24,7 @@ const dashboard = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("ownerDashboard", { revenue: req.session.owner.revenue, hotels, rooms })
+            res.render("ownerDashboard", { revenue: req.session.owner.revenue, hotels, rooms, booking })
         })
     } catch (error) {
         console.log(error);

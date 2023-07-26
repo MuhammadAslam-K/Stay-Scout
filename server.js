@@ -76,6 +76,10 @@ Handlebars.registerHelper('unescape', function (options) {
     return new Handlebars.SafeString(str.replace(/&amp;|&lt;|&gt;|&quot;|&#x27;|&#x60;/g, match => entities[match]));
 });
 
+hbs.registerHelper('dateFormat', function (date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+});
 
 
 

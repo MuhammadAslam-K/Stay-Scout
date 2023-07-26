@@ -133,6 +133,51 @@
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <a href="#" class="m-0 font-weight-bold text-primary">Bookings</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Hotel name</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each booking}}
+                                    <tr>
+                                        <td>{{this.user.name}}</td>
+                                        <td>{{this.hotel.name}}</td>
+                                        <td>
+                                            <p>checkIn: {{dateFormat this.checkInDate}}</p>
+                                            <p>checkOut: {{dateFormat this.checkOutDate}}</p>
+                                        </td>
+                                        <td>{{this.paymentAmount}}</td>
+                                        <td>
+                                            {{#if this.report}}
+                                            <p>Submitted a report</p>
+                                            {{/if}}
+                                            {{#if this.cancel}}
+                                            <p>The user Cancelled this booking</p>
+                                            {{else}}
+                                            <p>No actions still</p>
+                                            {{/if}}
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
@@ -141,6 +186,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+    });
+</script>
+
+
 
 <script>
     document.addEventListener("DOMContentLoaded", async function () {
@@ -160,7 +225,7 @@
                         timeUnit = '$week';
                         break;
                     default:
-                        timeUnit = '$month'; // Default to 'month' view
+                        timeUnit = '$month';
                         break;
                 }
 
@@ -217,7 +282,7 @@
 
             // Create the line chart with a logarithmic y-axis scale
             lineChart = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: lineChartData,
                 options: {
                     plugins: {
@@ -247,7 +312,7 @@
                             }
                         },
                         y: {
-                            type: 'logarithmic', // Set the y-axis scale to logarithmic
+                            type: 'linear',
                             title: {
                                 display: true,
                                 text: 'Revenue (INR)',
@@ -257,7 +322,7 @@
                             },
                             ticks: {
                                 callback: function (value) {
-                                    return '₹' + value.toLocaleString(); // Format tick labels as rupee values
+                                    return '₹' + value.toLocaleString();
                                 }
                             }
                         }
@@ -286,4 +351,3 @@
         });
     }
 </script>
-</body>

@@ -29,6 +29,7 @@ admin_route.get("/logout", isLogged, adminAuth.logout)
 
 //////////////DASHBOARD///////////
 admin_route.get("/dashboard", isLogged, adminDashboard.dashboard)
+admin_route.get("/userRegistration", isLogged, adminDashboard.userRegistrationChart)
 
 
 /////////////USER MANAGEMENT//////////
@@ -87,7 +88,7 @@ admin_route.get("/report/deltails", isLogged, report.reportDetails)
 
 //////////////REVENUE//////////////////
 admin_route.get("/revenue", isLogged, revenue.adminRevenueChart)
-admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
+// admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 
 
 

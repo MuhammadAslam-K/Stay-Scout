@@ -2,11 +2,13 @@ import User from "../../model/userModel.js"
 import Owner from "../../model/ownerModel.js"
 import Hotel from "../../model/hotelModel.js"
 import Rooms from "../../model/roomsModel.js"
+import adminRevenuew from "../../model/adminRevenue.js"
 
 
 
 const dashboard = async (req, res) => {
     try {
+        const revenue = await adminRevenuew.find().populate("owner")
         const [No_of_users, No_of_owners, No_of_hotels, No_of_rooms] = await Promise.all([
             User.find().count(),
             Owner.find().count(),
@@ -26,7 +28,8 @@ const dashboard = async (req, res) => {
                 users: No_of_users,
                 owners: No_of_owners,
                 hotels: No_of_hotels,
-                rooms: No_of_rooms
+                rooms: No_of_rooms,
+                revenue,
             });
         })
     } catch (error) {
@@ -34,7 +37,61 @@ const dashboard = async (req, res) => {
     }
 };
 
+const userRegistrationChart = async (req, res) => {
+
+    try {
+        const { view } = req.query;
+
+        let groupByTimeUnit;
+        switch (view) {
+            case 'year':
+                groupByTimeUnit = '$year';
+                break;
+            case 'month':
+                groupByTimeUnit = '$month';
+                break;
+            case 'week':
+                groupByTimeUnit = '$week';
+                break;
+            default:
+                groupByTimeUnit = '$month';
+                break;
+        }
+
+        const registrationData = await User.aggregate([
+            {
+                $group: {
+                    _id: {
+                        timeUnit: { [groupByTimeUnit]: '$joinedAt' },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $sort: {
+                    '_id.timeUnit': 1,
+                },
+            },
+        ]);
+
+        const labels = [];
+        const registrationCount = [];
+
+        registrationData.forEach((data) => {
+            labels.push(`${data._id.timeUnit}`);
+            registrationCount.push(data.count);
+        });
+
+        res.json({ labels, registrationCount });
+    } catch (err) {
+        console.error('Error fetching user registration data:', err.message);
+        res.status(500).json({ error: 'Failed to fetch user registration data' });
+    }
+}
+
+
 
 export default {
     dashboard,
+    userRegistrationChart,
 }
