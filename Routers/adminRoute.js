@@ -86,6 +86,7 @@ admin_route.get('/message/delete', isLogged, messageManagement.messageDelete)
 admin_route.get("/report", isLogged, report.report)
 admin_route.get("/report/delete", isLogged, report.deleteReport)
 admin_route.get("/report/deltails", isLogged, report.reportDetails)
+admin_route.post("/report/status", isLogged, report.resportStatus)
 
 //////////////REVENUE//////////////////
 admin_route.get("/revenue", isLogged, revenue.ownerRevenueChart)

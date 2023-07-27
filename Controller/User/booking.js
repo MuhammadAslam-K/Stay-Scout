@@ -7,6 +7,7 @@ import Booking from "../../model/bokingModel.js";
 
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
+import Signup_function from "../../helper/Signup_functions.js"
 
 
 
@@ -103,8 +104,8 @@ const paymentSuccess = (async (req, res) => {
             Room.findById(ID).populate("hotel")
         ]);
 
-        const newWalletBalance = user.wallet.balance - totalPrice;
         const totalPrice = parseInt(total, 10)
+        const newWalletBalance = user.wallet.balance - totalPrice;
         const details = `Booked room in ${room.hotel.name}`
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -148,7 +149,7 @@ const paymentSuccess = (async (req, res) => {
         await room.save()
 
 
-        await Hotel.findByIdAndUpdate(  // Update the revenu of hotel
+        const hotel = await Hotel.findByIdAndUpdate(  // Update the revenu of hotel
             { _id: room.hotel._id },
             { $inc: { revenue: ownerAmount } },
             { new: true }
@@ -175,6 +176,22 @@ const paymentSuccess = (async (req, res) => {
                 revenue: adminAmount
             })
             await newAdminRevenue.save()
+        }
+        const userEmail = await User.findById(id)
+        let subject = `Thank You for booking room in ${hotel.name}`
+        let data = `CheckIn Date: ${formatDate(checkIn)}\nCheckOut Date: ${formatDate(checkOut)}\nAmount Paid:${total} \nPayment Method:${radioNoLabel}`
+        Signup_function.sendOTP(userEmail.email, data, subject)
+
+        function formatDate(date) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            const day = days[date.getDay()];
+            const month = months[date.getMonth()];
+            const dayOfMonth = date.getDate();
+            const year = date.getFullYear();
+
+            return `${day} ${month} ${dayOfMonth} ${year}`;
         }
 
         return res.status(200).end()

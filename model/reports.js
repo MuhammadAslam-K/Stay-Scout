@@ -14,7 +14,11 @@ const reportSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    adminResponse: {
+        type: String,
+        default: "No Response"
+    },
 })
 const Report = mongoose.model("Report", reportSchema);
 

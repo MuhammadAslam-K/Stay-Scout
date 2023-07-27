@@ -51,6 +51,10 @@ const bookingSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    adminResponse: {
+        type: String,
+        default: "No Action"
+    },
     bookedAt: {
         type: Date,
         default: Date.now

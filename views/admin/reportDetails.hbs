@@ -29,7 +29,8 @@
 
 <div id="content-wrapper" class="justify-content-center m-5">
     <div id="content">
-        <input type="text" name="id" value="{{room._id}}" style="display: none;">
+        <input type="text" name="bookingId" value="{{report.booking._id}}" style="display: none;">
+        <input type="text" name="reportId" value="{{report._id}}" style="display: none;">
         <div class="form-row m-4">
             <div class="form-group col-md-6">
                 <label>User Name</label>
@@ -67,9 +68,67 @@
                 <textarea id="description" class="form-control" style="height: 150px; resize: vertical;"
                     readonly>{{report.report}}</textarea>
             </div>
+            <div class="form-group col-md-6 d-flex  align-items-end">
+                {{!-- <button class="btn btn-success">Resolve</button> --}}
+                <button class="btn btn-success" id="resolveBtn">Resolve</button>
+                <div class="m-2"></div>
+                <button class="btn btn-danger" id="rejectBtn">Reject</button>
+                {{!-- <button class="btn btn-danger">Reject</button> --}}
+            </div>
+
         </div>
 
     </div>
 </div>
 
 {{>userFooter}}
+
+<!-- Add your Axios library (if not already included) -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    // Add event listener to the "Resolve" button
+    document.getElementById('resolveBtn').addEventListener('click', function () {
+        sendStatusToServer('Resolved');
+    });
+
+    // Add event listener to the "Reject" button
+    document.getElementById('rejectBtn').addEventListener('click', function () {
+        sendStatusToServer('Rejected');
+    });
+
+    async function sendStatusToServer(status) {
+        const bookingId = document.querySelector('input[name="bookingId"]').value;
+        const reportId = document.querySelector('input[name="reportId"]').value;
+
+        const data = {
+            bookingId,
+            reportId,
+            status,
+        };
+
+        try {
+            const response = await axios.post('/admin/report/status', data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status === 200) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Updated the response successfully",
+                    showConfirmButton: true,
+                    confirmButtonColor: "#00A300",
+                });
+            }
+        } catch (error) {
+            console.log(error)
+            alertify.alert("Something went wrong, please try again later", function () {
+                alertify.message('OK');
+            });
+        }
+    }
+
+</script>
