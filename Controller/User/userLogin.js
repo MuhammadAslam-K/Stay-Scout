@@ -35,6 +35,10 @@ const loginVerify = (async (req, res) => {
         const { email, password } = req.body
         const userExists = await User.findOne({ email: email })
 
+        if (!email || !password) {
+            return res.status(400).json({ error: "Enter the email and password" })
+        }
+
         if (userExists) {
 
             if (userExists.validation == false) {

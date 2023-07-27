@@ -63,7 +63,7 @@ const Hotelreview = (async (req, res) => {
             });
 
         if (bookings.length == 0) {
-            return res.status(401).json({ error: "Invalid User" })
+            return res.status(401).json({ error: "you can't write Review" })
         }
         else {
             if (bookings[0].review === false) {
