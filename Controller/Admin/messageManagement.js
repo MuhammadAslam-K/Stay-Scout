@@ -1,6 +1,6 @@
 import Message from "../../model/contact.js";
 
-
+// Render the message that is sented by the users
 const message = (async (req, res) => {
 
     try {
@@ -12,6 +12,7 @@ const message = (async (req, res) => {
 
 })
 
+// can delete the messages
 const messageDelete = (async (req, res) => {
 
     try {

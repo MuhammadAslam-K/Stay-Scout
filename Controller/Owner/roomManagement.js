@@ -1,14 +1,15 @@
+import Hotel from "../../model/hotelModel.js";
 import Rooms from "../../model/roomsModel.js";
 import Category from "../../model/roomCategory.js";
 import roomAmenities from "../../model/roomAmenities.js"
-import propertyValidation from "../../helper/propertyValidation.js"
-import cloudinary from "../../config/cloudinary.js"
-import Hotel from "../../model/hotelModel.js";
-import propertyFetching from "../../helper/propertyFetching.js";
 import Cancellation from "../../model/cancellation.js"
 
+import propertyValidation from "../../helper/propertyValidation.js"
+import propertyFetching from "../../helper/propertyFetching.js";
+import cloudinary from "../../config/cloudinary.js"
 
 
+// Render the page for adding new room
 const addRoom = (async (req, res) => {
     const category = await Category.find()
     const amenities = await roomAmenities.find()
@@ -26,6 +27,7 @@ const addRoom = (async (req, res) => {
             }
             res.render("addRooms", { category, amenities, cancellation })
         })
+
     } catch (error) {
         console.log(error);
         return res.status(500).render("500");
@@ -33,6 +35,7 @@ const addRoom = (async (req, res) => {
 
 })
 
+// validate the room data and store create a new room
 const submitRoom = (async (req, res) => {
     try {
         const id = req.session.hotelId
@@ -99,12 +102,14 @@ const submitRoom = (async (req, res) => {
 
 })
 
-
+// View the room to the owners
 const viewRooms = async (req, res) => {
     const id = req.session.owner._id
     try {
-        const rooms = await propertyFetching.room(id, 0, 0, false)
-        const category = await Category.find()
+        const [rooms, category] = await Promise.new([
+            propertyFetching.room(id, 0, 0, false),
+            Category.find()
+        ])
 
         res.render("viewRooms", (err) => {
             if (err) {
@@ -123,8 +128,8 @@ const viewRooms = async (req, res) => {
     }
 };
 
-const blockRoom = (async (req, res) => {
-
+// owner can make the rooms available or not for the user
+const isAvaillable = (async (req, res) => {
     try {
         const id = req.query.id
         const room = await Rooms.findById(id)
@@ -137,19 +142,21 @@ const blockRoom = (async (req, res) => {
         console.log(error);
         return res.status(500).render("500");
     }
-
 })
 
-
+// Render the page for editing the rooms
 const editRoom = (async (req, res) => {
-
     try {
         const id = req.query.id
         req.session.roomID = id
-        const room = await Rooms.findOne({ _id: id });
-        const category = await Category.find()
-        const amenities = await roomAmenities.find()
-        const cancellation = await Cancellation.find()
+
+        const [room, category, amenities, cancellation] = await Promise.all([
+            Rooms.findOne({ _id: id }),
+            Category.find(),
+            roomAmenities.find(),
+            Cancellation.find(),
+        ])
+
         res.render("editRoom", { room, category, amenities, cancellation })
 
     } catch (error) {
@@ -158,10 +165,9 @@ const editRoom = (async (req, res) => {
     }
 })
 
-
+// Validate the information and update the rooms information
 const updateRoom = (async (req, res) => {
     try {
-
         const id = req.session.roomID
         const files = req.files;
         const roomImages = [];
@@ -224,9 +230,8 @@ const updateRoom = (async (req, res) => {
 
 })
 
-
+// For showing the room status to the owner
 const roomStatus = (async (req, res) => {
-
     try {
         const id = req.query.id
         const room = await Rooms.findById(id)
@@ -251,7 +256,7 @@ export default {
     viewRooms,
     roomStatus,
 
-    blockRoom,
+    isAvaillable,
     editRoom,
     updateRoom,
 }

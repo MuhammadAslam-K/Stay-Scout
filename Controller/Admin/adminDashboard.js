@@ -5,15 +5,15 @@ import Rooms from "../../model/roomsModel.js"
 import adminRevenuew from "../../model/adminRevenue.js"
 
 
-
+// To show the admin dashboard and the information
 const dashboard = async (req, res) => {
     try {
-        const revenue = await adminRevenuew.find().populate("owner")
-        const [No_of_users, No_of_owners, No_of_hotels, No_of_rooms] = await Promise.all([
+        const [No_of_users, No_of_owners, No_of_hotels, No_of_rooms, revenue] = await Promise.all([
             User.find().count(),
             Owner.find().count(),
             Hotel.find().count(),
-            Rooms.find().count()
+            Rooms.find().count(),
+            adminRevenuew.find().populate("owner")
         ]);
 
         res.render("adminDashboard", (err) => {
@@ -24,6 +24,7 @@ const dashboard = async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
+
             res.render("adminDashboard", {
                 users: No_of_users,
                 owners: No_of_owners,
@@ -37,8 +38,8 @@ const dashboard = async (req, res) => {
     }
 };
 
+// For showing the information in the chart about when the user joined 
 const userRegistrationChart = async (req, res) => {
-
     try {
         const { view } = req.query;
 
@@ -88,7 +89,6 @@ const userRegistrationChart = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch user registration data' });
     }
 }
-
 
 
 export default {

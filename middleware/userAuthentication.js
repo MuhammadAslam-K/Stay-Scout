@@ -1,5 +1,5 @@
 import User from "../model/userModel.js"
-import swal from 'sweetalert';
+
 
 
 

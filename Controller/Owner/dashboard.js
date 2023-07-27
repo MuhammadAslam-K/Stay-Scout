@@ -1,19 +1,19 @@
-import mongoose from "mongoose"
 import owner from "../../model/ownerModel.js"
-import Signup_functions from "../../helper/Signup_functions.js"
 import Hotel from "../../model/hotelModel.js"
 import Rooms from "../../model/roomsModel.js"
 import Booking from "../../model/bokingModel.js"
 
+import Signup_functions from "../../helper/Signup_functions.js"
 
+// Render the dashboard for the owner
 const dashboard = (async (req, res) => {
-
     try {
         const ownerId = req.session.owner
-        const booking = await Booking.find({ owner: ownerId }).populate("hotel").populate("user")
-        const [hotels, rooms] = await Promise.all([
+
+        const [hotels, rooms, booking] = await Promise.all([
             Hotel.find({ owner: ownerId }).count(),
-            Rooms.find({ owner: ownerId }).count()
+            Rooms.find({ owner: ownerId }).count(),
+            Booking.find({ owner: ownerId }).populate("hotel").populate("user")
         ]);
 
         res.render("ownerDashboard", (err) => {
@@ -26,16 +26,15 @@ const dashboard = (async (req, res) => {
             }
             res.render("ownerDashboard", { revenue: req.session.owner.revenue, hotels, rooms, booking })
         })
+
     } catch (error) {
         console.log(error);
         return res.status(500).render("500");
     }
 })
 
-
-
+//  Render the owner profiel
 const profile = async (req, res) => {
-
     try {
         const id = req.session.owner._id
         const Owner = await owner.findById(id)
@@ -51,19 +50,19 @@ const profile = async (req, res) => {
             res.render("profile", { Owner })
         })
 
-
     } catch (error) {
         res.render("500")
     }
 
 }
 
+// Save the updated information of the owner after editing the profile
 const profileUpdate = (async (req, res) => {
 
     try {
         const id = req.session.owner._id
         const Owner = await owner.findById(id)
-        const valid = Signup_functions.validate(false, req.body)
+        const valid = Signup_functions.validate(false, req.body) // Validate the information
 
         if (!valid.isValid) {
             return res.status(409).json({ error: valid.errors })
@@ -86,7 +85,7 @@ const profileUpdate = (async (req, res) => {
 })
 
 
-
+// For displaying the revenue chart
 const revenueChart = async (req, res) => {
     try {
         const { view } = req.query;

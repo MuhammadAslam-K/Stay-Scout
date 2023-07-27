@@ -1,7 +1,7 @@
 import Cancellation from "../../model/cancellation.js";
 
 
-
+// Render the cancellation policy page
 const cancellation = (async (req, res) => {
     try {
         const cancellation = await Cancellation.find()
@@ -21,7 +21,7 @@ const cancellation = (async (req, res) => {
     }
 })
 
-
+// validate and create new cancellation policy
 const addCancellation = (async (req, res) => {
     try {
         const cancelation = req.body.cancellationName
@@ -41,10 +41,9 @@ const addCancellation = (async (req, res) => {
     }
 })
 
+// update the cancellation policy
 const editCancellation = (async (req, res) => {
-
     try {
-
         const id = req.body.id
         const cancellation = req.body.updatedPolicy
         await Cancellation.findByIdAndUpdate(id, { cancellation: cancellation })
@@ -55,9 +54,8 @@ const editCancellation = (async (req, res) => {
     }
 })
 
-
+// Delete the cancellation policy
 const deleteCancellation = (async (req, res) => {
-
     try {
         const id = req.query.id
         await Cancellation.findByIdAndDelete(id)

@@ -3,8 +3,7 @@ import Signup_functions from "../../helper/Signup_functions.js";
 
 
 
-
-
+// Render the signup page 
 const signUp = ((req, res) => {
     try {
         res.render("ownerSignup", (err) => {
@@ -23,34 +22,25 @@ const signUp = ((req, res) => {
     }
 })
 
-//////////// STARTED OTP //////////
-
 
 let ownerOtp = []
 
+// Validate the information
 const signupValidate = async (req, res) => {
     try {
 
         const { name, email, phone, password, bankName, accountNo, ifc } = req.body
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
-        const accountExist = await Owner.findOne({ accountNo: accountNo })
         const valid = Signup_functions.validate(true, req.body)
 
         if (emailExist) {
-
             return res.status(409).json({ error: "The owner already Exists please Login" })
         }
         else if (phoneExist) {
-
             return res.status(408).json({ error: "The owner with same Phone Number already Exist please Re-check" })
         }
-        else if (accountExist) {
-
-            return res.status(409).json({ error: "The owner with same Account Number already Exist please Re-check" })
-        }
         else if (!valid.isValid) {
-
             return res.status(400).json({ error: valid.errors })
         }
         else {
@@ -70,7 +60,7 @@ const signupValidate = async (req, res) => {
     }
 }
 
-
+// Send the otp and render the page for entering the otp
 const enterOtp = async (req, res) => {
     try {
 
@@ -94,13 +84,14 @@ const enterOtp = async (req, res) => {
             }
             res.render("ownerOtp")
         })
+
     } catch (error) {
         console.log(error);
         return res.status(500).render("500");
     }
 }
 
-
+// verify the OTP and create a new owner
 const verifyOtp = async (req, res) => {
     try {
         const enteredOtp = req.body.otp;

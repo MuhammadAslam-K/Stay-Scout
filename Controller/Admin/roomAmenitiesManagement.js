@@ -1,6 +1,6 @@
 import roomAmenities from "../../model/roomAmenities.js"
 
-
+// Render the room amenities table
 const amenities = (async (req, res) => {
     try {
         const amenities = await roomAmenities.find()
@@ -22,8 +22,8 @@ const amenities = (async (req, res) => {
 })
 
 
+// Validate and create new Room Amenities
 const addAmenities = (async (req, res) => {
-
     try {
         const amenitiesName = req.body.amenitiesName
         const existingAmenities = await roomAmenities.find({ amenities: amenitiesName })
@@ -37,28 +37,35 @@ const addAmenities = (async (req, res) => {
 
             return res.status(200).end()
         }
+
     } catch (error) {
         res.status(500).render("500")
     }
 })
 
+// update the Room Amenities
 const editAmenities = (async (req, res) => {
-
     try {
 
         const id = req.body.id
         const amenities = req.body.updatedName
-        await roomAmenities.findByIdAndUpdate(id, { amenities: amenities })
+        const existingAmenities = await roomAmenities.find({ amenities: amenities })
 
-        return res.status(200)
+        if (existingAmenities.length != 0) {
+            return res.status(400).json({ error: "The Amenities already exists" })
+        }
+        else {
+            await roomAmenities.findByIdAndUpdate(id, { amenities: amenities })
+
+            return res.status(200)
+        }
     } catch (error) {
         res.status(500).render("500")
     }
 })
 
-
+// Delete the amenitites
 const deleteAmenities = (async (req, res) => {
-
     try {
         const id = req.query.id
         console.log(id);
@@ -68,7 +75,6 @@ const deleteAmenities = (async (req, res) => {
     } catch (error) {
         res.render("500")
     }
-
 })
 
 

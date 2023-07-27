@@ -88,7 +88,7 @@ admin_route.get("/report/delete", isLogged, report.deleteReport)
 admin_route.get("/report/deltails", isLogged, report.reportDetails)
 
 //////////////REVENUE//////////////////
-admin_route.get("/revenue", isLogged, revenue.adminRevenueChart)
+admin_route.get("/revenue", isLogged, revenue.ownerRevenueChart)
 admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 
 

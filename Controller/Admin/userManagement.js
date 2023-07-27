@@ -1,5 +1,6 @@
 import User from "../../model/userModel.js"
 
+// Render and show the users
 const viewUser = (async (req, res) => {
     try {
         const userDetails = await User.find()
@@ -20,7 +21,7 @@ const viewUser = (async (req, res) => {
 
 })
 
-
+// can block the user
 const blockUser = (async (req, res) => {
     try {
         const id = req.query.id
@@ -34,9 +35,7 @@ const blockUser = (async (req, res) => {
     } catch (error) {
         return res.status(500).render("500");
     }
-
 })
-
 
 
 export default {

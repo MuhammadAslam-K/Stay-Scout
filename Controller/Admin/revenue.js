@@ -1,9 +1,8 @@
 import Booking from "../../model/bokingModel.js";
-import adminRevenue from "../../model/adminRevenue.js";
 
 
-
-const adminRevenueChart = async (req, res) => {
+// Render and show the owner revenue based on the time period
+const ownerRevenueChart = async (req, res) => {
     try {
         const { view } = req.query;
 
@@ -55,6 +54,7 @@ const adminRevenueChart = async (req, res) => {
 };
 
 
+// Shows the revenue of the owner
 const ownerRevenue = async (req, res) => {
 
     try {
@@ -108,6 +108,6 @@ const ownerRevenue = async (req, res) => {
 
 
 export default {
-    adminRevenueChart,
+    ownerRevenueChart,
     ownerRevenue,
 }

@@ -3,9 +3,8 @@ import Hotel from "../../model/hotelModel.js"
 import adminRevenue from "../../model/adminRevenue.js"
 
 
-
+// For viewing the hotels under the owner
 const ownerHotels = (async (req, res) => {
-
     try {
         const id = req.query.id
         req.session.OWNERID = id
@@ -27,8 +26,8 @@ const ownerHotels = (async (req, res) => {
 
 })
 
+// Admin can block the hotels
 const blockHotel = (async (req, res) => {
-
     try {
         const id = req.query.id
         const hotel = await Hotel.findById(id)
@@ -40,15 +39,14 @@ const blockHotel = (async (req, res) => {
     } catch (error) {
         return res.status(500).render("500");
     }
-
 })
 
+// Admin will boost the hotel after the owner pay the amount
 const hotelBoosting = async (req, res) => {
-
-    const id = req.query.id
-    const boostValue = req.body.boost
-
     try {
+        const id = req.query.id
+        const boostValue = req.body.boost
+
         const updatedHotel = await Hotel.findByIdAndUpdate(
             id,
             { booste: boostValue },
@@ -63,9 +61,8 @@ const hotelBoosting = async (req, res) => {
 
 }
 
-
+// Show the page that contain the hotel for approvel
 const hotelForApproval = async (req, res) => {
-
     try {
         const hotels = await Hotel.find({
             adminApproval: { $in: ['Pending', 'Rejected'] }
@@ -79,7 +76,7 @@ const hotelForApproval = async (req, res) => {
 }
 
 
-
+// Response for the approvel of hotel
 const hotelForApproval_post = async (req, res) => {
 
     try {
@@ -97,9 +94,8 @@ const hotelForApproval_post = async (req, res) => {
 
 }
 
-
+// For viewing the hotle information
 const hotelDetails = (async (req, res) => {
-
     try {
         const id = req.query.id
         const hotel = await Hotel.findById(id).populate("type")

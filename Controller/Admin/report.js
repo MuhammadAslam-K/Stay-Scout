@@ -1,21 +1,21 @@
 import Hotel from "../../model/hotelModel.js";
 import Report from "../../model/reports.js";
 
-const report = async (req, res) => {
 
+// Render the report that is sended by the users
+const report = async (req, res) => {
     try {
         const report = await Report.find().populate("user")
-
         res.render("report", { report })
-
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         res.render("500")
     }
 }
 
+// can delelte the report
 const deleteReport = (async (req, res) => {
-
     try {
         const id = req.query.id
         await Report.findByIdAndDelete(id)
@@ -24,11 +24,10 @@ const deleteReport = (async (req, res) => {
         console.log(error);
         res.render("500")
     }
-
 })
 
+// Render and show full details about the report
 const reportDetails = async (req, res) => {
-
     try {
         const id = req.query.id
         const report = await Report.findById(id).populate("user").populate("booking")
@@ -39,7 +38,6 @@ const reportDetails = async (req, res) => {
         console.log(error);
         res.render("500")
     }
-
 }
 
 export default {

@@ -2,14 +2,16 @@ import Rooms from "../../model/roomsModel.js"
 import Category from "../../model/roomCategory.js"
 
 
-
+// render and show the rooms that are under the particulat owner
 const ownerRooms = (async (req, res) => {
-
     try {
         const id = req.query.id
         req.session.adminHotelId = id
-        const category = await Category.find()
-        const rooms = await Rooms.find({ hotel: id }).populate("hotel").populate("category")
+
+        const [category, rooms] = await Promise.all([
+            Category.find(),
+            Rooms.find({ hotel: id }).populate("hotel").populate("category")
+        ])
 
         res.render("viewRoom", (err) => {
             if (err) {
@@ -27,10 +29,9 @@ const ownerRooms = (async (req, res) => {
 
 })
 
-
+// For blocking the rooms
 const blockRoom = (async (req, res) => {
     try {
-
         const id = req.query.id
         const room = await Rooms.findById(id)
 
@@ -54,16 +55,14 @@ const blockRoom = (async (req, res) => {
         console.log(error);
         return res.status(500).render("500");
     }
-
 })
 
-
+// For boosting the rooms
 const roomBoosting = async (req, res) => {
-
-    const id = req.query.id
-    const boostValue = req.body.boost
-
     try {
+        const id = req.query.id
+        const boostValue = req.body.boost
+
         const updatedRoom = await Rooms.findByIdAndUpdate(
             id,
             { booste: boostValue },
@@ -78,8 +77,8 @@ const roomBoosting = async (req, res) => {
 
 }
 
+// To show the rooms that are waiting for approval
 const roomForApproval = async (req, res) => {
-
     try {
         const rooms = await Rooms.find({
             adminApproval: { $in: ['Pending', 'Rejected'] }
@@ -92,10 +91,8 @@ const roomForApproval = async (req, res) => {
     }
 }
 
-
-
+// update the room status of approval
 const roomForApproval_post = async (req, res) => {
-
     try {
         const { status, roomId } = req.body
 
@@ -109,12 +106,10 @@ const roomForApproval_post = async (req, res) => {
     } catch (error) {
         res.render("500")
     }
-
 }
 
-
+// For showing the room details
 const roomDetails = (async (req, res) => {
-
     try {
         const id = req.query.id
         const room = await Rooms.findById(id).populate("category")

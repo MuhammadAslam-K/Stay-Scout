@@ -1,15 +1,13 @@
-import cloudinary from "../../config/cloudinary.js"
 import Hotel from "../../model/hotelModel.js"
-import propertyValidation from "../../helper/propertyValidation.js"
-import propertyFetching from "../../helper/propertyFetching.js"
 import Type from "../../model/hotelType.js"
 import Amenities from "../../model/hotelAmenities.js"
 
+import propertyFetching from "../../helper/propertyFetching.js"
+import propertyValidation from "../../helper/propertyValidation.js"
+import cloudinary from "../../config/cloudinary.js"
 
 
-
-
-
+// For displaying the hotel to the owners
 const viewHotels = (async (req, res) => {
     try {
         const ownerId = req.session.owner._id
@@ -31,7 +29,7 @@ const viewHotels = (async (req, res) => {
     }
 })
 
-
+// Render the add hotel page
 const addHotel = (async (req, res) => {
     try {
         const type = await Type.find()
@@ -53,7 +51,7 @@ const addHotel = (async (req, res) => {
     }
 })
 
-
+// Validate and save the new hotel data
 const submitHotel = (async (req, res) => {
     try {
         const files = req.files;
@@ -118,8 +116,8 @@ const submitHotel = (async (req, res) => {
     }
 })
 
-
-const blockHotel = (async (req, res) => {
+// The owner can make the hotel available or not to user
+const availability = (async (req, res) => {
     try {
         const id = req.query.id
 
@@ -136,14 +134,17 @@ const blockHotel = (async (req, res) => {
 })
 
 
+// Render the page for editing the hotel
 const editHotel = async (req, res) => {
     try {
         const id = req.query.id
         req.session.HOTELID = id
-        const hotel = await Hotel.findById(id)
-        const type = await Type.find()
-        const amenities = await Amenities.find()
 
+        const [hotel, type, amenities] = await Promise.all([
+            Hotel.findById(id),
+            Type.find(),
+            Amenities.find(),
+        ])
 
         res.render("editHotel", (err) => {
             if (err) {
@@ -162,16 +163,16 @@ const editHotel = async (req, res) => {
 }
 
 
+// Validate the edited data and update it
 const updateHotel = (async (req, res) => {
 
     try {
         const id = req.session.HOTELID
-        // const hotel = await Hotel.findById(id)
         const files = req.files
         const hotelImages = []
         let amenities = []
         const oldImages = req.body.selectedImages
-        const valid = propertyValidation.hotelValidation(req.body)
+        const valid = propertyValidation.hotelValidation(req.body)  // Validate the informations
 
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
@@ -233,17 +234,13 @@ const updateHotel = (async (req, res) => {
 
 
 
-
-
-
-
 export default {
     viewHotels,
 
     addHotel,
     submitHotel,
 
-    blockHotel,
+    availability,
     editHotel,
     updateHotel,
 }

@@ -1,8 +1,7 @@
 import Booking from "../../model/bokingModel.js";
 import Owner from "../../model/ownerModel.js"
 
-
-
+// Render the owners table that contain information about the owners 
 const viewowner = (async (req, res) => {
     try {
         const ownerDetails = await Owner.find()
@@ -24,8 +23,7 @@ const viewowner = (async (req, res) => {
 
 })
 
-
-
+// Admin can block the owners
 const blockowner = (async (req, res) => {
     try {
         const id = req.query.id
@@ -41,9 +39,8 @@ const blockowner = (async (req, res) => {
 
 })
 
-
+// shows the information of the owner
 const ownerDetails = async (req, res) => {
-
     try {
         const ownerId = req.query.id
         req.session.OwnerID = ownerId

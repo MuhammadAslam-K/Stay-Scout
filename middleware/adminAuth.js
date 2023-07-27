@@ -2,16 +2,16 @@
 
 
 function isLogged(req, res, next) {
-    // next()
-    try {
-        if (req.session.admintoken) {
-            next()
-        } else {
-            res.redirect("/admin")
-        }
-    } catch (error) {
-        console.log(error)
-    }
+    next()
+    // try {
+    //     if (req.session.admintoken) {
+    //         next()
+    //     } else {
+    //         res.redirect("/admin")
+    //     }
+    // } catch (error) {
+    //     console.log(error)
+    // }
 
 }
 

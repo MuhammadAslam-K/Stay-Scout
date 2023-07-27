@@ -8,8 +8,7 @@ dotenv.config({ path: "config.env" })
 
 
 
-/////////////owner LOGIN/////////
-
+// Render the login page for the user
 const login = ((req, res) => {
     try {
         res.render("ownerLogin", (err) => {
@@ -28,6 +27,7 @@ const login = ((req, res) => {
     }
 })
 
+// veryfy the login data and create JWT token for the owner
 const loginVerify = (async (req, res) => {
     try {
 
@@ -68,7 +68,7 @@ const loginVerify = (async (req, res) => {
     }
 })
 
-
+// delete the sesions
 const logout = ((req, res) => {
     try {
         delete req.session.owner
