@@ -2,9 +2,8 @@ import User from "../../model/userModel.js";
 import Signup_functions from "../../helper/Signup_functions.js";
 
 
-
+// The page for entering email will render
 const enterEmail = ((req, res) => {
-
     try {
         res.render("enterEmail", (err) => {
             if (err) {
@@ -22,6 +21,8 @@ const enterEmail = ((req, res) => {
 })
 
 const saveOtp = []
+
+// To validate the email check does the email exist or not
 const emailValidation = (async (req, res) => {
     try {
         req.session.userEmail = req.body.email
@@ -47,15 +48,15 @@ const emailValidation = (async (req, res) => {
 
 })
 
+// Render the page for entering the email
 const recoveryotp = ((req, res) => {
-
     try {
         const email = req.session.userEmail
-        const generateOtp = Signup_functions.generateOTP()
+        const generateOtp = Signup_functions.generateOTP()  // Genarate the otp
 
         saveOtp.push(generateOtp)
-        Signup_functions.sendOTP(email, generateOtp)
-        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
+        Signup_functions.sendOTP(email, generateOtp)    // Send OTP to the emal 
+        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)    //To delete the email after 31Sec
 
         res.render("passwordRecoveryOtp", (err) => {
             if (err) {
@@ -73,7 +74,7 @@ const recoveryotp = ((req, res) => {
     }
 })
 
-
+// verify the entered OTP is valid or not
 const verifyOtp = (async (req, res) => {
     try {
         const enteredOtp = req.body.OTP
@@ -95,6 +96,7 @@ const verifyOtp = (async (req, res) => {
     }
 })
 
+// Render the password page for entering new password
 const updatePassword = ((req, res) => {
     try {
         res.render("updatePassword", (err) => {
@@ -113,15 +115,14 @@ const updatePassword = ((req, res) => {
     }
 })
 
+// Save the new password
 const passwordUpdation = (async (req, res) => {
 
     const { password, password2 } = req.body
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[\w\s@$!%*?&#]{8,}$/;
 
     try {
-
         if (!passwordPattern.test(password) || password.length < 8) {
-
             return res.status(401).json({ error: "password must be atleast 8 characters with atleast one uppercase, lowercase, digit and special character" })
         }
         else if (password !== password2) {
@@ -131,7 +132,7 @@ const passwordUpdation = (async (req, res) => {
 
         const hashedPassword = await Signup_functions.passwordHash(password)
         const email = req.session.userEmail
-        await User.findOneAndUpdate({ email: email }, { password: hashedPassword })
+        await User.findOneAndUpdate({ email: email }, { password: hashedPassword }, { new: true })
 
         return res.status(200).end()
 

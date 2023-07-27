@@ -2,16 +2,14 @@ import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
 
+import User from "../../model/userModel.js"
 
 import Signup_functions from "../../helper/Signup_functions.js"
-import User from "../../model/userModel.js"
 dotenv.config({ path: "config.env" })
 
 
 
-
-/////////////USER LOGIN/////////
-
+// Render the login page
 const login = ((req, res) => {
     try {
         res.render("userLogin", (err) => {
@@ -29,6 +27,8 @@ const login = ((req, res) => {
     }
 })
 
+
+// To verify the information and create the JWT token for the user
 const loginVerify = (async (req, res) => {
     try {
 
@@ -83,6 +83,7 @@ const loginVerify = (async (req, res) => {
     }
 })
 
+// To destroy the token and session while the user logout
 const logout = ((req, res) => {
     try {
         delete req.session.user
@@ -95,9 +96,10 @@ const logout = ((req, res) => {
 
 })
 
+// IF THE USER EMAIL IS NOT VALIDATED AT THE SIGNUP TIME
 
+// Render the page for entering the email
 const enterEmail = ((req, res) => {
-
     try {
         res.render("emailValidation", (err) => {
             if (err) {
@@ -115,6 +117,8 @@ const enterEmail = ((req, res) => {
 })
 
 const saveOtp = []
+
+// For validating the email does the user exist or not
 const emailVerfy = (async (req, res) => {
     try {
         req.session.userEmail = req.body.email
@@ -141,16 +145,16 @@ const emailVerfy = (async (req, res) => {
 
 })
 
-
+// To send the otp and render the otp page
 const recoveryotp = ((req, res) => {
 
     try {
         const email = req.session.userEmail
-        const generateOtp = Signup_functions.generateOTP()
+        const generateOtp = Signup_functions.generateOTP()  // Create the OTP
 
         saveOtp.push(generateOtp)
-        Signup_functions.sendOTP(email, generateOtp)
-        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
+        Signup_functions.sendOTP(email, generateOtp)    //Send the OTP through the email
+        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)    // Delete the OTP after 31Sec
 
         res.render("emailValidationOtp", (err) => {
             if (err) {
@@ -168,7 +172,7 @@ const recoveryotp = ((req, res) => {
     }
 })
 
-
+// Validate the OTP 
 const verifyOtp = (async (req, res) => {
     try {
         const enteredOtp = req.body.OTP
@@ -181,7 +185,7 @@ const verifyOtp = (async (req, res) => {
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
 
-                const user = await User.findOneAndUpdate(
+                const user = await User.findOneAndUpdate(   // find the user and update the user that the user email is validated
                     { email: email },
                     { validation: true },
                     { new: true }

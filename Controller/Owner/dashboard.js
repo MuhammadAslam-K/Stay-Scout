@@ -63,7 +63,7 @@ const profileUpdate = (async (req, res) => {
     try {
         const id = req.session.owner._id
         const Owner = await owner.findById(id)
-        const valid = Signup_functions.Ownervalidate(false, req.body)
+        const valid = Signup_functions.validate(false, req.body)
 
         if (!valid.isValid) {
             return res.status(409).json({ error: valid.errors })

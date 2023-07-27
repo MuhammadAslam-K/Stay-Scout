@@ -17,7 +17,7 @@ async function connect() {
 
 async function removeOutdatedDates() {
     const currentDate = new Date();
-    console.log(19);
+
     try {
         const result = await Rooms.updateMany(
             {

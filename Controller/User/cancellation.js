@@ -1,11 +1,12 @@
-import Booking from "../../model/bokingModel.js"
+import adminRevenue from "../../model/adminRevenue.js";
+import Owner from "../../model/ownerModel.js";
 import User from "../../model/userModel.js";
 import Hotel from "../../model/hotelModel.js"
-import Owner from "../../model/ownerModel.js";
-import adminRevenue from "../../model/adminRevenue.js";
 import Rooms from "../../model/roomsModel.js";
+import Booking from "../../model/bokingModel.js"
 
 
+// To perform the cancellation
 const cancellation = async (req, res) => {
     try {
         const { bookingId, roomCancellation } = req.body;
@@ -14,9 +15,10 @@ const cancellation = async (req, res) => {
         const checkout = new Date(booking.checkOutDate);
         const currentDate = new Date();
         const userId = booking.user
+
         let amountRefund = booking.paymentAmount
 
-
+        // Check the cancellation policy
         if (roomCancellation === "Free cancellation upto 24hrs before checkin date") {
             const timeDifference = checkin.getTime() - currentDate.getTime();
             const hoursDifference = timeDifference / (1000 * 3600);
@@ -26,29 +28,14 @@ const cancellation = async (req, res) => {
                 return res.status(200).end()
             }
             else {
-                cancelBooking(bookingId)
+                cancelBooking(bookingId, booking.room)
                 return res.status(401).end()
             }
         }
         else if (roomCancellation === "Non-Refundable") {
-            const booking = await Booking.findByIdAndUpdate(
-                bookingId,
-                { cancel: true },
-                { new: true }
-            )
 
-            await Rooms.findByIdAndDelete(
-                booking.room,
-                {
-                    $pull: {
-                        checkin: booking.checkInDate,
-                        checkout: booking.checkOutDate,
-                    }
-                },
-                { new: true }
-            )
+            cancelBooking(bookingId, booking.room)
             return res.status(401).end()
-
         }
         else if (roomCancellation === "Canceling within 7 days before checkin") {
 
@@ -61,6 +48,7 @@ const cancellation = async (req, res) => {
 
             }
             else {
+                cancelBooking(bookingId, booking.room)
                 return res.status(401).end()
             }
         }
@@ -74,6 +62,7 @@ const cancellation = async (req, res) => {
 
             }
             else {
+                cancelBooking(bookingId, booking.room)
                 return res.status(401).end()
             }
         }
@@ -87,6 +76,7 @@ const cancellation = async (req, res) => {
 };
 
 
+//  To perform the money management 
 async function userWallet(userId, amout, bookingId) {
 
     try {
@@ -95,7 +85,7 @@ async function userWallet(userId, amout, bookingId) {
         const adminAmount = (30 / 100) * amout;
         const ownerAmount = (70 / 100) * amout;
 
-        const user = await User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(  // Add the money to the user wallet
             userId,
             {
                 $inc: { 'wallet.balance': amout },
@@ -110,13 +100,13 @@ async function userWallet(userId, amout, bookingId) {
             { new: true }
         )
 
-        const booking = await Booking.findByIdAndUpdate(
+        const booking = await Booking.findByIdAndUpdate(    //Update that the user cancelled the booking
             bookingId,
             { cancel: true },
             { new: true }
         )
 
-        const room = await Rooms.findByIdAndUpdate(
+        const room = await Rooms.findByIdAndUpdate(     //Remove the date from the room collection
             booking.room,
             {
                 $pull: {
@@ -128,20 +118,20 @@ async function userWallet(userId, amout, bookingId) {
         );
 
         const hotelId = booking.hotel
-        const hotel = await Hotel.findByIdAndUpdate(
+        const hotel = await Hotel.findByIdAndUpdate(    //Reduce the revenue from the hotel collection
             hotelId,
             { $inc: { revenue: -ownerAmount } },
             { new: true }
         );
 
         const ownerId = hotel.owner
-        await Owner.findByIdAndUpdate(
+        await Owner.findByIdAndUpdate(      //Reduce the revenue from the owner collection
             ownerId,
             { $inc: { revenue: -ownerAmount } },
             { new: true }
         )
 
-        await adminRevenue.findOneAndUpdate(
+        await adminRevenue.findOneAndUpdate(    //Reduce the revenue from the admin collection
             { owner: ownerId },
             { $inc: { revenue: -adminAmount } },
             { new: true }
@@ -153,13 +143,28 @@ async function userWallet(userId, amout, bookingId) {
 }
 
 
-async function cancelBooking(bookingId) {
+async function cancelBooking(bookingId, roomId) {
+    try {
 
-    const booking = await Booking.findByIdAndUpdate(
-        bookingId,
-        { cancel: true },
-        { new: true }
-    )
+        const booking = await Booking.findByIdAndUpdate(     //Update that the user cancelled the booking
+            bookingId,
+            { cancel: true },
+            { new: true }
+        )
+
+        const room = await Rooms.findByIdAndUpdate(     //Remove the date from the room collection
+            roomId,
+            {
+                $pull: {
+                    checkIn: booking.checkInDate,
+                    checkOut: booking.checkOutDate,
+                },
+            },
+            { new: true }
+        );
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 

@@ -1,15 +1,16 @@
 import Hotel from "../model/hotelModel.js";
 import Rooms from "../model/roomsModel.js";
 import Review from "../model/review.js";
-import mongoose from "mongoose";
+
 
 const query = { is_Available: true, is_block: false, adminApproval: "Approved" }
 const sort = { booste: -1 }
 
+
+// To fetch the hotel from the db
 const hotel = (async (id = null, skip = 0, limit = 0, user = true) => {
 
     try {
-
         if (user == false) {
             if (id) {
                 const hotels = Hotel.find({ owner: id }).populate("type")
@@ -18,7 +19,6 @@ const hotel = (async (id = null, skip = 0, limit = 0, user = true) => {
             const hotels = Hotel.find().populate("type")
             return hotels
         }
-
 
         if (id) {
             const hotel = Hotel.findById(id)
@@ -40,10 +40,9 @@ const hotel = (async (id = null, skip = 0, limit = 0, user = true) => {
 
 })
 
-
+// To Fetch the room data from the DB
 const room = (async (id = null, skip = 0, limit = 0, user = true) => {
     try {
-
         if (user == false) {
 
             if (id) {
@@ -78,17 +77,17 @@ const room = (async (id = null, skip = 0, limit = 0, user = true) => {
 
 })
 
+// To get the rooms of particulat hotel
 const hotelRoom = (async (id) => {
-
     try {
         const room = await Rooms.find({ hotel: id, ...query }).sort(sort)
         return room
     } catch (error) {
         console.log(error);
     }
-
 })
 
+// To filter and get the room based on the category
 const filterRoom = (async (id) => {
 
     try {
@@ -103,12 +102,10 @@ const filterRoom = (async (id) => {
 
 })
 
-
+// For calculating the average rating of the hotel
 async function hotelRating(id) {
-
     try {
         const reviews = await Review.find({ hotel: id });
-
 
         if (reviews.length === 0) {
             return null;
@@ -127,6 +124,7 @@ async function hotelRating(id) {
 }
 
 
+// Calculate the distance for finding the nearest hotel
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const earthRadiusKm = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;

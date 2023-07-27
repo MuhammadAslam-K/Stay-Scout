@@ -1,10 +1,9 @@
 import Booking from "../../model/bokingModel.js";
 import Review from "../../model/review.js";
 import Report from "../../model/reports.js";
-import Rooms from "../../model/roomsModel.js";
-import Hotel from "../../model/hotelModel.js";
 
 
+// To show the booking history 
 const bookingHistory = async (req, res) => {
     try {
         const userId = req.session.user._id;
@@ -23,6 +22,7 @@ const bookingHistory = async (req, res) => {
     }
 };
 
+// For submitting the report to the admin about the hotel
 const submitReport = async (req, res) => {
     try {
         const { bookingId, reportText } = req.body
@@ -48,12 +48,13 @@ const submitReport = async (req, res) => {
     }
 }
 
+// To check that the user is valid for writhing the review
 const Hotelreview = (async (req, res) => {
-
     try {
         const userId = req.session.user._id
         const hotelId = req.session.hotelID
         const currentDate = new Date();
+
         const bookings = await Booking.find(
             {
                 user: userId,
@@ -63,18 +64,11 @@ const Hotelreview = (async (req, res) => {
             });
 
         if (bookings.length == 0) {
-            return res.status(401).json({ error: "you can't write Review" })
+            return res.status(401).json({ error: "Sorry you can't write the Review" })
         }
         else {
-            if (bookings[0].review === false) {
-
-                req.session.bookingId = bookings[0]._id;
-                return res.status(200).end()
-            }
-            else {
-
-                return res.status(401).json({ error: "You already submitted the review" })
-            }
+            req.session.bookingId = bookings[0]._id;
+            return res.status(200).end()
         }
 
     } catch (error) {
@@ -84,8 +78,8 @@ const Hotelreview = (async (req, res) => {
 })
 
 
+// To save the review in the collection
 const submitReview = async (req, res) => {
-
     try {
 
         const userId = req.session.user._id
@@ -117,7 +111,7 @@ const submitReview = async (req, res) => {
 
 }
 
-
+// For edithing the review
 const editReview = (async (req, res) => {
 
     try {

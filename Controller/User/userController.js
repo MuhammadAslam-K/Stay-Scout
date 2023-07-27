@@ -3,12 +3,14 @@ import propertyFetching from "../../helper/propertyFetching.js";
 import User from "../../model/userModel.js"
 
 
+// Home page for the user
 const home = (async (req, res) => {
-
     try {
-        const banner = await propertyFetching.hotel(null, 0, 2)
-        const hotel = await propertyFetching.hotel(null, 2, 2)
-        const rooms = await propertyFetching.room(null, 0, 6)
+        const [banner, hotel, rooms] = await Promise.all([
+            propertyFetching.hotel(null, 0, 2),
+            propertyFetching.hotel(null, 2, 2),
+            propertyFetching.room(null, 0, 6),
+        ])
 
         res.render("home", (err) => {
             if (err) {
@@ -25,10 +27,12 @@ const home = (async (req, res) => {
     }
 })
 
+// To show the profile page to the user
 const profile = (async (req, res) => {
     try {
         const id = req.session.user._id
         const user = await User.findById(id)
+
         res.render("profile", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -47,12 +51,13 @@ const profile = (async (req, res) => {
 
 })
 
+// For saveing the changes done in profile 
 const profile_edit = async (req, res) => {
-
     try {
         const { name, email, phone } = req.body;
         const id = req.session.user._id;
-        const valid = Signup_functions.validate(false, req.body)
+        const valid = Signup_functions.validate(false, req.body)    // For checking the enterd information are valid or not
+
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
         }
@@ -71,9 +76,8 @@ const profile_edit = async (req, res) => {
     }
 }
 
-
+// Render the wallet History
 const walletHistory = (async (req, res) => {
-
     try {
         const id = req.session.user._id
         const user = await User.findById(id)
@@ -88,10 +92,10 @@ const walletHistory = (async (req, res) => {
             }
             res.render("walletHistory", { user })
         })
+
     } catch (error) {
         res.render("500")
     }
-
 })
 
 

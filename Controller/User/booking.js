@@ -1,15 +1,16 @@
-import Room from "../../model/roomsModel.js"
+import adminRevenue from "../../model/adminRevenue.js";
+import Owner from "../../model/ownerModel.js";
+import User from "../../model/userModel.js"
 import Hotel from "../../model/hotelModel.js";
+import Room from "../../model/roomsModel.js"
+import Booking from "../../model/bokingModel.js";
+
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
-import User from "../../model/userModel.js"
-import Booking from "../../model/bokingModel.js";
-import Owner from "../../model/ownerModel.js";
-import adminRevenue from "../../model/adminRevenue.js";
 
 
 
-
+// CHECK DOES THE ROOM IS AVAILABLE//
 const book = (async (req, res) => {
 
     try {
@@ -18,11 +19,10 @@ const book = (async (req, res) => {
         const { checkIn, checkOut, adults, kids } = req.body;
         req.session.checkIn = checkIn
         req.session.checkOut = checkOut
-        const valid = propertyValidation.bookingValidation(req.body)
-        const available = await availability.formValidation(id, req.body)
+        const valid = propertyValidation.bookingValidation(req.body) // To vailidate the form
+        const available = await availability.roomisAvailable(id, req.body) // To check does the room is avaialabel or not
 
         if (!valid.isValid) {
-
             return res.status(400).json({ error: valid.errors })
         }
         else if (adults > room.adults) {
@@ -50,7 +50,7 @@ const book = (async (req, res) => {
 
 })
 
-
+// TO RENDER THE PAYMENT PAGE AND INFORMATION 
 const payment = async (req, res) => {
 
     try {
@@ -59,8 +59,12 @@ const payment = async (req, res) => {
         const ID = req.session.room;
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
-        const user = await User.findById(id)
-        const room = await Room.findById(ID)
+
+        const [user, room] = await Promise.all([  // Get the data from the collection
+            User.findById(id),
+            Room.findById(ID)
+        ]);
+
         const timeDifferenceMs = checkOut - checkIn
         const daysDifference = Math.ceil(timeDifferenceMs / (1000 * 60 * 60 * 24));
         const total = room.price * daysDifference
@@ -84,32 +88,31 @@ const payment = async (req, res) => {
 }
 
 
-
-
+// If the payment is success
 const paymentSuccess = (async (req, res) => {
 
     try {
         const { radioNoLabel, roomPrice, noOfDays, total } = req.body
-
         const id = req.session.user._id
         const ID = req.session.room
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
-        const user = await User.findById(id)
-        const room = await Room.findById(ID).populate("hotel")
+
+        const [user, room] = await Promise.all([  // Get the data from the collection
+            User.findById(id),
+            Room.findById(ID).populate("hotel")
+        ]);
+
+        const newWalletBalance = user.wallet.balance - totalPrice;
         const totalPrice = parseInt(total, 10)
         const details = `Booked room in ${room.hotel.name}`
-        const newWalletBalance = user.wallet.balance - totalPrice;
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
         const adminAmount = (30 / 100) * totalPrice;
         const ownerAmount = (70 / 100) * totalPrice;
 
 
-
-
-
-        if (radioNoLabel == "walletpayment") {
+        if (radioNoLabel == "walletpayment") { // If the user do payment with wallet
 
             const user = await User.findByIdAndUpdate(
                 { _id: id },
@@ -145,20 +148,21 @@ const paymentSuccess = (async (req, res) => {
         await room.save()
 
 
-        await Hotel.findByIdAndUpdate(
+        await Hotel.findByIdAndUpdate(  // Update the revenu of hotel
             { _id: room.hotel._id },
             { $inc: { revenue: ownerAmount } },
             { new: true }
         );
 
-        const owner = await Owner.findByIdAndUpdate(
+        const owner = await Owner.findByIdAndUpdate(    // Update the revenu of owner
             { _id: room.owner },
             { $inc: { revenue: ownerAmount } },
             { new: true }
         )
 
         const adminrevenue = await adminRevenue.find({ owner: owner._id })
-        if (adminrevenue.length != 0) {
+
+        if (adminrevenue.length != 0) {    // Update the revenu of Admin
             await adminRevenue.findOneAndUpdate(
                 { owner: owner._id },
                 { $inc: { revenue: adminAmount } },
@@ -183,7 +187,7 @@ const paymentSuccess = (async (req, res) => {
 
 
 
-
+// To show the room status to the user
 const roomcheckin = async (req, res) => {
 
     try {

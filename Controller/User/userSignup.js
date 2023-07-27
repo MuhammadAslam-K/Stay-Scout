@@ -2,10 +2,9 @@ import Signup_functions from "../../helper/Signup_functions.js"
 import User from "../../model/userModel.js"
 
 
-
+// To render the signup page
 const signUp = ((req, res) => {
     try {
-
         res.render("userRegister", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -22,9 +21,9 @@ const signUp = ((req, res) => {
 })
 
 
-//////////// STARTED OTP //////////
 let saveOtp = []
 
+// For validating and saving the information in the user collection
 const signupValidation = async (req, res) => {
 
     try {
@@ -34,15 +33,13 @@ const signupValidation = async (req, res) => {
         const phoneExist = await User.findOne({ phone: phone })
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        const valid = Signup_functions.validate(true, req.body)
+        const valid = Signup_functions.validate(true, req.body)     // Validating the provided informtion are valid or not
 
         let wallet = 0
         let referedUser
         let transactions = []
 
-
         if (!valid.isValid) {
-
             return res.status(400).json({ error: valid.errors })
         }
         else if (emailExist) {
@@ -50,12 +47,11 @@ const signupValidation = async (req, res) => {
 
         }
         else if (phoneExist) {
-
             return res.status(409).json({ error: "The user with same Mobile Number already Exist please try another Number" })
         }
 
 
-        if (refrelCode) {
+        if (refrelCode) {   // If the user have a refrel code find the refred user and add amount to that user wallet
 
             wallet = 50
             const details = `${name} joined using your Referel`
@@ -75,7 +71,7 @@ const signupValidation = async (req, res) => {
             );
         }
 
-        if (referedUser) {
+        if (referedUser) {  // If the refrel code is valid add amount to the user wallet
             const referedUserName = referedUser.name
             let data = {
                 date: formattedDate,
@@ -84,10 +80,11 @@ const signupValidation = async (req, res) => {
             }
             transactions.push(data)
         }
+
         const hashedPassword = await Signup_functions.passwordHash(password)
         const userRefrelCode = Signup_functions.generateRandomString(10);
 
-        const user = new User({
+        const user = new User({     // Save new user
             name,
             email,
             phone,
@@ -109,16 +106,18 @@ const signupValidation = async (req, res) => {
     }
 }
 
-
+// The OPT will send and the render the OTP page
 const enterOtp = (req, res) => {
     try {
 
         const email = req.session.userData.email
-        const generateOtp = Signup_functions.generateOTP()
+        const generateOtp = Signup_functions.generateOTP()  // Generate the OTP
 
         saveOtp.push(generateOtp)
-        Signup_functions.sendOTP(email, generateOtp)
-        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)
+        let data = `Your OTP is ${generateOtp}. Please enter this code to verify your Email Account`
+        const subject = "Email for user verification"
+        Signup_functions.sendOTP(email, data, subject)    //Send the OTP through mail 
+        Signup_functions.otpRemoval(saveOtp, generateOtp, 31000)    // Delete the OTP after the 31 Sec
 
         res.render("userOtp", (err) => {
             if (err) {
@@ -138,7 +137,7 @@ const enterOtp = (req, res) => {
     }
 }
 
-
+// For Validating the OTP 
 const verifyOtp = async (req, res) => {
     try {
 
@@ -150,7 +149,7 @@ const verifyOtp = async (req, res) => {
 
             if (saveOtp[i] == enteredOtp) {
                 saveOtp.splice(i, 1)
-                const user = await User.findOneAndUpdate(
+                const user = await User.findOneAndUpdate(   // Update that the user email is validated
                     { email: email },
                     { validation: true },
                     { new: true }
@@ -165,7 +164,7 @@ const verifyOtp = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error Please Try agin later" })
     }
 }
-/////////////Ended OTP///////
+
 
 
 export default {

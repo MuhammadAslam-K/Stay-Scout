@@ -1,10 +1,8 @@
 import Room from "../model/roomsModel.js";
 
+//  To check the room is available or not
+const roomisAvailable = async (id, data) => {
 
-const formValidation = async (id, data) => {
-
-    let errors = {}
-    const room = await Room.findById(id)
     const { checkIn, checkOut, } = data
 
     const checkInDate = new Date(checkIn);
@@ -33,9 +31,8 @@ const formValidation = async (id, data) => {
     else {
         return false
     }
-
 }
 
 export default {
-    formValidation,
+    roomisAvailable,
 }

@@ -1,7 +1,8 @@
 import Message from "../../model/contact.js";
 
-const contact = ((req, res) => {
 
+// Render the contact page
+const contact = ((req, res) => {
     try {
         res.render("contact", (err) => {
             if (err) {
@@ -17,12 +18,10 @@ const contact = ((req, res) => {
         console.log(error);
         res.render("500")
     }
-
 })
 
-
+//  Submit the message to the admin
 const submitContact = (async (req, res) => {
-
     try {
         const message = req.body.message
         const user = req.session.user._id
@@ -34,7 +33,6 @@ const submitContact = (async (req, res) => {
         console.log(error);
         res.render("500")
     }
-
 })
 
 

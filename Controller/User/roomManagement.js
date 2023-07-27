@@ -2,10 +2,13 @@ import propertyFetching from "../../helper/propertyFetching.js"
 import Category from "../../model/roomCategory.js"
 
 
+// Shows the rooms to the user
 const rooms = (async (req, res) => {
     try {
-        const rooms = await propertyFetching.room()
-        const category = await Category.find()
+        cosnt[rooms, category] = await Promise([
+            propertyFetching.room(),
+            Category.find(),
+        ])
 
         res.render("rooms", (err) => {
             if (err) {
@@ -22,10 +25,13 @@ const rooms = (async (req, res) => {
     }
 })
 
+// To show the rooms based on the category
 const roomsFilter = (async (req, res) => {
     try {
-        const rooms = await propertyFetching.filterRoom(req.query.id)
-        const category = await Category.find()
+        const [rooms, category] = await Promise.all([
+            propertyFetching.filterRoom(req.query.id),
+            Category.find(),
+        ])
 
         res.render("rooms", (err) => {
             if (err) {
@@ -42,13 +48,15 @@ const roomsFilter = (async (req, res) => {
     }
 })
 
-
+// For showing the room details to the user
 const roomDetails = (async (req, res) => {
     try {
         const id = req.query.id
         const room = await propertyFetching.room(id)
         req.session.room = id
+
         let childrents = true
+
         if (room.childrents == 0) {
             childrents = false
         }
@@ -68,9 +76,6 @@ const roomDetails = (async (req, res) => {
         return res.status(500).render("500")
     }
 })
-
-
-
 
 
 

@@ -1,5 +1,6 @@
 
 
+// To validate the form of hotel while adding and editing the hotel
 const hotelValidation = ((data) => {
     const errors = {}
 
@@ -13,10 +14,6 @@ const hotelValidation = ((data) => {
     const pricePattern = /^(?:100|[2-9]\d{2,3}|1\d{4}|20000)$/
     const descriptionPattern = /^\s*(\S+\s+){19,499}\S+$/;
     const addressPattern = /^[\w\s,]+$/;
-
-
-
-
 
     //  Name Validation //
     if (!name) {
@@ -88,7 +85,7 @@ const hotelValidation = ((data) => {
 })
 
 
-
+// To validate the form of room while adding and editing the room
 function roomValidation(data) {
     const errors = {}
     const { price, adults, childrents, bed, description } = data
@@ -135,7 +132,7 @@ function roomValidation(data) {
     }
 }
 
-
+// To validate the checkIn and checkOut form of room
 const bookingValidation = (data) => {
 
     const { checkIn, checkOut, adults } = data;
@@ -147,9 +144,6 @@ const bookingValidation = (data) => {
         errors.adultsError = "Invalid input for adults";
     }
 
-    // if (!numberPattern.test(kids)) {
-    //     errors.kidsError = "Invalid input for kids";
-    // }
 
     const currentDate = new Date();
     const checkInDate = new Date(checkIn);
@@ -169,6 +163,8 @@ const bookingValidation = (data) => {
     }
 };
 
+
+// To validate the hotel checkin and checkout form
 const hotelHomeForm = (data) => {
     const errors = {}
     const { checkIn, checkOut } = data

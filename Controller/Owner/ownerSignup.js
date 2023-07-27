@@ -35,7 +35,7 @@ const signupValidate = async (req, res) => {
         const emailExist = await Owner.findOne({ email: email })
         const phoneExist = await Owner.findOne({ phone: phone })
         const accountExist = await Owner.findOne({ accountNo: accountNo })
-        const valid = Signup_functions.Ownervalidate(true, req.body)
+        const valid = Signup_functions.validate(true, req.body)
 
         if (emailExist) {
 
@@ -78,7 +78,10 @@ const enterOtp = async (req, res) => {
         const generateOtp = Signup_functions.generateOTP()
 
         ownerOtp.push(generateOtp)
-        Signup_functions.sendOTP(email, generateOtp)
+        let data = `Your OTP is ${generateOtp}. Please enter this code to verify your Email Account`
+        const subject = "Email for user verification"
+
+        Signup_functions.sendOTP(email, data, subject)
         Signup_functions.otpRemoval(ownerOtp, generateOtp, 31000)
 
         res.render("ownerOtp", (err) => {

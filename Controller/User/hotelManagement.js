@@ -1,16 +1,16 @@
+import Hotel from "../../model/hotelModel.js";
+import Rooms from "../../model/roomsModel.js";
+import Review from "../../model/review.js";
+import Category from "../../model/roomCategory.js";
+
 import propertyFetching from "../../helper/propertyFetching.js";
 import propertyValidation from "../../helper/propertyValidation.js";
-import Hotel from "../../model/hotelModel.js";
-import Category from "../../model/roomCategory.js";
-import Rooms from "../../model/roomsModel.js";
-import Review from "../../model/review.js"
 
 
-
+// To show all the hotels to the user
 const hotels = async (req, res) => {
-
     try {
-        const hotel = await propertyFetching.hotel();
+        const hotel = await propertyFetching.hotel(); // Fetch the hotel form the collection
 
         res.render("userViewHotels", (err) => {
             if (err) {
@@ -29,17 +29,21 @@ const hotels = async (req, res) => {
 };
 
 
+// To show a particular hotel to the user
 const hotelHome = (async (req, res) => {
-
     try {
         const id = req.query.id
         req.session.hotelID = id
         const userId = req.session.user._id
-        const hotel = await propertyFetching.hotel(id)
-        const rooms = await propertyFetching.hotelRoom(id)
-        const ratings = await propertyFetching.hotelRating(id)
-        const reviews = await Review.find({ hotel: id }).populate("user")
-        const reviewEdit = await Review.findOne({ user: userId, hotel: id })
+
+        const [hotel, rooms, ratings, reviews, reviewEdit] = await Promise.all([
+            propertyFetching.hotel(id),
+            propertyFetching.hotelRoom(id),
+            propertyFetching.hotelRating(id),
+            Review.find({ hotel: id }).populate("user"),
+            Review.findOne({ user: userId, hotel: id }),
+        ])
+
         let reviewExist = false
 
         if (reviewEdit) {
@@ -63,8 +67,8 @@ const hotelHome = (async (req, res) => {
 })
 
 
+// The user can search the hotel
 const hotelSearch = (async (req, res) => {
-
     try {
         const value = req.body.search
         const regexValue = new RegExp(value, "i")
@@ -93,12 +97,11 @@ const hotelSearch = (async (req, res) => {
     }
 })
 
-
+// To check the rooms are available in the hotel for the particular date
 const roomAvailability = (async (req, res) => {
-
     try {
         const id = req.session.hotelID
-        const valid = propertyValidation.hotelHomeForm(req.body)
+        const valid = propertyValidation.hotelHomeForm(req.body)    //.To validate the form
         const { checkIn, checkOut } = req.body
         const checkInDate = new Date(checkIn);
         const checkOutDate = new Date(checkOut);
@@ -141,9 +144,8 @@ const roomAvailability = (async (req, res) => {
     }
 })
 
-
+// To find the nearest hotel
 const nearestHotel = async (req, res) => {
-    console.log(139);
     try {
         const userLat = parseFloat(req.params.latitude);
         const userLong = parseFloat(req.params.longitude);
