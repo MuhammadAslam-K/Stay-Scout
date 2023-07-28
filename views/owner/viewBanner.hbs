@@ -1,0 +1,274 @@
+{{>userHeader}}
+{{>adminDashboardSide}}
+
+<style>
+    /* Additional styles for the admin hotel view */
+
+    .container-fluid {
+        padding: 20px;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: none;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 20px;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .btn-primary {
+        background-color: #3366ff;
+        border-color: #3366ff;
+    }
+
+    .btn-primary:hover {
+        background-color: #254eda;
+        border-color: #254eda;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #d39e00;
+        border-color: #d39e00;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    /* Animation for table rows */
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table tbody tr {
+        animation: fade-in 0.3s ease-in-out;
+    }
+</style>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+                    <button class="h3 mb-0 text-light m-3 btn btn-primary" type="button" id="addbanner">Add
+                        BANNER</button>
+                </nav>
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <a href="#" class="m-0 font-weight-bold text-primary">BANNERS</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Hotel Name</th>
+                                            <th>Title</th>
+                                            <th>Visible</th>
+                                            <th>Availabil</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each banner}}
+                                        <tr>
+                                            <td>{{this.hotel.name}}</td>
+                                            <td>{{this.title}}</td>
+                                            <td>{{this.active}}</td>
+                                            <td>
+                                                <div id="availabilityButton{{this._id}}">
+                                                    {{#if this.available}}
+                                                    <button class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)"
+                                                        id="blockButton{{this._id}}">Available</button>
+                                                    {{else}}
+                                                    <button class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)"
+                                                        id="blockButton{{this._id}}">Not Available</button>
+                                                    {{/if}}
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <a href="/owner/banner/edit?id={{this._id}}"><i
+                                                        class="fa-solid fa-pen-to-square"
+                                                        style="color: #2ea3a1;"></i></a>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger"
+                                                    onclick="deleteBanner('{{this._id}}')">Delete</button>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+{{>userFooter}}
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+    });
+</script>
+
+{{!-- ADD NEW BANNER --}}
+<script>
+    async function addBanner() {
+        try {
+            const response = await axios.get("/owner/addbanner");
+
+            window.location.href = "/owner/submitbanner"
+
+        } catch (error) {
+            console.log(error);
+            if (error.response.status == 400) {
+                const err = error.response.data.error
+                alertify.alert(err, function () {
+                    alertify.message('OK');
+                });
+            }
+            else {
+                alertify.alert("Something went wrong, please try again later", function () {
+                    alertify.message('OK');
+                });
+            }
+        }
+    }
+
+    document.getElementById('addbanner').addEventListener('click', addBanner);
+
+
+    function toggleBlock(bannerId, blockStatus) {
+
+        axios.post('/owner/banner/available?id=' + bannerId, {
+            availability: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here
+                const blockButton = document.getElementById('blockButton' + bannerId); // Use the correct ID
+                const newStatus = response.data.available;
+
+                // Update the button text and class based on the new status
+                if (newStatus) {
+                    blockButton.innerText = 'Available';
+                    blockButton.classList.remove('btn-warning');
+                    blockButton.classList.add('btn-primary');
+                } else {
+                    blockButton.innerText = 'Not Available';
+                    blockButton.classList.remove('btn-primary');
+                    blockButton.classList.add('btn-warning');
+                }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
+    }
+
+
+    function deleteBanner(id) {
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                try {
+
+                    const response = axios.get(`/owner/banner/delete?id=${id}`)
+                    if (response.status == 200) {
+                        window.location.reload()
+                    }
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                )
+
+            }
+        })
+
+    }
+</script>

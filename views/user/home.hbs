@@ -166,12 +166,15 @@
                 {{#each banner}}
                 <div class="slide">
                     {{#each this.images.[0]}}
-                    <div class="background_image" style="background-image:url({{this.url}})"></div>
+                    <div class="background_image" style="background-image:url({{this.url}}); "></div>
                     {{/each}}
                     <div class="home_container">
                         <div class="container">
                             <div class="row">
                                 <div class="col">
+                                    <div class="home_title"
+                                        style="font-size: 50px;color: rgba(247, 249, 251, 0.73); font-family: 'Poppins', sans-serif;">
+                                        {{this.name}}</div>
                                     <div class="home_content text-center">
                                         <div class="home_title"
                                             style="font-size: 50px;color: rgba(247, 249, 251, 0.73); font-family: 'Poppins', sans-serif;">
@@ -189,6 +192,7 @@
         </div>
     </div>
     <!--END BANNER-->
+
 
     <!-- Hotels -->
     {{#each hotel}}

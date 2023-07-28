@@ -188,9 +188,49 @@ const hotelHomeForm = (data) => {
 }
 
 
+// For validating the banner information
+const bannerValidate = (data) => {
+    const { title, subtitle } = data
+    const errors = {}
+
+
+
+    // valdate the title
+    if (!title) {
+        errors.titleError = "Please enter the title"
+    }
+    else if (title.length < 3 || title[0] == " ") {
+        errors.titleError = "Enter a Valid title"
+    }
+    // else if (title.length > 20) {
+    //     console.log(title.length);
+    //     errors.titleError = "Invalid title"
+    // }
+
+    // valdate the title
+    if (!subtitle) {
+        errors.subtitleError = "Please enter the sub title"
+    }
+    else if (subtitle.length < 3 || subtitle[0] == " ") {
+        errors.subtitleError = "Enter a Valid sub title"
+    }
+    // else if (subtitle.length > 20) {
+    //     console.log(subtitle.length);
+    //     errors.subtitleError = "Invalid sub title"
+    // }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+}
+
+
+
 export default {
     hotelValidation,
     roomValidation,
     bookingValidation,
     hotelHomeForm,
+    bannerValidate,
 }

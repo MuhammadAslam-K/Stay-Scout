@@ -5,7 +5,7 @@ import Category from "../../model/roomCategory.js"
 // Shows the rooms to the user
 const rooms = (async (req, res) => {
     try {
-        cosnt[rooms, category] = await Promise([
+        const [rooms, category] = await Promise.all([
             propertyFetching.room(),
             Category.find(),
         ])

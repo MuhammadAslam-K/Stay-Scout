@@ -1,0 +1,190 @@
+{{>userHeader}}
+{{>adminDashboardSide}}
+
+<style>
+    <style>#content-wrapper {
+        background-color: #f8f9fa;
+    }
+
+    #content {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 30px;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #80bdff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+    .error-msg {
+        font-size: 14px;
+    }
+
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Barlow&family=Kanit&family=PT+Sans&display=swap');
+</style>
+
+
+<div class="text-center mt-4">
+    <h1 style="font-family: 'Kanit', sans-serif;">Add Banner</h1>
+</div>
+<div id="content-wrapper" class="justify-content-center m-5">
+    <div id="content" class="bg-light p-4 border rounded">
+        <form id="registerForm" enctype="multipart/form-data">
+            <div class="form-row m-4">
+
+                <div class="form-group col-md-6">
+                    <label>Titel</label>
+                    <input type="tel" class="form-control" name="title" value="{{banner.title}}">
+                    <span id="titleError" class="text-danger error-msg"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Sub Title</label>
+                    <input type="text" class="form-control" name="subtitle" value="{{banner.subtitle}}">
+                    <span id="subtitleError" class="text-danger error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-row m-4">
+
+                <div id="images">
+                    <input type="file" id="image1" name="image" required>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <img src="{{banner.image.url}}" class="image-preview" alt="unable to view the image">
+                    <input type="checkbox" name="selectedImage" value="{{banner.image.url}}">
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div class="image-preview-container mt-4">
+            <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+        </div>
+    </div>
+
+
+
+    {{!-- Image preview code --}}
+    <script>
+        function previewImage(event, imageNumber) {
+            var preview = document.getElementById(`preview${imageNumber}`);
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                preview.style.display = "none";
+            }
+        }
+
+        // Add event listeners for image previews
+        document.getElementById("image1").addEventListener("change", function (event) {
+            previewImage(event, 1);
+        });
+
+    </script>
+
+    {{!-- AXIOS --}}
+    <script>
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            resetError()
+            try {
+                const response = await axios.post('/owner/banner/update', formData)
+                if (response.status === 200) {
+                    Notification()
+                    function Notification() {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Banner Updated Successfully",
+                            showConfirmButton: true,
+                            confirmButtonColor: "#00A300",
+                        });
+                    }
+                    window.location.href = '/owner/banner'
+                }
+
+            } catch (error) {
+                console.log(error)
+                if (error.response.status == 400) {
+
+                    const errors = error.response.data.error;
+                    resetError()
+
+                    Object.keys(errors).forEach((key) => {
+                        let element = document.getElementById(key).textContent = errors[key];
+                    });
+
+                }
+                else if (error.response.status == 500) {
+                    //const err = error.response.data.error;
+                    alertify.alert("The Banner can contain only one image", function () {
+                        alertify.message('OK');
+                    });
+                }
+                else {
+                    alertify.alert("Something went wrong", function () {
+                        alertify.message('OK');
+                    });
+                }
+            }
+        };
+        document.getElementById('registerForm').addEventListener('submit', handleSubmit);
+
+        function resetError() {
+            const errorElements = document.querySelectorAll(".error-msg");
+            errorElements.forEach((element) => {
+                element.textContent = "";
+            });
+        }
+
+
+    </script>
+
+
+
+
+    {{>userFooter}}
+
+    <script>
+        const errorMessage = "{{errorMessage}}";
+        if (errorMessage) {
+            alertify.alert(errorMessage, function () {
+                alertify.message('OK');
+            });
+        }
+    </script>

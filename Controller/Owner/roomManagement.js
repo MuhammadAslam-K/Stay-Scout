@@ -106,7 +106,7 @@ const submitRoom = (async (req, res) => {
 const viewRooms = async (req, res) => {
     const id = req.session.owner._id
     try {
-        const [rooms, category] = await Promise.new([
+        const [rooms, category] = await Promise.all([
             propertyFetching.room(id, 0, 0, false),
             Category.find()
         ])
