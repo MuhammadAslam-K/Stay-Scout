@@ -1,14 +1,15 @@
 import Signup_functions from "../../helper/Signup_functions.js";
 import propertyFetching from "../../helper/propertyFetching.js";
 import User from "../../model/userModel.js"
+import Banner from "../../model/banner.js"
 
 
 // Home page for the user
 const home = (async (req, res) => {
     try {
         const [banner, hotel, rooms] = await Promise.all([
+            Banner.find({ available: true, active: true }),
             propertyFetching.hotel(null, 0, 2),
-            propertyFetching.hotel(null, 2, 2),
             propertyFetching.room(null, 0, 6),
         ])
 

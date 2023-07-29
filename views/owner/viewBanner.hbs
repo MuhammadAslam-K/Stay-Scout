@@ -2,8 +2,6 @@
 {{>adminDashboardSide}}
 
 <style>
-    /* Additional styles for the admin hotel view */
-
     .container-fluid {
         padding: 20px;
     }
@@ -244,20 +242,24 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                swalWithBootstrapButtons.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
                 try {
 
                     const response = axios.get(`/owner/banner/delete?id=${id}`)
                     if (response.status == 200) {
-                        window.location.reload()
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
                     }
                 }
                 catch (error) {
-                    console.log(error)
+                    if (response.status === 500) {
+                        alertify
+                            .alert("Something went wrong while deleting.", function () {
+                                alertify.message('OK');
+                            });
+                    }
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
 

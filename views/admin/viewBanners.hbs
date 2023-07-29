@@ -1,0 +1,129 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+
+                </nav>
+                <div class="container">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">Reports</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Owner Name</th>
+                                            <th>Hotel Name</th>
+                                            <th>Available</th>
+                                            <th>visible</th>
+                                            <th>Details</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each banner}}
+                                        <tr>
+                                            <td><span>{{this.owner.name}}</span></td>
+                                            <td><span>{{this.hotel.name}}</span></td>
+                                            <td><span>{{this.available}}</span></td>
+                                            <td><span>{{this.active}}</span></td>
+                                            <td>
+                                                <a href="/admin/banner/deltails?id={{this._id}}"
+                                                    class="btn btn-primary">Details</a>
+                                            </td>
+
+                                            <td>
+                                                <button class="btn btn-danger"
+                                                    onclick="deleteBanner('{{this._id}}')">Delete</button>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Disable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false, // Disable automatic column width calculation
+            "pageLength": 10 // Set number of rows per page
+        });
+    });
+
+    function deleteBanner(id) {
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                try {
+
+                    const response = axios.get(`/admin/banner/delete?id=${id}`)
+                    if (response.status == 200) {
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                }
+                catch (error) {
+                    if (response.status === 500) {
+                        alertify
+                            .alert("Something went wrong while deleting.", function () {
+                                alertify.message('OK');
+                            });
+                    }
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                )
+
+            }
+        })
+
+    }
+</script>
+{{>userFooter}}

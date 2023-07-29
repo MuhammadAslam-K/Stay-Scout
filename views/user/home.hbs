@@ -4,12 +4,23 @@
 
 
 <style>
-    /* Fonts */
     body {
         font-family: 'Poppins', sans-serif;
     }
 
-    /* BANNER */
+    .title {
+        font-size: 100px;
+        color: rgba(247, 249, 251, 0.73);
+        max-width: 950px;
+    }
+
+    .subtitle {
+        font-size: xx-large;
+        color: rgba(247, 249, 251, 0.73);
+        text-align: left;
+
+    }
+
     .home_slider_container {
         position: relative;
         width: 100%;
@@ -17,18 +28,10 @@
         margin-bottom: 50px;
     }
 
-    .home_title {
-        font-size: 50px;
-        font-weight: 700;
-        margin-bottom: 30px;
-        color: rgba(247, 249, 251, 0.73);
-    }
-
     .home_content {
         margin-top: 200px;
     }
 
-    /* Hotels */
     .container1 {
         background-color: #f8f9fa;
         padding: 20px;
@@ -71,7 +74,6 @@
         font-size: 16px;
     }
 
-    /* ROOMS */
     .booking {
         padding: 100px 0;
         background-color: #f8f9fa;
@@ -136,7 +138,6 @@
         text-decoration: none;
     }
 
-    /* Additional Styles */
     .container1 {
         display: grid;
         grid-template-columns: 1fr;
@@ -165,25 +166,20 @@
                 <!-- Slide -->
                 {{#each banner}}
                 <div class="slide">
-                    {{#each this.images.[0]}}
-                    <div class="background_image" style="background-image:url({{this.url}}); "></div>
-                    {{/each}}
+                    <div class="background_image" style="background-image:url({{this.image.url}}); "></div>
                     <div class="home_container">
                         <div class="container">
+                            <div class="home_title title">
+                                {{this.title}}</div>
                             <div class="row">
                                 <div class="col">
-                                    <div class="home_title"
-                                        style="font-size: 50px;color: rgba(247, 249, 251, 0.73); font-family: 'Poppins', sans-serif;">
-                                        {{this.name}}</div>
-                                    <div class="home_content text-center">
-                                        <div class="home_title"
-                                            style="font-size: 50px;color: rgba(247, 249, 251, 0.73); font-family: 'Poppins', sans-serif;">
-                                            {{this.name}}</div>
-                                        <a href="/hotel/home?id={{this._id}}" class="btn btn-primary">Check
-                                            Availability</a>
+                                    <div class="home_content text-center mt-4">
+                                        <div class="home_title subtitle">
+                                            {{this.subtitle}}</div>
                                     </div>
                                 </div>
                             </div>
+                            <a href="{{this.linkTo}}" class="btn btn-primary mt-3">Book now</a>
                         </div>
                     </div>
                 </div>
@@ -191,7 +187,6 @@
             </div>
         </div>
     </div>
-    <!--END BANNER-->
 
 
     <!-- Hotels -->
@@ -202,7 +197,8 @@
                 <div class="owl-carousel owl-theme home_slider">
                     {{#each this.images}}
                     <div class="slide" style="height: 50vh;background-size: cover;">
-                        <div class="background_image" style="opacity: unset; background-image:url({{this.url}})"></div>
+                        <div class="background_image" style="opacity: unset; background-image:url({{this.url}})">
+                        </div>
                     </div>
                     {{/each}}
                 </div>
@@ -250,7 +246,8 @@
                                         {{this.price}} </p>
                                 </div>
                                 <div class="booking_link"><a
-                                        href="/hotel/room?id={{this._id}}">{{this.category.name}}</a></div>
+                                        href="/hotel/room?id={{this._id}}">{{this.category.name}}</a>
+                                </div>
                             </div>
                             {{/each}}
                         </div>

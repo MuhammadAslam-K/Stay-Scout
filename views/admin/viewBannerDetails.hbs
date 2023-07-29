@@ -1,0 +1,53 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<style>
+    .title {
+        font-size: 100px;
+        color: rgba(247, 249, 251, 0.73);
+        font-family: 'Poppins', sans-serif;
+        max-width: 950px;
+    }
+
+    .subtitle {
+        font-size: xx-large;
+        color: rgba(247, 249, 251, 0.73);
+        font-family: 'Poppins', sans-serif;
+        text-align: left;
+
+    }
+</style>
+
+
+<div class="super_container">
+    <!-- BANNER-->
+    <div class="home mb-5">
+        <div class="home_slider_container">
+            <div class="owl-carousel owl-theme home_slider">
+                <!-- Slide -->
+                <div class="slide">
+                    <div class="background_image" style="background-image:url({{banner.image.url}}); "></div>
+                    <div class="home_container">
+                        <div class="container">
+                            <div class="home_title title">
+                                {{banner.title}}</div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="home_content text-center">
+                                        <div class="home_title subtitle">
+                                            {{banner.subtitle}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="m-2 ms-5">
+    <a href="/admin/banner/active?id={{banner._id}}&value=true" class="btn btn-success m-3">Active</a>
+    <a href="/admin/banner/active?id={{banner._id}}&value=false" class="btn btn-danger">Deactive</a>
+</div>
+{{>userFooter}}

@@ -1,7 +1,6 @@
 import express from "express"
 
-import adminAuth from "../Controller/Admin/adminAuth.js"
-import adminDashboard from "../Controller/Admin/adminDashboard.js"
+import bannerManagement from "../Controller/Admin/bannerManagement.js"
 import userManagement from "../Controller/Admin/userManagement.js"
 import ownerManagement from "../Controller/Admin/ownerManagement.js"
 import hotelManagement from "../Controller/Admin/hotelManagement.js"
@@ -12,8 +11,10 @@ import messageManagement from "../Controller/Admin/messageManagement.js"
 import cancellationManagement from "../Controller/Admin/cancellationManagement.js"
 import report from "../Controller/Admin/report.js"
 import revenue from "../Controller/Admin/revenue.js"
-import auth from "../middleware/adminAuth.js"
+import adminAuth from "../Controller/Admin/adminAuth.js"
+import adminDashboard from "../Controller/Admin/adminDashboard.js"
 
+import auth from "../middleware/adminAuth.js"
 
 
 const admin_route = express()
@@ -91,6 +92,12 @@ admin_route.post("/report/status", isLogged, report.resportStatus)
 //////////////REVENUE//////////////////
 admin_route.get("/revenue", isLogged, revenue.ownerRevenueChart)
 admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
+
+// / / / / /BANNER MANAGEMENT// / / / / / 
+admin_route.get("/banner", isLogged, bannerManagement.banner)
+admin_route.get("/banner/deltails", isLogged, bannerManagement.bannerDetails)
+admin_route.get("/banner/active", isLogged, bannerManagement.visible)
+admin_route.get("/banner/delete", isLogged, bannerManagement.deleteBanner)
 
 
 

@@ -15,16 +15,6 @@ const bannerSchema = new mongoose.Schema({
             required: true
         }
     },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Owner',
-        required: true
-    },
-    hotel: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hotels',
-        required: true
-    },
     linkTo: {
         type: String,
         require: true
@@ -36,6 +26,16 @@ const bannerSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         default: false
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Owner',
+        required: true
+    },
+    hotel: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hotels',
+        required: true
     }
 })
 
