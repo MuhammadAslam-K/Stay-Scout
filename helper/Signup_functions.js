@@ -53,6 +53,8 @@ async function sendOTP(email, data, subject) {
     }
 }
 
+
+
 // Generate randon string for refrel code
 function generateRandomString(length) {
 

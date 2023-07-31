@@ -6,7 +6,6 @@ import Category from "../../model/roomCategory.js";
 import propertyFetching from "../../helper/propertyFetching.js";
 import propertyValidation from "../../helper/propertyValidation.js";
 
-
 // To show all the hotels to the user
 const hotels = async (req, res) => {
     try {

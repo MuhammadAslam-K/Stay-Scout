@@ -8,6 +8,7 @@ import Booking from "../../model/bokingModel.js";
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
 import Signup_function from "../../helper/Signup_functions.js"
+import sendHtml from "../../helper/sendHtml.js";
 
 
 
@@ -188,23 +189,20 @@ const paymentSuccess = (async (req, res) => {
             })
             await newAdminRevenue.save()
         }
-        const userEmail = await User.findById(id)
-        let subject = `Thank You for booking room in ${hotel.name}`
-        let data = `CheckIn Date: ${formatDate(checkIn)}\nCheckOut Date: ${formatDate(checkOut)}\nAmount Paid:${total} \nPayment Method:${radioNoLabel}`
-        Signup_function.sendOTP(userEmail.email, data, subject)
 
-        function formatDate(date) {
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-            const day = days[date.getDay()];
-            const month = months[date.getMonth()];
-            const dayOfMonth = date.getDate();
-            const year = date.getFullYear();
-
-            return `${day} ${month} ${dayOfMonth} ${year}`;
+        const emailData = {
+            email: req.session.user.email,
+            subject: "Booking Confirmation",
+            userName: req.session.user.name,
+            hotel: hotel.name,
+            checkIn,
+            checkOut,
+            hotelLocation: hotel.address,
+            amount: total,
+            method: radioNoLabel
         }
 
+        await sendHtml.sendConfirmationMail(emailData)
         return res.status(200).end()
     } catch (error) {
         console.log(error)
