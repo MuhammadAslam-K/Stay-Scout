@@ -70,6 +70,8 @@
                     </div>
                 </div>
             </div>
+
+            {{!-- User registration --}}
             <div class="container d-flex justify-content-center mt-3">
                 <div class="btn-group" role="group" aria-label="View Options">
                     <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
@@ -80,9 +82,10 @@
 
             <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
                 <div style="width: 100%;">
-                    <canvas id="userRegistrationChart"></canvas>
+                    <canvas id="adminRevenuChart"></canvas>
                 </div>
             </div>
+            {{!-- Chart end --}}
             <div class="container-fluid">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -141,72 +144,101 @@
 
 
 
+
+{{!-- Admin Revenue chart --}}
 <script>
     document.addEventListener("DOMContentLoaded", async function () {
-        let userLineChart;
+        let lineChart;
 
-        const updateUserChartData = async (view) => {
+        const updateChartData = async (view) => {
             try {
-                // Make an asynchronous HTTP GET request to fetch user registration data based on the selected view
-                const response = await axios.get(`/admin/userRegistration?view=${view}`);
+                let timeUnit;
+                switch (view) {
+                    case 'year':
+                        timeUnit = '$year';
+                        break;
+                    case 'month':
+                        timeUnit = '$month';
+                        break;
+                    case 'week':
+                        timeUnit = '$week';
+                        break;
+                    default:
+                        timeUnit = '$month';
+                        break;
+                }
+
+                // Make an asynchronous HTTP GET request to fetch revenue data based on the selected view
+                const response = await axios.get(`/admin/revenue?view=${view}`);
 
                 // Extract data from the response
                 const data = response.data;
 
-                // Update the chart data for the user line chart
-                userLineChart.data.labels = data.labels;
-                userLineChart.data.datasets[0].data = data.registrationCount;
+                // Convert revenue data to rupees
+
+                // Update the chart data for line chart
+                lineChart.data.labels = data.labels;
+                lineChart.data.datasets[0].data = data.revenue;
 
                 // Update the x-axis title based on the selected view
-                userLineChart.options.scales.x.title.text = `${view.charAt(0).toUpperCase()}${view.slice(1)}`;
+                lineChart.options.scales.x.title.text = `${view.charAt(0).toUpperCase()}${view.slice(1)}`;
 
                 // Re-render the chart
-                userLineChart.update();
+                lineChart.update();
 
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         };
 
-        // Add event listeners for the view selection buttons (similar to the revenue chart)
-        document.getElementById('yearBtn').addEventListener('click', () => updateUserChartData('year'));
-        document.getElementById('monthBtn').addEventListener('click', () => updateUserChartData('month'));
-        document.getElementById('weekBtn').addEventListener('click', () => updateUserChartData('week'));
+        // Add event listeners for the view selection buttons
+        document.getElementById('yearBtn').addEventListener('click', () => updateChartData('year'));
+        document.getElementById('monthBtn').addEventListener('click', () => updateChartData('month'));
+        document.getElementById('weekBtn').addEventListener('click', () => updateChartData('week'));
 
         // Initially load the chart with the default 'month' view
-        await updateUserChartData('month');
+        await updateChartData('month');
 
         try {
-            // Make an asynchronous HTTP GET request to fetch user registration data
-            const response = await axios.get('/admin/userRegistration');
+            // Make an asynchronous HTTP GET request to fetch revenue data
+            const response = await axios.get('/admin/revenue');
 
             const data = response.data;
-            const userLineChartData = {
+            const lineChartData = {
                 labels: data.labels,
                 datasets: [{
-                    label: 'User Registrations',
+                    label: 'Revenue',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    data: data.registrationCount,
-                    fill: false,
+                    borderWidth: 1,
+                    data: data.revenue,
+                    fill: true,
                 }]
             };
 
-            const userCtx = document.getElementById('userRegistrationChart').getContext('2d');
+            // Get the chart context
+            const ctx = document.getElementById('adminRevenuChart').getContext('2d');
 
-            userLineChart = new Chart(userCtx, {
-                type: 'bar',
-                data: userLineChartData,
+            // Create the line chart with a logarithmic y-axis scale
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: lineChartData,
                 options: {
                     plugins: {
                         title: {
                             display: true,
-                            text: 'User Registration Chart',
+                            text: 'Revenue Chart',
                             font: {
                                 size: 20
                             }
                         },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return '₹' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {
@@ -222,11 +254,16 @@
                             type: 'linear',
                             title: {
                                 display: true,
-                                text: 'Users',
+                                text: 'Revenue (INR)',
                                 font: {
                                     size: 16
                                 }
                             },
+                            ticks: {
+                                callback: function (value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
                         }
                     }
                 }
@@ -234,12 +271,12 @@
 
             // Add interactivity: Update the chart on window resize
             window.addEventListener('resize', function () {
-                userLineChart.resize();
+                lineChart.resize();
             });
 
         } catch (error) {
             // Handle errors in case the data retrieval fails
-            console.error('Failed to fetch user registration data:', error);
+            console.error('Failed to fetch revenue data:', error);
         }
     });
 </script>

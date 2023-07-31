@@ -96,6 +96,23 @@
     .btn-primary:hover {
         background-color: #0056b3;
     }
+
+    @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+    .price {
+        font-family: 'Oswald', sans-serif;
+        size: 10px;
+    }
+
+    .eeUure {
+        background-color: rgb(230, 49, 72);
+        border-radius: 0.5rem 0.4rem 0.4rem 0.5rem;
+        color: rgb(255, 255, 255);
+        padding: 0.2rem 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        max-width: 90px;
+    }
 </style>
 
 <div class="super_container my-5" style="margin-top: 100px;">
@@ -135,10 +152,18 @@
         <div class="description-container1">
             <h5 class="bed-type">Bed Type: {{this.bed}}</h5>
             <p class="amenities">Amenities: {{this.amenities}}</p>
-            <p class="cancellation">Cancellation: {{this.Cancellation}}</p>
+            <p class="cancellation mt-3">Cancellation: {{this.Cancellation}}</p>
         </div>
         <div class="booking-container1 d-flex align-items-center">
-            <h5 class="price">Starts From RS{{this.price}}</h5>
+            {{#if discountPrice}}
+            <div class="OfferTagstyles__PercentageOffWrapperDiv-sc-16zl30v-12 eeUure mb-3">{{discount}}% off</div>
+            <div class="mb-3">
+                <span class="price text-danger"><del>RS {{this.price}}</del></span>
+                <span class="price text-success">now at {{this.discountPrice}}</span>
+            </div>
+            {{else}}
+            <h5 class="price">RS {{this.price}}</h5>
+            {{/if}}
             <a href="/hotel/room?id={{this._id}}" class="btn btn-primary">Check Availability</a>
         </div>
     </div>

@@ -51,6 +51,21 @@
                     </div>
                 </div>
             </div>
+            {{!-- User registration --}}
+            <div class="container d-flex justify-content-center mt-3">
+                <div class="btn-group" role="group" aria-label="View Options">
+                    <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
+                    <button type="button" class="btn btn-secondary" id="monthBtn">Month</button>
+                    <button type="button" class="btn btn-secondary" id="weekBtn">Week</button>
+                </div>
+            </div>
+
+            <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
+                <div style="width: 100%;">
+                    <canvas id="userRegistrationChart"></canvas>
+                </div>
+            </div>
+            {{!-- Chart end --}}
         </div>
     </div>
 </body>
@@ -59,6 +74,9 @@
 
 <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -124,4 +142,108 @@
             tableBody.appendChild(row);
         });
     }
+</script>
+
+{{!-- User Regstration --}}
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        let userLineChart;
+
+        const updateUserChartData = async (view) => {
+            try {
+                // Make an asynchronous HTTP GET request to fetch user registration data based on the selected view
+                const response = await axios.get(`/admin/userRegistration?view=${view}`);
+
+                // Extract data from the response
+                const data = response.data;
+
+                // Update the chart data for the user line chart
+                userLineChart.data.labels = data.labels;
+                userLineChart.data.datasets[0].data = data.registrationCount;
+
+                // Update the x-axis title based on the selected view
+                userLineChart.options.scales.x.title.text = `${view.charAt(0).toUpperCase()}${view.slice(1)}`;
+
+                // Re-render the chart
+                userLineChart.update();
+
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        // Add event listeners for the view selection buttons (similar to the revenue chart)
+        document.getElementById('yearBtn').addEventListener('click', () => updateUserChartData('year'));
+        document.getElementById('monthBtn').addEventListener('click', () => updateUserChartData('month'));
+        document.getElementById('weekBtn').addEventListener('click', () => updateUserChartData('week'));
+
+        // Initially load the chart with the default 'month' view
+        await updateUserChartData('month');
+
+        try {
+            // Make an asynchronous HTTP GET request to fetch user registration data
+            const response = await axios.get('/admin/userRegistration');
+
+            const data = response.data;
+            const userLineChartData = {
+                labels: data.labels,
+                datasets: [{
+                    label: 'User Registrations',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    data: data.registrationCount,
+                    fill: false,
+                }]
+            };
+
+            const userCtx = document.getElementById('userRegistrationChart').getContext('2d');
+
+            userLineChart = new Chart(userCtx, {
+                type: 'line',
+                data: userLineChartData,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'User Registration Chart',
+                            font: {
+                                size: 20
+                            }
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Months and Years',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Users',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                        }
+                    }
+                }
+            });
+
+            // Add interactivity: Update the chart on window resize
+            window.addEventListener('resize', function () {
+                userLineChart.resize();
+            });
+
+        } catch (error) {
+            // Handle errors in case the data retrieval fails
+            console.error('Failed to fetch user registration data:', error);
+        }
+    });
 </script>

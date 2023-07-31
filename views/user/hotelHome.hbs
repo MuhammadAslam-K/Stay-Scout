@@ -192,8 +192,15 @@
         </div>
 
         <div class="booking-container1 d-flex align-items-center">
-            <h5 class="price">Per night rs: {{this.price}}</h5>
-            <a href="/hotel/room?id={{this._id}}" class="btn btn-primary btn-sm">Check Availability <i
+            {{#if discountPrice}}
+            <div class="OfferTagstyles__PercentageOffWrapperDiv-sc-16zl30v-12 eeUure mb-3">{{discount}}% off</div>
+            <div class="mb-3">
+                <span class="price text-danger"><del>RS {{this.price}}</del></span>
+                <span class="price text-success">now at {{this.discountPrice}}</span>
+            </div>
+            {{else}}
+            <h5 class="price">RS {{this.price}}</h5>
+            {{/if}} <a href="/hotel/room?id={{this._id}}" class="btn btn-primary btn-sm">Check Availability <i
                     class="fas fa-calendar-alt ml-2"></i></a>
         </div>
     </div>

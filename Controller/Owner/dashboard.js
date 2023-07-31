@@ -4,16 +4,18 @@ import Rooms from "../../model/roomsModel.js"
 import Booking from "../../model/bokingModel.js"
 
 import Signup_functions from "../../helper/Signup_functions.js"
+import Owner from "../../model/ownerModel.js"
 
 // Render the dashboard for the owner
 const dashboard = (async (req, res) => {
     try {
         const ownerId = req.session.owner
 
-        const [hotels, rooms, booking] = await Promise.all([
+        const [hotels, rooms, booking, owner] = await Promise.all([
             Hotel.find({ owner: ownerId }).count(),
             Rooms.find({ owner: ownerId }).count(),
-            Booking.find({ owner: ownerId }).populate("hotel").populate("user")
+            Booking.find({ owner: ownerId }).populate("hotel").populate("user"),
+            Owner.findById(ownerId),
         ]);
 
         res.render("ownerDashboard", (err) => {
@@ -24,7 +26,7 @@ const dashboard = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("ownerDashboard", { revenue: req.session.owner.revenue, hotels, rooms, booking })
+            res.render("ownerDashboard", { revenue: owner.revenue, hotels, rooms, booking })
         })
 
     } catch (error) {
@@ -91,7 +93,7 @@ const revenueChart = async (req, res) => {
         const { view } = req.query;
         const ownerId = req.session.owner._id;
 
-        const bookings = await Booking.find({ owner: ownerId }).select('bookedAt paymentAmount').sort({ bookedAt: 1 });
+        const bookings = await Booking.find({ owner: ownerId, refund: false }).select('bookedAt ownerAmount').sort({ bookedAt: 1 });
 
         const labels = [];
         const revenue = [];
@@ -121,7 +123,7 @@ const revenueChart = async (req, res) => {
             if (!groupedData[timeUnit]) {
                 groupedData[timeUnit] = 0;
             }
-            groupedData[timeUnit] += booking.paymentAmount;
+            groupedData[timeUnit] += booking.ownerAmount;
         });
 
         for (const timeUnit in groupedData) {

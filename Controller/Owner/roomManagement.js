@@ -247,7 +247,26 @@ const roomStatus = (async (req, res) => {
 
 })
 
-
+const discount = async (req, res) => {
+    try {
+        const { id, input } = req.params
+        const room = await Rooms.findById(id)
+        let discountPrice = (room.price * input) / 100
+        let priceAfterDiscount = room.price - discountPrice
+        await Rooms.findByIdAndUpdate(
+            id,
+            {
+                discount: input,
+                discountPrice: priceAfterDiscount
+            },
+            { new: true }
+        )
+        return res.status(200).end()
+    } catch (error) {
+        console.log(error);
+        res.render("500")
+    }
+}
 
 
 export default {
@@ -259,4 +278,5 @@ export default {
     isAvaillable,
     editRoom,
     updateRoom,
+    discount,
 }

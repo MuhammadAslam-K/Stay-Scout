@@ -82,8 +82,8 @@ async function userWallet(userId, amout, bookingId) {
     try {
         const date = new Date()
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        const adminAmount = (30 / 100) * amout;
-        const ownerAmount = (70 / 100) * amout;
+        const adminAmount = (15 / 100) * amout;
+        const ownerAmount = (85 / 100) * amout;
 
         const user = await User.findByIdAndUpdate(  // Add the money to the user wallet
             userId,
@@ -102,7 +102,7 @@ async function userWallet(userId, amout, bookingId) {
 
         const booking = await Booking.findByIdAndUpdate(    //Update that the user cancelled the booking
             bookingId,
-            { cancel: true },
+            { cancel: true, refund: true },
             { new: true }
         )
 
@@ -143,6 +143,7 @@ async function userWallet(userId, amout, bookingId) {
 }
 
 
+// If the policy does not meet the conditionn then update the room status and the booking
 async function cancelBooking(bookingId, roomId) {
     try {
 

@@ -40,6 +40,7 @@ const dashboard = async (req, res) => {
 
 // For showing the information in the chart about when the user joined 
 const userRegistrationChart = async (req, res) => {
+    console.log(43);
     try {
         const { view } = req.query;
 

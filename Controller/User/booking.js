@@ -69,6 +69,14 @@ const payment = async (req, res) => {
         const timeDifferenceMs = checkOut - checkIn
         const daysDifference = Math.ceil(timeDifferenceMs / (1000 * 60 * 60 * 24));
         const total = room.price * daysDifference
+        let discount = false
+        let amountAfterDiscount
+        let discountPrice
+        if (room.discountPrice != 0) {
+            discount = room.discount
+            discountPrice = (room.price * room.discount) / 100
+            amountAfterDiscount = total - discountPrice
+        }
 
         res.render("payment", (err) => {
             if (err) {
@@ -79,7 +87,7 @@ const payment = async (req, res) => {
                 }
             }
 
-            res.render("payment", { room, days: daysDifference, total, user })
+            res.render("payment", { room, days: daysDifference, total, user, discount, amountAfterDiscount, discountPrice })
         })
 
     } catch (error) {
@@ -93,6 +101,7 @@ const payment = async (req, res) => {
 const paymentSuccess = (async (req, res) => {
 
     try {
+        console.log(req.body);
         const { radioNoLabel, roomPrice, noOfDays, total } = req.body
         const id = req.session.user._id
         const ID = req.session.room
@@ -109,8 +118,8 @@ const paymentSuccess = (async (req, res) => {
         const details = `Booked room in ${room.hotel.name}`
         const date = new Date();
         const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        const adminAmount = (30 / 100) * totalPrice;
-        const ownerAmount = (70 / 100) * totalPrice;
+        const adminAmount = (15 / 100) * totalPrice;
+        const ownerAmount = (85 / 100) * totalPrice;
 
 
         if (radioNoLabel == "walletpayment") { // If the user do payment with wallet
@@ -140,6 +149,8 @@ const paymentSuccess = (async (req, res) => {
             checkOutDate: checkOut,
             paymentMethod: radioNoLabel,
             paymentAmount: total,
+            adminAmount,
+            ownerAmount,
             totalDays: noOfDays
         })
         await booking.save()
@@ -205,7 +216,7 @@ const paymentSuccess = (async (req, res) => {
 
 
 // To show the room status to the user
-const roomcheckin = async (req, res) => {
+const roomStatus = async (req, res) => {
 
     try {
         const id = req.session.room
@@ -225,7 +236,7 @@ const roomcheckin = async (req, res) => {
 
 export default {
     book,
-    roomcheckin,
+    roomStatus,
 
     payment,
     paymentSuccess,

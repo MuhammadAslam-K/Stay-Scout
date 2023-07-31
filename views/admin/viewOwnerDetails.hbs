@@ -123,7 +123,7 @@
                                                 <p>checkIn: {{dateFormat this.checkInDate}}</p>
                                                 <p>checkOut: {{dateFormat this.checkOutDate}}</p>
                                             </td>
-                                            <td>{{this.paymentAmount}}</td>
+                                            <td>{{this.ownerAmount}}</td>
                                             <td>
                                                 {{#if this.report}}
                                                 <p class="text-warning">Submitted a report</p>
@@ -247,7 +247,7 @@
 
             // Create the line chart with a logarithmic y-axis scale
             lineChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: lineChartData,
                 options: {
                     plugins: {

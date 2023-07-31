@@ -9,7 +9,6 @@ const rooms = (async (req, res) => {
             propertyFetching.room(),
             Category.find(),
         ])
-
         res.render("rooms", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {

@@ -66,13 +66,34 @@
                                 <div class="col-8">No of Days</div>
                                 <input class="ms-auto" name="noOfDays" value="{{days}}" readonly></input>
                             </div>
+                            {{#if discount}}
+                            <div class="p-2 d-flex">
+                                <div class="col-8">Total</div>
+                                <input class="ms-auto" name="total1" value="{{total}}" readonly></input>
+                            </div>
+                            <div class="p-2 d-flex">
+                                <div class="col-8">Discount</div>
+                                <input class="ms-auto" value="{{discount}}%" readonly></input>
+                            </div>
 
+                            <div class="border-top px-2 mx-2"></div>
+                            <div class="p-2 d-flex pt-3">
+                                <div class="col-8"><b>Amount after Discount</b></div>
+                                <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
+                                        value="{{amountAfterDiscount}}" readonly></input></div>
+                            </div>
+                            <span>save:
+                                <span class="text-success">Rs:{{discountPrice}}</span>
+                            </span>
+                            {{/if}}
+                            {{#unless discount}}
                             <div class="border-top px-2 mx-2"></div>
                             <div class="p-2 d-flex pt-3">
                                 <div class="col-8"><b>Total</b></div>
                                 <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
                                         value="{{total}}" readonly></input></div>
                             </div>
+                            {{/unless}}
                         </div>
                     </div>
                     </form>

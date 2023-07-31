@@ -39,6 +39,14 @@ const bookingSchema = new mongoose.Schema({
     totalDays: {
         type: Number
     },
+    adminAmount: {
+        type: Number,
+        require: true
+    },
+    ownerAmount: {
+        type: Number,
+        require: true,
+    },
     review: {
         type: Boolean,
         default: false,
@@ -46,6 +54,10 @@ const bookingSchema = new mongoose.Schema({
     report: {
         type: Boolean,
         default: false,
+    },
+    refund: {
+        type: Boolean,
+        default: false
     },
     cancel: {
         type: Boolean,

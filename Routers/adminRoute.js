@@ -90,7 +90,7 @@ admin_route.get("/report/deltails", isLogged, report.reportDetails)
 admin_route.post("/report/status", isLogged, report.resportStatus)
 
 //////////////REVENUE//////////////////
-admin_route.get("/revenue", isLogged, revenue.ownerRevenueChart)
+admin_route.get("/revenue", isLogged, revenue.adminRevenue)
 admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 
 // / / / / /BANNER MANAGEMENT// / / / / / 

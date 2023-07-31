@@ -51,6 +51,8 @@ owner_route.post("/room/block", isLogged, isBlocked, roomManagement.isAvaillable
 owner_route.get("/room/edit", isLogged, isBlocked, roomManagement.editRoom)
 owner_route.get("/room/status", isLogged, isBlocked, roomManagement.roomStatus)
 owner_route.post("/room/edit", isLogged, isBlocked, upload.array('image', 4), roomManagement.updateRoom)
+owner_route.get("/discount/:id/:input", isLogged, isBlocked, roomManagement.discount)
+
 
 // / / / / / / / / / BANNER / / / / / / / / / /
 owner_route.get("/banner", isLogged, isBlocked, bannerManagement.viewBanners)

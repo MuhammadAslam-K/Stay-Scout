@@ -30,7 +30,6 @@ const viewBanners = (async (req, res) => {
 
 // For adding new banner
 const addBanner = async (req, res) => {
-    console.log(32);
     try {
         const ownerId = req.session.owner._id
         const hotels = await Hotel.find({ owner: ownerId }).count()

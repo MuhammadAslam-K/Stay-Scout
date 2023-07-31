@@ -73,7 +73,7 @@ user_route.get("/rooms", isLogged, isBlocked, roomManagement.rooms)
 user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
 user_route.get("/room/filter", isLogged, isBlocked, roomManagement.roomsFilter)
 
-user_route.get("/room/checkin", isLogged, isBlocked, booking.roomcheckin)
+user_route.get("/room/checkin", isLogged, isBlocked, booking.roomStatus)
 user_route.post("/room/book", isLogged, isBlocked, booking.book)
 
 /////////////CONTACT////////////
