@@ -67,10 +67,11 @@ const deleteAmenities = (async (req, res) => {
     try {
         const id = req.query.id
         await Amenities.findByIdAndDelete(id)
-        res.redirect("/admin/hotel/amenities")
+        return res.status(200).end()
 
     } catch (error) {
-        res.render("500")
+        console.log(error);
+        return res.status(500).end()
     }
 })
 

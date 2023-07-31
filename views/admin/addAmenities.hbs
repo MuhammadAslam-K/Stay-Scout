@@ -47,10 +47,8 @@
                                                     style="display: none;">OK</button>
                                             </td>
                                             <td>
-                                                <form action="/admin/hotel/deleteamenities?id={{this._id}}"
-                                                    method="post">
-                                                    <button class="btn btn-danger btn-delete">Delete</button>
-                                                </form>
+                                                <button class="btn btn-danger btn-delete"
+                                                    onclick="deleteamenities('{{this._id}}')">Delete</button>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -245,4 +243,58 @@
         });
     });
 
+</script>
+
+{{!-- Deleting --}}
+<script>
+    function deleteamenities(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                try {
+
+                    const response = axios.post(`/admin/hotel/deleteamenities?id=${id}`)
+                    if (response.status == 200) {
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        window.location.reload()
+                    }
+                }
+                catch (error) {
+                    if (response.status === 500) {
+                        alertify
+                            .alert("Something went wrong while deleting.", function () {
+                                alertify.message('OK');
+                            });
+                    }
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                )
+
+            }
+        })
+    }
 </script>

@@ -47,10 +47,9 @@
                                                     style="display: none;">OK</button>
                                             </td>
                                             <td>
-                                                <form action="/admin/room/deleteamenities?id={{this._id}}"
-                                                    method="post">
-                                                    <button class="btn btn-danger btn-delete">Delete</button>
-                                                </form>
+
+                                                <button class="btn btn-danger btn-delete"
+                                                    onclick="deleteamenities('{{this._id}}')">Delete</button>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -161,7 +160,9 @@
                     })
                     .catch(function (error) {
                         if (error.response.status === 400) {
-                            document.getElementById('Error').textContent = "The Amenitie already Exists"
+                            const err = error.response.data.error
+                            //document.getElementById('Error').textContent = "The Amenitie already Exists"
+                            document.getElementById('Error').textContent = err
 
                         } else {
                             alertify.alert("Something went wrong", function () {
@@ -176,7 +177,6 @@
 
 
 {{!-- EDITING OPTION --}}
-
 <script>
     $(document).ready(function () {
         // Initialize DataTable
@@ -246,4 +246,59 @@
         });
     });
 
+</script>
+
+{{!-- Delete Amenities --}}
+<script>
+    function deleteamenities(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                try {
+
+                    const response = axios.post(`/admin/room/deleteamenities?id=${id}`)
+                    if (response.status == 200) {
+                        console.log(274)
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        window.location.reload()
+                    }
+                }
+                catch (error) {
+                    if (response.status === 500) {
+                        alertify
+                            .alert("Something went wrong while deleting.", function () {
+                                alertify.message('OK');
+                            });
+                    }
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                )
+
+            }
+        })
+    }
 </script>

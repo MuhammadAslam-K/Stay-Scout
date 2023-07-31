@@ -68,7 +68,7 @@
             <div class="form-row m-4">
 
                 <div id="images">
-                    <input type="file" id="image1" name="image" required>
+                    <input type="file" id="image1" name="image">
                 </div>
 
                 <div class="form-group col-md-6">
@@ -151,8 +151,8 @@
 
                 }
                 else if (error.response.status == 500) {
-                    //const err = error.response.data.error;
-                    alertify.alert("The Banner can contain only one image", function () {
+                    const err = error.response.data.error;
+                    alertify.alert(err, function () {
                         alertify.message('OK');
                     });
                 }

@@ -101,12 +101,23 @@ const filterRoom = (async (id) => {
 
 })
 
-// To filter and get the Room based on the category
+// To filter and get the Hotel based on the Type
 const filterHotel = (async (id) => {
     try {
 
         const typeId = id
         const hotels = await Hotel.find({ type: typeId, ...query })
+
+        return hotels
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+// To filter and get the hotel based on the Price
+const filterHotelPrice = (async (price) => {
+    try {
+        const hotels = await Hotel.find({ startingPrice: { $lte: price }, ...query });
 
         return hotels
     } catch (error) {
@@ -160,8 +171,10 @@ export default {
     room,
     filterRoom,
     filterHotel,
+    filterHotelPrice,
     hotelRoom,
 
     hotelRating,
     calculateDistance,
+
 }

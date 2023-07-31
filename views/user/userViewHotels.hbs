@@ -131,26 +131,35 @@
     }
 </style>
 
-<div class="dropdown form-group col-md-3 ms-4" style="margin-top: 100px;max-width: 200px;">
-    <select id="dropdownSelect" class="form-control custom-dropdown" name="category">
-        <option value="" disabled selected>Category</option>
-        {{#each type}}
-        <option value="/hotel/filter?id={{this._id}}">{{this.name}}</option>
-        {{/each}}
-    </select>
+<div class="d-flex" style="margin-top: 100px;">
+    <div class="dropdown form-group col-md-3 ms-4" style="max-width: 200px;">
+        <select id="typeDropdownSelect" class="form-control custom-dropdown" name="category">
+            <option value="" disabled selected>Type</option>
+            {{#each type}}
+            <option value="/hotel/filter?id={{this._id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="dropdown form-group col-md-3 ms-4" style="max-width: 200px;">
+        <select id="priceDropdownSelect" class="form-control custom-dropdown" name="category">
+            <option value="" disabled selected>Price</option>
+            <option value="/hotel/filter/price?value=1000">below 1000</option>
+            <option value="/hotel/filter/price?value=2500">below 2500</option>
+            <option value="/hotel/filter/price?value=5000">below 5000</option>
+        </select>
+    </div>
 </div>
 
+{{#if message}}
+<div class="container-fluid mt-5" style="height: 70vh;">
 
-<script>
-    const dropdownSelect = document.getElementById('dropdownSelect');
+    <div class="text-center">
+        <div class="error mx-auto mt-5" data-text="Oops!!!">Oops!!!</div>
+        <p class="lead text-gray-800 mb-5 h2" style="font-weight: bolder;">{{message}}</p>
+    </div>
 
-    dropdownSelect.addEventListener('change', () => {
-        const selectedRoute = dropdownSelect.value;
-        if (selectedRoute) {
-            window.location.href = selectedRoute;
-        }
-    });
-</script>
+</div>
+{{/if}}
 
 {{#each hotel}}
 <div class="container container1" style="margin-top: 100px;">
@@ -182,7 +191,24 @@
 {{>userSiteFooter}}
 {{>userFooter}}
 
+<script>
+    const typeDropdownSelect = document.getElementById('typeDropdownSelect');
+    const priceDropdownSelect = document.getElementById('priceDropdownSelect');
 
+    typeDropdownSelect.addEventListener('change', () => {
+        const selectedRoute = typeDropdownSelect.value;
+        if (selectedRoute) {
+            window.location.href = selectedRoute;
+        }
+    });
+
+    priceDropdownSelect.addEventListener('change', () => {
+        const selectedRoute = priceDropdownSelect.value;
+        if (selectedRoute) {
+            window.location.href = selectedRoute;
+        }
+    });
+</script>
 
 <script>
     const errorMessage = "{{errorMessage}}";

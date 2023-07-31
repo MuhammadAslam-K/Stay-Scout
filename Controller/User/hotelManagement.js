@@ -76,13 +76,21 @@ const hotelSearch = (async (req, res) => {
     try {
         const value = req.body.search
         const regexValue = new RegExp(value, "i")
-
-        const hotel = await Hotel.find({
-            $or: [
-                { name: { $regex: regexValue } },
-                { city: { $regex: regexValue } }
-            ]
-        })
+        const [type, hotel] = await Promise.all([
+            Type.find(),
+            Hotel.find({
+                $or: [
+                    { name: { $regex: regexValue } },
+                    { city: { $regex: regexValue } }
+                ]
+            })
+        ])
+        // const hotel = await Hotel.find({
+        //     $or: [
+        //         { name: { $regex: regexValue } },
+        //         { city: { $regex: regexValue } }
+        //     ]
+        // })
 
         res.render("userViewHotels", (err) => {
             if (err) {
@@ -92,7 +100,12 @@ const hotelSearch = (async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("userViewHotels", { hotel })
+            if (hotel.length != 0) {
+                res.render("userViewHotels", { hotel, type })
+            }
+            else {
+                res.render("userViewHotels", { hotel, type, message: "Hotels Not Found" })
+            }
         });
 
     } catch (error) {
@@ -207,6 +220,34 @@ const hotelFilter = async (req, res) => {
     }
 }
 
+// To filter the hotel based on its type
+const hotelFilterPrice = async (req, res) => {
+    try {
+        const [hotel, type] = await Promise.all([
+            propertyFetching.filterHotelPrice(req.query.value),
+            Type.find(),
+        ])
+
+        res.render("userViewHotels", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("500");
+                }
+            }
+            if (hotel.length != 0) {
+                res.render("userViewHotels", { hotel, type })
+            }
+            else {
+                res.render("userViewHotels", { hotel, type, message: "Hotels Not Found" })
+            }
+        })
+    } catch (error) {
+        return res.status(500).render("500");
+    }
+}
+
 
 export default {
     hotels,
@@ -216,4 +257,5 @@ export default {
     roomAvailability,
     nearestHotel,
     hotelFilter,
+    hotelFilterPrice,
 }

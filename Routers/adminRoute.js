@@ -22,28 +22,28 @@ admin_route.set("views", "./views/admin");
 const { islogout, isLogged } = auth
 
 
-///////////////LOGIN//////////
+// / / / / / / / //LOGIN / / / / / / / ///
 admin_route.get("/", islogout, adminAuth.login)
 admin_route.post("/", islogout, adminAuth.loginVerify)
 admin_route.get("/logout", isLogged, adminAuth.logout)
 
 
-//////////////DASHBOARD///////////
+// / / / / / / //DASHBOARD / / / / / / / / 
 admin_route.get("/dashboard", isLogged, adminDashboard.dashboard)
 admin_route.get("/userRegistration", isLogged, adminDashboard.userRegistrationChart)
 
 
-/////////////USER MANAGEMENT//////////
+// / / / / / / / USER MANAGEMENT / / / / / / / / 
 admin_route.get("/users", isLogged, userManagement.viewUser)
 admin_route.post("/users/block", isLogged, userManagement.blockUser)
 
 
-///////////////Owner MANAGEMENT/////////////
+// / / / / / / / / Owner MANAGEMENT / / / / / / / /
 admin_route.get("/owners", isLogged, ownerManagement.viewowner)
 admin_route.post("/owners/block", isLogged, ownerManagement.blockowner)
 admin_route.get("/owner/details", isLogged, ownerManagement.ownerDetails)
 
-/////////HOTELS////////
+// / / / / / / /HOTELS /  / / / / ///
 admin_route.get("/owner/hotels", isLogged, hotelManagement.ownerHotels)
 admin_route.post("/hotel/block", isLogged, hotelManagement.blockHotel)
 admin_route.post("/hotel/boost", isLogged, hotelManagement.hotelBoosting)
@@ -51,7 +51,7 @@ admin_route.get("/hotel/approval", isLogged, hotelManagement.hotelForApproval)
 admin_route.post("/hotel/approval", isLogged, hotelManagement.hotelForApproval_post)
 admin_route.get("/hotel/viewdetails", isLogged, hotelManagement.hotelDetails)
 
-////////ROOMS///////////
+// / / / / / / / /ROOMS / // / /  / / / 
 admin_route.get("/owner/hotel/rooms", isLogged, roomManagement.ownerRooms)
 admin_route.post("/owner/hotel/room/edit", isLogged, roomManagement.blockRoom)
 admin_route.post("/room/boost", isLogged, roomManagement.roomBoosting)
@@ -61,35 +61,35 @@ admin_route.post("/room/approval", isLogged, roomManagement.roomForApproval_post
 admin_route.get("/room/details", isLogged, roomManagement.roomDetails)
 
 
-///////////////HOTEL Amenities///////////
+// / / / / / / / /HOTEL Amenities / / / / / / / / 
 admin_route.get('/hotel/amenities', isLogged, amenitiesManagement.amenities)
 admin_route.post('/hotel/addamenities', isLogged, amenitiesManagement.addAmenities)
 admin_route.post('/hotel/editamenities', isLogged, amenitiesManagement.editAmenities)
 admin_route.post('/hotel/deleteamenities', isLogged, amenitiesManagement.deleteAmenities)
 
-//////////ROOM AMENITIES///////////////
+// / / / / / / / /ROOM AMENITIES / / / / / / / / / / 
 admin_route.get('/room/amenities', isLogged, roomAmenitiesManagement.amenities)
 admin_route.post('/room/addamenities', isLogged, roomAmenitiesManagement.addAmenities)
 admin_route.post('/room/editamenities', isLogged, roomAmenitiesManagement.editAmenities)
 admin_route.post('/room/deleteamenities', isLogged, roomAmenitiesManagement.deleteAmenities)
 
-////////////////ROOM CANCELLATION/////////////
+// / / / / / / / / ROOM CANCELLATION / / / / / / / / / / / 
 admin_route.get('/room/cancellation', isLogged, cancellationManagement.cancellation)
 admin_route.post('/room/addCancellation', isLogged, cancellationManagement.addCancellation)
 admin_route.post('/room/editCancellation', isLogged, cancellationManagement.editCancellation)
 admin_route.post('/room/deleteCancellation', isLogged, cancellationManagement.deleteCancellation)
 
-////////////MESSAGE MANAGEMENT///////////
+// / / / / / / / / MESSAGE MANAGEMENT / / / / / / / / / 
 admin_route.get('/messages', isLogged, messageManagement.message)
 admin_route.get('/message/delete', isLogged, messageManagement.messageDelete)
 
-//////////////REPORTS//////////////////
+/// / / / / /  / / REPORTS / / / / / / / / / / / 
 admin_route.get("/report", isLogged, report.report)
 admin_route.get("/report/delete", isLogged, report.deleteReport)
 admin_route.get("/report/deltails", isLogged, report.reportDetails)
 admin_route.post("/report/status", isLogged, report.resportStatus)
 
-//////////////REVENUE//////////////////
+// / / // / / / / REVENUE  / / / / / / / / / / / / 
 admin_route.get("/revenue", isLogged, revenue.adminRevenue)
 admin_route.get("/owner/revenue", isLogged, revenue.ownerRevenue)
 

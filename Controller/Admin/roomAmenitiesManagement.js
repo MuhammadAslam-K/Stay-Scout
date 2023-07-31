@@ -27,8 +27,11 @@ const addAmenities = (async (req, res) => {
     try {
         const amenitiesName = req.body.amenitiesName
         const existingAmenities = await roomAmenities.find({ amenities: amenitiesName })
-
-        if (existingAmenities.length != 0) {
+        if (amenitiesName == "") {
+            console.log(32);
+            return res.status(400).json({ error: "Invalid input" })
+        }
+        else if (existingAmenities.length != 0) {
             return res.status(400).json({ error: "The Amenities already exists" })
         }
         else {
@@ -70,10 +73,9 @@ const deleteAmenities = (async (req, res) => {
         const id = req.query.id
         console.log(id);
         await roomAmenities.findByIdAndDelete(id)
-        res.redirect("/admin/room/amenities")
-
+        return res.status(200).end()
     } catch (error) {
-        res.render("500")
+        return res.status(500).end()
     }
 })
 

@@ -130,28 +130,36 @@ const editBanner = async (req, res) => {
 // Update the banner changes
 const updateBanner = async (req, res) => {
     try {
-        const { titel, subtitel } = req.body
+        const { title, subtitle } = req.body
         const bannerId = req.session.bannerId
         const file = req.file
-        let images = req.body.selectedImage
         const validate = propertyValidation.bannerValidate(req.body)
+
+        let images
 
         if (images && file) {
             return res.status(500).json({ error: "The Banner can contain only one image" })
         }
-        if (!validate.isValid) {
+        else if (!req.body.selectedImage && !req.file) {
+            return res.status(500).json({ error: "The Banner must contain at least one image" })
+        }
+        else if (!validate.isValid) {
             return res.status(400).json({ error: valid.errors })
         }
         else {
+            if (req.body.selectedImage) {
+                images = req.body.selectedImage
+            }
             if (file) {
                 const result = await cloudinary.uploader.upload(file.path, {
                     folder: "Banner"
                 })
                 images = result.url
             }
+
             await Banner.findByIdAndUpdate(
                 bannerId,
-                { titel, subtitel, image: { url: images } },
+                { title, subtitle, image: { url: images } },
                 { new: true }
             )
             return res.status(200).end()

@@ -212,7 +212,7 @@
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
                     data: data.revenue,
-                    fill: true,
+                    fill: false,
                 }]
             };
 
@@ -221,7 +221,7 @@
 
             // Create the line chart with a logarithmic y-axis scale
             lineChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: lineChartData,
                 options: {
                     plugins: {
