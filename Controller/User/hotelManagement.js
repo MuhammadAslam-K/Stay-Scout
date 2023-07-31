@@ -2,6 +2,7 @@ import Hotel from "../../model/hotelModel.js";
 import Rooms from "../../model/roomsModel.js";
 import Review from "../../model/review.js";
 import Category from "../../model/roomCategory.js";
+import Type from "../../model/hotelType.js"
 
 import propertyFetching from "../../helper/propertyFetching.js";
 import propertyValidation from "../../helper/propertyValidation.js";
@@ -9,7 +10,10 @@ import propertyValidation from "../../helper/propertyValidation.js";
 // To show all the hotels to the user
 const hotels = async (req, res) => {
     try {
-        const hotel = await propertyFetching.hotel(); // Fetch the hotel form the collection
+        const [hotel, type] = await Promise.all([
+            propertyFetching.hotel(),
+            Type.find()
+        ])
 
         res.render("userViewHotels", (err) => {
             if (err) {
@@ -19,10 +23,11 @@ const hotels = async (req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("userViewHotels", { hotel })
+            res.render("userViewHotels", { hotel, type })
         });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).render("500");
     }
 };
@@ -178,7 +183,29 @@ const nearestHotel = async (req, res) => {
     }
 }
 
+// To filter the hotel based on its type
+const hotelFilter = async (req, res) => {
+    try {
+        console.log(189);
+        const [hotel, type] = await Promise.all([
+            propertyFetching.filterHotel(req.query.id),
+            Type.find(),
+        ])
 
+        res.render("userViewHotels", (err) => {
+            if (err) {
+                if (err.message.includes("Failed to lookup view")) {
+                    return res.render("404");
+                } else {
+                    return res.status(500).render("500");
+                }
+            }
+            res.render("userViewHotels", { hotel, type })
+        })
+    } catch (error) {
+        return res.status(500).render("500");
+    }
+}
 
 
 export default {
@@ -188,4 +215,5 @@ export default {
 
     roomAvailability,
     nearestHotel,
+    hotelFilter,
 }

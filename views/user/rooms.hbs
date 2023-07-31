@@ -116,7 +116,7 @@
 </style>
 
 <div class="super_container my-5" style="margin-top: 100px;">
-    <div class="dropdown form-group col-md-3" style="margin-top: 100px;">
+    <div class="dropdown form-group col-md-3 ms-4" style="margin-top: 100px;max-width: 200px;">
         <select id="dropdownSelect" class="form-control custom-dropdown" name="category">
             <option value="" disabled selected>Category</option>
             {{#each category}}
@@ -124,6 +124,7 @@
             {{/each}}
         </select>
     </div>
+
 
     <script>
         const dropdownSelect = document.getElementById('dropdownSelect');

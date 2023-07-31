@@ -89,13 +89,26 @@ const hotelRoom = (async (id) => {
 
 // To filter and get the room based on the category
 const filterRoom = (async (id) => {
-
     try {
 
         const categoryId = id
         const rooms = await Rooms.find({ category: categoryId, ...query }).populate('category').populate('hotel')
 
         return rooms
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+// To filter and get the Room based on the category
+const filterHotel = (async (id) => {
+    try {
+
+        const typeId = id
+        const hotels = await Hotel.find({ type: typeId, ...query })
+
+        return hotels
     } catch (error) {
         console.log(error);
     }
@@ -146,6 +159,7 @@ export default {
     hotel,
     room,
     filterRoom,
+    filterHotel,
     hotelRoom,
 
     hotelRating,

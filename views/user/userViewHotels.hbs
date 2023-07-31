@@ -131,7 +131,26 @@
     }
 </style>
 
+<div class="dropdown form-group col-md-3 ms-4" style="margin-top: 100px;max-width: 200px;">
+    <select id="dropdownSelect" class="form-control custom-dropdown" name="category">
+        <option value="" disabled selected>Category</option>
+        {{#each type}}
+        <option value="/hotel/filter?id={{this._id}}">{{this.name}}</option>
+        {{/each}}
+    </select>
+</div>
 
+
+<script>
+    const dropdownSelect = document.getElementById('dropdownSelect');
+
+    dropdownSelect.addEventListener('change', () => {
+        const selectedRoute = dropdownSelect.value;
+        if (selectedRoute) {
+            window.location.href = selectedRoute;
+        }
+    });
+</script>
 
 {{#each hotel}}
 <div class="container container1" style="margin-top: 100px;">
@@ -150,7 +169,6 @@
         <h3>{{this.name}}</h3>
         <h4>{{this.title}}</h4>
         <p class="mt-3">{{this.description}}</p>
-
     </div>
     <div class="booking-container1 d-flex align-items-center">
         <h5>Starts From RS{{this.startingPrice}}</h5>
