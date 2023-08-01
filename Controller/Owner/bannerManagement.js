@@ -70,8 +70,7 @@ const saveBanner = async (req, res) => {
         const { title, subtitle, hotelId, } = req.body
         const validate = propertyValidation.bannerValidate(req.body)
         const file = req.file
-        console.log(validate)
-        console.log(req.body);
+
         if (!validate.isValid) {
             return res.status(400).json({ error: validate.errors })
         }

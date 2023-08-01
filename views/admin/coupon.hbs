@@ -1,0 +1,483 @@
+{{>userHeader}}
+{{>dashbordSide}}
+
+<style>
+    .container-fluid {
+        padding: 20px;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: none;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 20px;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .btn-primary {
+        background-color: #3366ff;
+        border-color: #3366ff;
+    }
+
+    .btn-primary:hover {
+        background-color: #254eda;
+        border-color: #254eda;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #d39e00;
+        border-color: #d39e00;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    /* Animation for table rows */
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table tbody tr {
+        animation: fade-in 0.3s ease-in-out;
+    }
+
+    /* Styles for the popup container */
+    .popup-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    /* Styles for the popup container */
+    .popup-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    /* Styles for the popup container */
+    .popup-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    /* Styles for the popup content */
+    .popup-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        width: 400px;
+        max-width: 90%;
+    }
+
+    /* Styles for the form inside the popup */
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Styles for the form labels and input fields */
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    /* Styles for the form buttons */
+    button {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    button[type="submit"],
+    button[type="button"] {
+        margin-right: 10px;
+    }
+
+    /* Styles for the close button */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: #555;
+    }
+
+    .close-btn:hover {
+        color: #000;
+    }
+
+    .error-msg {
+        font-size: small;
+        color: rgba(255, 0, 0, 0.896);
+    }
+</style>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav
+                    class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
+                    <button class="h3 mb-0 text-light m-3 btn btn-primary" type="button" onclick="openPopup()">Add
+                        Coupon</button>
+                </nav>
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <a href="#" class="m-0 font-weight-bold text-primary">Coopens</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Coupon Code</th>
+                                            <th>Discount</th>
+                                            <th>Min Value</th>
+                                            <th>Max Value</th>
+                                            <th>ExpireAt</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each coupon}}
+                                        <tr>
+                                            <td>{{this.couponCode}}</td>
+                                            <td>{{this.discount}}</td>
+                                            <td>{{this.minVal}}</td>
+                                            <td>{{this.maxVal}}</td>
+                                            <td>{{this.expireAt}}</td>
+                                            <td>
+                                                <button onclick="openEditPopup('{{this._id}}')">Edit</button>
+                                            </td>
+                                            <td>
+                                                <div id="blockButton{{this._id}}">
+                                                    {{#if this.isBlock}}
+                                                    <a href="#" class="btn btn-primary btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', false)">Unblock</a>
+                                                    {{else}}
+                                                    <a href="#" class="btn btn-warning btn-block"
+                                                        onclick="toggleBlock('{{this._id}}', true)">Block</a>
+                                                    {{/if}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Popup Container -->
+    <div class="popup-container" id="popupContainer">
+        <!-- Popup Content -->
+        <div class="popup-content">
+            <h3>Enter Details</h3>
+            <form id="CouponData" onsubmit="submitForm(event)">
+                <label for="coopencode">Coupon code:</label>
+                <input type="text" id="Couponcode" name="couponCode"><br>
+                <span id="coupenError" class="error-msg"></span>
+
+                <label for="discount">Discount:</label>
+                <input type="number" id="discount" name="discount"><br>
+                <span id="discountError" class="error-msg"></span>
+
+                <label for="minval">Min Value:</label>
+                <input type="number" id="minval" name="minVal"><br>
+                <span id="minValError" class="error-msg"></span>
+
+                <label for="maxval">Max Value:</label>
+                <input type="number" id="maxval" name="maxVal"><br>
+                <span id="maxValError" class="error-msg"></span>
+
+                <label for="expireAt">ExpireAt:</label>
+                <input type="date" id="expireAtval" name="expireAt" required><br>
+                <span id="expireAtError" class="error-msg"></span>
+
+                <button type="submit">Submit</button>
+                <button type="button" onclick="closePopup()">Close</button>
+            </form>
+        </div>
+    </div>
+    {{!-- Edit --}}
+    <div class="popup-container" id="editPopupContainer">
+        <!-- Popup Content -->
+        <div class="popup-content">
+            <h3>Edit Details</h3>
+            <form id="EditCouponData" onsubmit="updateCoupon(event)">
+                <input type="hidden" id="editCouponId" name="couponId" value="">
+
+                <label for="editCouponcode">Coupon code:</label>
+                <input type="text" id="editCouponcode" name="couponCode" value=""><br>
+                <span id="editcouponCodeError" class="error-msg"></span>
+
+                <label for="discount">Discount:</label>
+                <input type="number" id="editDiscount" name="discount"><br>
+                <span id="editdiscountError" class="error-msg"></span>
+
+                <label for="minval">Min Value:</label>
+                <input type="number" id="editMinval" name="minVal"><br>
+                <span id="editminValError" class="error-msg"></span>
+
+                <label for="maxval">Max Value:</label>
+                <input type="number" id="editMaxval" name="maxVal"><br>
+                <span id="editmaxValError" class="error-msg"></span>
+
+                <label for="expireAt">ExpireAt:</label>
+                <input type="date" id="editExpireAt" name="expireAt" required><br>
+                <span id="editexpireAtError" class="error-msg"></span>
+                <!-- Update button to handle the updated data -->
+                <button type="submit">Update</button>
+
+                <!-- Button to close the popup -->
+                <button type="button" onclick="closeEditPopup()">Close</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+
+{{>userFooter}}
+
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            "paging": true, // Enable pagination
+            "lengthChange": true, // Enable length change
+            "searching": true, // Enable search bar
+            "ordering": true, // Enable column ordering
+            "info": true, // Show information about current page
+            "autoWidth": false // Disable automatic column width calculation
+        });
+    });
+</script>
+
+
+
+{{!-- Add coopen --}}
+<script>
+    function openPopup() {
+        document.getElementById("popupContainer").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popupContainer").style.display = "none";
+    }
+
+    async function submitForm(event) {
+        event.preventDefault()
+        const data = new FormData(event.target);
+        resetError()
+        let response
+        try {
+            response = await axios.post('/admin/addCoupon', data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                closePopup();
+                Swal.fire('Coopen Added Successfully')
+            }
+        } catch (error) {
+
+            if (error.response.status === 400) {
+                const errors = error.response.data.error;
+                Object.keys(errors).forEach((key) => {
+                    console.log(errors)
+                    let element = document.getElementById(key).textContent = errors[key];
+                });
+            }
+        }
+    }
+
+    function resetError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
+</script>
+
+{{!-- Edit popup --}}
+<script>
+    function openEditPopup(couponId) {
+        document.getElementById("editPopupContainer").style.display = "block";
+
+        axios.get(`/admin/getCoupon?id=${couponId}`)
+            .then(function (response) {
+
+                const couponData = response.data;
+                console.log(couponData)
+                document.getElementById("editCouponId").value = couponData._id;
+                document.getElementById("editCouponcode").value = couponData.couponCode;
+                document.getElementById("editDiscount").value = couponData.discount;
+                document.getElementById("editMinval").value = couponData.minVal;
+                document.getElementById("editMaxval").value = couponData.maxVal;
+
+                const expireAtDate = new Date(couponData.expireAt);
+                const formattedExpireAt = expireAtDate.toISOString().slice(0, 10);
+                document.getElementById("editExpireAt").value = formattedExpireAt;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    function closeEditPopup() {
+        document.getElementById("editPopupContainer").style.display = "none";
+    }
+
+    async function updateCoupon(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        resetEditError();
+        let response;
+        try {
+            response = await axios.post('/admin/updateCoupon', data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                console.log("updated teh data")
+                closeEditPopup();
+                Swal.fire('Coupon Updated Successfully');
+
+            }
+        } catch (error) {
+            if (error.response.status === 400) {
+                const errors = error.response.data.error;
+                Object.keys(errors).forEach((key) => {
+                    const element = document.getElementById("edit" + key);
+                    if (element) {
+                        element.textContent = errors[key];
+                    }
+                });
+            }
+        }
+    }
+
+    // Function to reset error messages in the edit popup
+    function resetEditError() {
+        const errorElements = document.querySelectorAll(".error-msg");
+        errorElements.forEach((element) => {
+            element.textContent = "";
+        });
+    }
+
+
+</script>
+
+
+{{!-- Block Unblock --}}
+<script>
+    function toggleBlock(couponId, blockStatus) {
+        axios.post('/admin/coupon/block?id=' + couponId, {
+            availability: blockStatus
+        })
+            .then(function (response) {
+                // Handle the response here, if needed
+                const blockButton = document.getElementById('blockButton' + couponId);
+                if (blockStatus) {
+                    blockButton.innerHTML = '<a href="#" class="btn btn-primary btn-block" onclick="toggleBlock(\'' + couponId + '\', false)">Unblock</a>';
+                } else {
+                    blockButton.innerHTML = '<a href="#" class="btn btn-warning btn-block" onclick="toggleBlock(\'' + couponId + '\', true)">Block</a>';
+                }
+            })
+            .catch(function (error) {
+                alertify.alert("Something went wrong", function () {
+                    alertify.message('OK');
+                });
+                console.log(error);
+            });
+    }
+</script>

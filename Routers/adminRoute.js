@@ -9,6 +9,7 @@ import amenitiesManagement from "../Controller/Admin/amenitiesManagement.js"
 import roomAmenitiesManagement from "../Controller/Admin/roomAmenitiesManagement.js"
 import messageManagement from "../Controller/Admin/messageManagement.js"
 import cancellationManagement from "../Controller/Admin/cancellationManagement.js"
+import coopenManagement from "../Controller/Admin/couponManagement.js";
 import report from "../Controller/Admin/report.js"
 import revenue from "../Controller/Admin/revenue.js"
 import adminAuth from "../Controller/Admin/adminAuth.js"
@@ -99,6 +100,11 @@ admin_route.get("/banner/deltails", isLogged, bannerManagement.bannerDetails)
 admin_route.get("/banner/active", isLogged, bannerManagement.visible)
 admin_route.get("/banner/delete", isLogged, bannerManagement.deleteBanner)
 
-
+//  / / / /. / / COOPEN MANAGEMENT / / / / / / /  
+admin_route.get("/coopen", isLogged, coopenManagement.coupons)
+admin_route.post("/addCoupon", isLogged, coopenManagement.addCoupon)
+admin_route.post("/coupon/block", isLogged, coopenManagement.blockCoupon)
+admin_route.get("/getCoupon", isLogged, coopenManagement.getCoupon)
+admin_route.post("/updateCoupon", isLogged, coopenManagement.updateCoupon)
 
 export default admin_route

@@ -193,8 +193,6 @@ const bannerValidate = (data) => {
     const { title, subtitle } = data
     const errors = {}
 
-
-
     // valdate the title
     if (!title) {
         errors.titleError = "Please enter the title"
@@ -225,6 +223,47 @@ const bannerValidate = (data) => {
     }
 }
 
+// To validate the coupen
+const coupenValidate = (data) => {
+    const { couponCode, discount, minVal, maxVal, expireAt } = data
+
+    const discountRegex = /^(100|[1-9][0-9]?)$/;
+    const minValRegex = /^[5-9]\d{2,}$/
+    const maxValRegex = /^[1-5][0-9]{3,5}$/;
+    const currentDate = new Date()
+    const error = {}
+
+    const parsedDiscount = parseInt(discount);
+    const parsedMinVal = parseInt(minVal);
+    const parsedMaxVal = parseInt(maxVal);
+    const parsedExpireAt = new Date(expireAt);
+
+
+    if (!couponCode || couponCode.trim() === '') {
+        error.coupenError = "Coupon code is required."
+    }
+
+    if (isNaN(parsedDiscount) || parsedDiscount < 1 || parsedDiscount > 90) {
+        error.discountError = "Discount should be between 1 and 90."
+    }
+
+    if (isNaN(parsedMinVal) || parsedMinVal <= 500 || parsedMinVal >= 6000) {
+        error.minValError = "Min value should be a number between 501 and 5999."
+    }
+
+    if (isNaN(parsedMaxVal) || parsedMaxVal <= 500 || parsedMaxVal >= 6000) {
+        error.maxValError = "Max value should be a number between 501 and 5999.."
+    }
+
+    if (parsedExpireAt <= currentDate) {
+        error.expireAtError = "Expire date should be at least one day more than the current date."
+    }
+    return {
+        isValid: Object.keys(error).length === 0,
+        error
+    }
+}
+
 
 
 export default {
@@ -233,4 +272,5 @@ export default {
     bookingValidation,
     hotelHomeForm,
     bannerValidate,
+    coupenValidate,
 }
