@@ -1,5 +1,7 @@
 import Coopen from "../../model/coupon.js";
 import propertyValidation from "../../helper/propertyValidation.js";
+import sendHtml from "../../helper/sendHtml.js";
+import User from "../../model/userModel.js";
 
 
 
@@ -94,7 +96,7 @@ const updateCoupon = async (req, res) => {
         else {
 
             await Coopen.findByIdAndUpdate(
-                req.body.coupenId,
+                req.body.couponId,
                 { couponCode, discount, minVal, maxVal, expireAt },
                 { new: true }
             )
@@ -106,10 +108,53 @@ const updateCoupon = async (req, res) => {
     }
 }
 
+
+// Delete Coupen
+const deleteCoupen = (async (req, res) => {
+    try {
+        const id = req.query.id
+        await Coopen.findByIdAndDelete(id)
+        return res.status(200).end()
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).end()
+    }
+})
+
+// To send the coopen as a mail {Can use redis for big data}
+const sendmail = async (req, res) => {
+    try {
+        const { id } = req.body
+
+        const [coopen, user] = await Promise.all([
+            Coopen.findById(id),
+            User.find()
+        ])
+
+        for (const userData of user) {
+            const data = {
+                subject: "Coupen Code",
+                discount: coopen.discount,
+                coupenCode: coopen.couponCode,
+                expireAt: coopen.expireAt
+            }
+            await sendHtml.sendCoupen(userData.email, data)
+        }
+        return res.status(200).end()
+    } catch (error) {
+        console.log(error);
+        return res.status(400).end()
+    }
+}
+
+
 export default {
     coupons,
     addCoupon,
     blockCoupon,
     getCoupon,
     updateCoupon,
+    deleteCoupen,
+    sendmail,
 }

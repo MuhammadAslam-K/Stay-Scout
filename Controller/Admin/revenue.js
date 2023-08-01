@@ -1,60 +1,6 @@
 import Booking from "../../model/bokingModel.js";
 
 
-// Render and show the owner revenue based on the time period
-// const ownerRevenueChart = async (req, res) => {
-//     console.log("adminReveniu");
-//     try {
-//         const { view } = req.query;
-
-//         let groupByTimeUnit;
-//         switch (view) {
-//             case 'year':
-//                 groupByTimeUnit = '$year';
-//                 break;
-//             case 'month':
-//                 groupByTimeUnit = '$month';
-//                 break;
-//             case 'week':
-//                 groupByTimeUnit = '$week';
-//                 break;
-//             default:
-//                 groupByTimeUnit = '$month';
-//                 break;
-//         }
-
-//         const revenueData = await Booking.aggregate([
-//             {
-//                 $group: {
-//                     _id: {
-//                         timeUnit: { [groupByTimeUnit]: '$bookedAt' },
-//                     },
-//                     revenue: { $sum: '$paymentAmount' },
-//                 },
-//             },
-//             {
-//                 $sort: {
-//                     '_id.timeUnit': 1,
-//                 },
-//             },
-//         ]);
-
-//         const labels = [];
-//         const revenue = [];
-
-//         revenueData.forEach((data) => {
-//             labels.push(`${data._id.timeUnit}`);
-//             revenue.push(data.revenue);
-//         });
-
-//         res.json({ labels, revenue });
-//     } catch (err) {
-//         console.error('Error fetching revenue data:', err.message);
-//         res.status(500).json({ error: 'Failed to fetch revenue data' });
-//     }
-// };
-
-
 // For showing the admin revenue
 const adminRevenue = async (req, res) => {
 

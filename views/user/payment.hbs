@@ -1,7 +1,7 @@
 {{>userHeader}}
 {{>navBar2}}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -78,7 +78,7 @@
 
                             <div class="border-top px-2 mx-2"></div>
                             <div class="p-2 d-flex pt-3">
-                                <div class="col-8"><b>Amount after Discount</b></div>
+                                <div class="col-8"><b>Payable Amount</b></div>
                                 <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
                                         value="{{amountAfterDiscount}}" readonly></input></div>
                             </div>
@@ -94,6 +94,12 @@
                                         value="{{total}}" readonly></input></div>
                             </div>
                             {{/unless}}
+                            <button id="applyCouponButton" class="btn btn-success mt-3" onclick="applyCoupen()"
+                                style="max-width: 150px;">Apply Coupon</button>
+
+                            <button id="removeCouponButton" class="btn btn-success mt-3" onclick="removeCoupen()"
+                                style="max-width: 150px; display: none;">Remove Coupon</button>
+
                         </div>
                     </div>
                     </form>
@@ -121,7 +127,6 @@
     // Rest of your script code...
 
 </script>
-{{>userSiteFooter}}
 
 {{!-- RAZORPAY --}}
 <script>
@@ -144,6 +149,7 @@
 
                     payment(selectedPayment)
                     console.log(response);
+
                 },
                 "theme": {
                     "color": "#3399cc"
@@ -159,36 +165,7 @@
     }
 </script>
 
-{{!-- PAYMENT --}}
-<script>
-    async function payment(selectedPayment) {
-
-        const formElement = document.getElementById('paymentForm');
-        const formData = new FormData(formElement);
-        console.log(formData)
-        try {
-
-            const response = await axios.post('/payment', formData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (response.status === 200) {
-                window.location.href = '/bookinghistory'
-            }
-
-        } catch (error) {
-            console.log(error)
-            alertify.alert("Something went wrong, please try again later", function () {
-                alertify.message('OK');
-            });
-        }
-    }
-</script>
-
 {{!-- WALLET --}}
-
 <script>
     function walletPayment() {
         try {
@@ -209,3 +186,93 @@
         }
     }
 </script>
+
+
+{{!-- PAYMENT --}}
+<script>
+    var coopenCode
+    async function payment(selectedPayment) {
+
+        const formElement = document.getElementById('paymentForm');
+        const formData = new FormData(formElement);
+
+        try {
+
+            const response = await axios.post(`/payment?code=${coopenCode}`, formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (response.status === 200) {
+                window.location.href = '/bookinghistory'
+            }
+
+        } catch (error) {
+            console.log(error)
+            alertify.alert("Something went wrong, please try again later", function () {
+                alertify.message('OK');
+            });
+        }
+    }
+
+
+    //Apply coupen 
+
+    async function applyCoupen() {
+        event.preventDefault()
+        Swal.fire({
+            title: 'Submit coupen code',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Apply',
+            showLoaderOnConfirm: true,
+            preConfirm: async (code) => {
+                let response
+                try {
+                    var totalValue = document.getElementById('subTotalValue').value;
+                    coopenCode = code
+                    response = await axios.get(`/applycoupen?code=${code}&total=${totalValue}`);
+
+                    if (response.status == 200) {
+                        console.log(response)
+                        console.log(241)
+                        document.getElementById('subTotalValue').value = response.data.amount;
+                        const message = response.data.message
+                        Swal.fire({
+                            icon: 'success',
+                            text: message,
+                        })
+
+
+                        document.getElementById('applyCouponButton').style.display = 'none';
+                        document.getElementById('removeCouponButton').style.display = 'block';
+                    }
+                    return response
+                } catch (error) {
+                    Swal.showValidationMessage(
+                        `Request failed: ${error.response.data.error}`
+                    );
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+
+    }
+
+    // RemoveCoupen 
+    function removeCoupen() {
+        coopenCode = null
+        const originalTotalValue = totalValue; // Replace with the original total value
+        document.getElementById('subTotalValue').value = originalTotalValue;
+
+        // Show the "Apply Coupon" button and hide the "Remove Coupon" button
+        document.getElementById('applyCouponButton').style.display = 'block';
+        document.getElementById('removeCouponButton').style.display = 'none';
+    }
+</script>
+
+{{>userSiteFooter}}

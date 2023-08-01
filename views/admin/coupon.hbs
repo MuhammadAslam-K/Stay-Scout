@@ -214,7 +214,9 @@
                                             <th>Max Value</th>
                                             <th>ExpireAt</th>
                                             <th>Edit</th>
+                                            <th>Block</th>
                                             <th>Delete</th>
+                                            <th>sendMail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -238,6 +240,14 @@
                                                         onclick="toggleBlock('{{this._id}}', true)">Block</a>
                                                     {{/if}}
                                                 </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger"
+                                                    onclick="deleteCoupen('{{this._id}}')">Delete</button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-success"
+                                                    onclick="sendMail('{{this._id}}')">sendMail</button>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -430,8 +440,8 @@
             if (response.status === 200) {
                 console.log("updated teh data")
                 closeEditPopup();
-                Swal.fire('Coupon Updated Successfully');
-
+                Swal.fire('Coupon Updated Successfully')
+                window.location.reload()
             }
         } catch (error) {
             if (error.response.status === 400) {
@@ -457,7 +467,6 @@
 
 </script>
 
-
 {{!-- Block Unblock --}}
 <script>
     function toggleBlock(couponId, blockStatus) {
@@ -479,5 +488,76 @@
                 });
                 console.log(error);
             });
+    }
+</script>
+
+{{!-- Delete Coupen --}}
+<script>
+    function deleteCoupen(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                try {
+
+                    const response = axios.post(`/admin/coupen/delete?id=${id}`)
+                    if (response.status == 200) {
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'The coupen has been deleted.',
+                            'success'
+                        )
+                        window.location.reload()
+                    }
+                }
+                catch (error) {
+                    console.log(error)
+                    if (response.status === 500) {
+                        alertify
+                            .alert("Something went wrong while deleting.", function () {
+                                alertify.message('OK');
+                            });
+                    }
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your data is safe :)',
+                    'error'
+                )
+
+            }
+        })
+    }
+</script>
+
+{{!-- Send MaIL --}}
+<script>
+    async function sendMail(id) {
+        event.preventDefault()
+        try {
+            const response = await axios.post("/admin/coopen/sendmail", { id: id })
+            if (response.status === 200) {
+                console.log("okkoook")
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 </script>

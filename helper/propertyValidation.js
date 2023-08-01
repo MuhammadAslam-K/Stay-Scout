@@ -247,12 +247,12 @@ const coupenValidate = (data) => {
         error.discountError = "Discount should be between 1 and 90."
     }
 
-    if (isNaN(parsedMinVal) || parsedMinVal <= 500 || parsedMinVal >= 6000) {
-        error.minValError = "Min value should be a number between 501 and 5999."
+    if (isNaN(parsedMinVal) || parsedMinVal < 20 || parsedMinVal > 2000) {
+        error.minValError = "Min value should be a number between 20 and 2000.."
     }
 
-    if (isNaN(parsedMaxVal) || parsedMaxVal <= 500 || parsedMaxVal >= 6000) {
-        error.maxValError = "Max value should be a number between 501 and 5999.."
+    if (isNaN(parsedMaxVal) || parsedMaxVal < 20 || parsedMaxVal > 2000) {
+        error.maxValError = "Max value should be a number between 20 and 2000.."
     }
 
     if (parsedExpireAt <= currentDate) {

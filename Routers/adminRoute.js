@@ -106,5 +106,7 @@ admin_route.post("/addCoupon", isLogged, coopenManagement.addCoupon)
 admin_route.post("/coupon/block", isLogged, coopenManagement.blockCoupon)
 admin_route.get("/getCoupon", isLogged, coopenManagement.getCoupon)
 admin_route.post("/updateCoupon", isLogged, coopenManagement.updateCoupon)
+admin_route.post("/coupen/delete", isLogged, coopenManagement.deleteCoupen)
+admin_route.post("/coopen/sendmail", isLogged, coopenManagement.sendmail)
 
 export default admin_route

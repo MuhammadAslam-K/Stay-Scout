@@ -25,7 +25,11 @@ const couponSchema = new mongoose.Schema({
     isBlock: {
         type: Boolean,
         default: false,
-    }
+    },
+    usedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }]
 })
 
 const Coupon = mongoose.model("Coopen", couponSchema)

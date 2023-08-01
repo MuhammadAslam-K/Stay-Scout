@@ -751,6 +751,116 @@ async function sendConfirmationMail(data) {
     }
 }
 
+//  For sending the coupen as a mail
+const sendCoupen = async (email, data) => {
+    try {
+        console.log(data);
+        const { subject, discount, coupenCode, expireAt } = data
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASS,
+            },
+        })
+
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: subject,
+            html: `<!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Discount Coupon</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f7f7f7;
+                    }
+            
+                    .coupon {
+                        width: 350px;
+                        padding: 20px;
+                        border: 2px solid #ccc;
+                        border-radius: 10px;
+                        background-color: #fff;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        margin: 50px auto;
+                    }
+            
+                    .coupon h2 {
+                        font-size: 28px;
+                        margin-bottom: 10px;
+                        text-align: center;
+                    }
+            
+                    .coupon p {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        text-align: center;
+                    }
+            
+                    .coupon .code {
+                        font-size: 26px;
+                        font-weight: bold;
+                        background-color: #f7f7f7;
+                        padding: 5px 10px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        margin: 0 auto 20px;
+                        display: table;
+                        color: #007bff;
+                    }
+            
+                    .coupon .valid-until {
+                        font-size: 16px;
+                        text-align: center;
+                    }
+            
+                    .coupon .cta {
+                        display: block;
+                        margin: 0 auto;
+                        background-color: #007bff;
+                        color: #fff;
+                        padding: 12px 24px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 20px;
+                        text-align: center;
+                        text-decoration: none;
+                        width: 250px;
+                        transition: background-color 0.3s ease;
+                    }
+            
+                    .coupon .cta:hover {
+                        background-color: #0056b3;
+                    }
+                </style>
+            </head>
+            
+            <body>
+                <div class="coupon">
+                    <h2>Discount Coupon</h2>
+                    <p>Get <strong>${discount}% off</strong> your next Booking!</p>
+                    <div class="code">${coupenCode}</div>
+                    <p class="valid-until">Valid until ${expireAt}.</p>
+                    <a href="http://localhost:8000" class="cta">Book now</a>
+                </div>
+            </body>
+            
+            </html>`,
+        }
+        const result = await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 export default {
     sendConfirmationMail,
+    sendCoupen,
 }
