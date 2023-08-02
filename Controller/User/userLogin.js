@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
-
+import cookie from "cookie"
 import User from "../../model/userModel.js"
 
 import Signup_functions from "../../helper/Signup_functions.js"
@@ -62,16 +62,19 @@ const loginVerify = (async (req, res) => {
             }
             else {
 
-                const index = userExists._id
+                const index = userExists
                 const payload = { index: index };
                 const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
                     expiresIn: "1h",
                 })
 
+                // const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+
                 req.session.usertoken = token
                 req.session.user = userExists
 
-                return res.status(200).end();
+                return res.status(200).json({ token: token });
+
             }
 
         } else {

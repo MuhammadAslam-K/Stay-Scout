@@ -2,15 +2,14 @@ import User from "../model/userModel.js"
 
 
 
-
-function isLogged(req, res, next) {
-
-    // next()
+const isLogged = (req, res, next) => {
+    const { token } = req.body
     try {
-        if (req.session.usertoken) {
+        if (token) {
+            req.token = token
             next()
         } else {
-            res.redirect("/login")
+            res.render("/login")
 
         }
     } catch (error) {
@@ -34,24 +33,25 @@ const islogout = ((req, res, next) => {
 })
 
 
+
 const isBlocked = (async (req, res, next) => {
-    // next();
-    const id = req.session.user._id
-    try {
-        const user = await User.findById(id)
-        if (user.is_block) {
-            delete req.session.user
-            delete req.session.usertoken
+    next();
+    // const id = req.session.user._id
+    // try {
+    //     const user = await User.findById(id)
+    //     if (user.is_block) {
+    //         delete req.session.user
+    //         delete req.session.usertoken
 
-            res.redirect("/login")
-        }
-        else {
-            next()
-        }
+    //         res.redirect("/login")
+    //     }
+    //     else {
+    //         next()
+    //     }
 
-    } catch (error) {
-        console.log(error);
-    }
+    // } catch (error) {
+    //     console.log(error);
+    // }
 })
 
 export default {

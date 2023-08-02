@@ -80,8 +80,8 @@ user_route.get("/room/checkin", isLogged, isBlocked, booking.roomStatus)
 user_route.post("/room/book", isLogged, isBlocked, booking.book)
 
 /////////////CONTACT////////////
-user_route.get("/contact", isLogged, isBlocked, contact.contact)
-user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
+user_route.get("/contact", contact.contact)
+user_route.post("/contact", isLogged, contact.submitContact)
 
 
 //////////////PAYMENT/////////
@@ -98,6 +98,8 @@ user_route.post("/hotel/report", isLogged, isBlocked, review.submitReport)
 
 ///////////////////CANCELLATION//////////////////
 user_route.post("/cancellation", isLogged, isBlocked, cancellation.cancellation)
+
+user_route.post("/authenticate", isLogged)
 
 
 

@@ -74,11 +74,17 @@
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData(event.target);
-
+        const message = document.getElementById('messageTextarea').value
+        const token = localStorage.getItem('jwt_token');
+        const data = {
+            message,
+            token
+        }
+        console.log(message)
+        console.log(data)
 
         try {
-            const response = await axios.post('/contact', formData, {
+            const response = await axios.post('/contact', data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -90,6 +96,7 @@
                 });
             }
         } catch (error) {
+            console.log(error)
             alertify.alert("Something went wrong please try later", function () {
                 alertify.message('OK');
             });

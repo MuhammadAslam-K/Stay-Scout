@@ -1,4 +1,5 @@
 import Message from "../../model/contact.js";
+import jwt from "jsonwebtoken";
 
 
 // Render the contact page
@@ -12,7 +13,7 @@ const contact = ((req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("contact")
+            return res.status(200).render("contact")
         })
     } catch (error) {
         console.log(error);
@@ -23,12 +24,15 @@ const contact = ((req, res) => {
 //  Submit the message to the admin
 const submitContact = (async (req, res) => {
     try {
+        const token = req.token
         const message = req.body.message
-        const user = req.session.user._id
+        const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+        const user = decodedToken.index._id
         const contact = new Message({ message, user })
 
         await contact.save()
         return res.status(200).end()
+
     } catch (error) {
         console.log(error);
         res.render("500")
