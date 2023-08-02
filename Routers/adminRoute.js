@@ -14,6 +14,7 @@ import report from "../Controller/Admin/report.js"
 import revenue from "../Controller/Admin/revenue.js"
 import adminAuth from "../Controller/Admin/adminAuth.js"
 import adminDashboard from "../Controller/Admin/adminDashboard.js"
+import pdfKit from "../Controller/Admin/pdfKit.js"
 
 import auth from "../middleware/adminAuth.js"
 
@@ -108,5 +109,11 @@ admin_route.get("/getCoupon", isLogged, coopenManagement.getCoupon)
 admin_route.post("/updateCoupon", isLogged, coopenManagement.updateCoupon)
 admin_route.post("/coupen/delete", isLogged, coopenManagement.deleteCoupen)
 admin_route.post("/coopen/sendmail", isLogged, coopenManagement.sendmail)
+
+// / / / / / / / / PDF MANAGEMENT/ / / / / / / / / 
+admin_route.get("/dashboard/downloadpdf", isLogged, pdfKit.adminRevenue)
+
+
+
 
 export default admin_route

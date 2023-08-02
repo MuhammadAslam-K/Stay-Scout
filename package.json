@@ -33,6 +33,7 @@
     "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
+    "pdfkit": "^0.13.0",
     "razorpay": "^2.9.1",
     "sweetalert": "^2.1.2",
     "twilio": "^4.13.0",
