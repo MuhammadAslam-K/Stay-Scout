@@ -7,6 +7,7 @@ import hotelManagment from "../Controller/Owner/hotelManagment.js"
 import roomManagement from "../Controller/Owner/roomManagement.js"
 import dashboard from "../Controller/Owner/dashboard.js"
 import bannerManagement from "../Controller/Owner/bannerManagement.js"
+import pdfKit from "../Controller/Owner/pdfKit.js"
 const { isLogged, islogout, isBlocked } = Auth
 
 
@@ -65,6 +66,9 @@ owner_route.post("/banner/update", isLogged, isBlocked, upload.single('image'), 
 
 owner_route.post("/banner/available", isLogged, isBlocked, bannerManagement.availabile)
 owner_route.get("/banner/delete", isLogged, isBlocked, bannerManagement.deleteBanner)
+
+// / / / / /  / / DOWNLOAD PDF
+owner_route.get("/dashboard/downloadpdf", isLogged, isBlocked, pdfKit.ownerRevenue)
 
 
 

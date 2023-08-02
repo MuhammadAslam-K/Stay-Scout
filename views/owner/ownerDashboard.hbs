@@ -120,15 +120,31 @@
                     </div>
                 </div>
             </div>
-            <div class="container d-flex justify-content-center mt-3">
-                <div class="btn-group" role="group" aria-label="View Options">
+            <div class="container d-flex justify-content-between mt-3">
+
+                <form id="checkin" class="align-form-elements mb-5" style="width: 250px;">
+                    <!-- Form inputs -->
+                    <div class="form-group">
+                        <label for="checkin">From</label>
+                        <input type="date" class="form-control" id="from" name="from" required>
+                        <span class="text-danger error-msg" id="checkInError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout">To</label>
+                        <input type="date" class="form-control" id="to" name="to" required>
+                        <span class="text-danger error-msg" id="checkOutError"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="downloadPdf()">Download PDF</button>
+                </form>
+
+                <div class="btn-group mt-5" role="group" aria-label="View Options" style="max-height: 50px;">
                     <button type="button" class="btn btn-secondary" id="yearBtn">Year</button>
                     <button type="button" class="btn btn-secondary" id="monthBtn">Month</button>
                     <button type="button" class="btn btn-secondary" id="weekBtn">Week</button>
                 </div>
             </div>
 
-            <div class="container d-flex justify-content-center mt-5" style="width: 90%;">
+            <div class="container d-flex justify-content-center " style="width: 90%;">
                 <div style="width: 100%;">
                     <canvas id="revenueChart"></canvas>
                 </div>
@@ -207,7 +223,7 @@
 </script>
 
 
-
+{{!-- CHART --}}
 <script>
     document.addEventListener("DOMContentLoaded", async function () {
         let lineChart;
@@ -343,6 +359,48 @@
     });
 </script>
 
+{{!-- DOWNLOAD PDF --}}
+
+{{!-- DOWNLOAD THE PDF --}}
+<script>
+    // JavaScript
+    async function downloadPdf() {
+        event.preventDefault();
+
+        try {
+            const from = document.getElementById("from").value;
+            const to = document.getElementById("to").value;
+
+            const response = await axios.get(`/owner/dashboard/downloadpdf?from=${from}&to=${to}`, {
+                responseType: 'blob',
+            });
+
+            // Create a URL for the blob
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+
+            // Create a temporary anchor element to trigger the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'booking_report.pdf');
+
+            // Append the anchor element to the document and simulate a click
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up after the download is complete
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            if (error.response.status === 400) {
+                alertify
+                    .alert("There is no bookings Based on the given period.", function () {
+                        alertify.message('OK');
+                    });
+            }
+            console.log(error);
+        }
+    }
+
+</script>
 
 <script>
     const errorMessage = "{{errorMessage}}";
