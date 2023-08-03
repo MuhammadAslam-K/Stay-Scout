@@ -80,8 +80,8 @@ user_route.get("/room/checkin", isLogged, isBlocked, booking.roomStatus)
 user_route.post("/room/book", isLogged, isBlocked, booking.book)
 
 /////////////CONTACT////////////
-user_route.get("/contact", contact.contact)
-user_route.post("/contact", isLogged, contact.submitContact)
+user_route.get("/contact", isLogged, isBlocked, contact.contact)
+user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 
 //////////////PAYMENT/////////
@@ -115,14 +115,14 @@ user_route.get(
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
 
-        const index = userData._id
+        const index = userData
         const payload = { index: index };
         const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
             expiresIn: "1h",
         })
 
         req.session.usertoken = token
-        req.session.user = userData
+        // req.session.user = userData
 
         res.redirect('/');
     }

@@ -85,7 +85,7 @@ const submitRoom = (async (req, res) => {
                 images: roomImages,
                 category: categoryId,
                 hotel: req.session.hotelId,
-                owner: req.session.owner._id,
+                owner: req.token.index._id,
             })
 
             hotel.rooms += 1
@@ -104,7 +104,7 @@ const submitRoom = (async (req, res) => {
 
 // View the room to the owners
 const viewRooms = async (req, res) => {
-    const id = req.session.owner._id
+    const id = req.token.index._id
     try {
         const [rooms, category] = await Promise.all([
             propertyFetching.room(id, 0, 0, false),

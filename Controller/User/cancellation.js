@@ -23,7 +23,7 @@ const cancellation = async (req, res) => {
             const timeDifference = checkin.getTime() - currentDate.getTime();
             const hoursDifference = timeDifference / (1000 * 3600);
 
-            if (hoursDifference <= 24) {
+            if (hoursDifference >= 24) {
                 await userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
             }
@@ -42,7 +42,7 @@ const cancellation = async (req, res) => {
             const timeDifference = checkin.getTime() - currentDate.getTime();
             const daysDifference = timeDifference / (1000 * 3600 * 24);
 
-            if (daysDifference <= 7) {
+            if (daysDifference >= 7) {
                 await userWallet(userId, amountRefund, bookingId)
                 return res.status(200).end()
 

@@ -82,9 +82,6 @@
 
             if (response.status === 200) {
 
-                const token = response.data.token
-                console.log(token);
-                localStorage.setItem('jwt_token', token);
                 window.location.href = '/';
             }
         } catch (error) {

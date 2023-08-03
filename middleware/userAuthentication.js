@@ -1,21 +1,24 @@
 import User from "../model/userModel.js"
+import dotenv from "dotenv"
+import jwt from 'jsonwebtoken'
 
+dotenv.config({ path: "config.env" })
 
 
 const isLogged = (req, res, next) => {
-    const { token } = req.body
     try {
-        if (token) {
-            req.token = token
+        if (req.session.usertoken) {
+            const token = req.session.usertoken
+            const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+            req.token = decodedToken
             next()
         } else {
-            res.render("/login")
+            res.redirect("/login")
 
         }
     } catch (error) {
         console.log(error)
     }
-
 }
 
 const islogout = ((req, res, next) => {
@@ -35,23 +38,21 @@ const islogout = ((req, res, next) => {
 
 
 const isBlocked = (async (req, res, next) => {
-    next();
-    // const id = req.session.user._id
-    // try {
-    //     const user = await User.findById(id)
-    //     if (user.is_block) {
-    //         delete req.session.user
-    //         delete req.session.usertoken
+    const id = req.token.index._id
+    try {
+        const user = await User.findById(id)
+        if (user.is_block) {
+            delete req.session.usertoken
 
-    //         res.redirect("/login")
-    //     }
-    //     else {
-    //         next()
-    //     }
+            res.redirect("/login")
+        }
+        else {
+            next()
+        }
 
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 export default {

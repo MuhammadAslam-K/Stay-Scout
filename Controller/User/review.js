@@ -6,7 +6,7 @@ import Report from "../../model/reports.js";
 // To show the booking history 
 const bookingHistory = async (req, res) => {
     try {
-        const userId = req.session.user._id;
+        const userId = req.token.index._id;
         const bookings = await Booking.find({ user: userId }).populate("hotel").populate("room")
 
         const formattedBookings = bookings.map((booking) => ({
@@ -26,7 +26,7 @@ const bookingHistory = async (req, res) => {
 const submitReport = async (req, res) => {
     try {
         const { bookingId, reportText } = req.body
-        const userId = req.session.user._id
+        const userId = req.token.index._id
 
         const report = new Report({
             report: reportText,
@@ -51,7 +51,7 @@ const submitReport = async (req, res) => {
 // To check that the user is valid for writhing the review
 const Hotelreview = (async (req, res) => {
     try {
-        const userId = req.session.user._id
+        const userId = req.token.index._id
         const hotelId = req.session.hotelID
         const currentDate = new Date();
 
@@ -82,7 +82,7 @@ const Hotelreview = (async (req, res) => {
 const submitReview = async (req, res) => {
     try {
 
-        const userId = req.session.user._id
+        const userId = req.token.index._id
         const hotelId = req.session.hotelID
         const bookingId = req.session.bookingId
 

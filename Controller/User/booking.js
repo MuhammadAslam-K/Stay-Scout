@@ -8,9 +8,7 @@ import Coupen from "../../model/coupon.js"
 
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
-import Signup_function from "../../helper/Signup_functions.js"
 import sendHtml from "../../helper/sendHtml.js";
-import { ReturnDocument } from "mongodb";
 
 
 
@@ -59,7 +57,7 @@ const payment = async (req, res) => {
 
     try {
 
-        const id = req.session.user._id
+        const id = req.token.index._id
         const ID = req.session.room;
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
@@ -107,7 +105,7 @@ const paymentSuccess = (async (req, res) => {
         const coupenCode = req.query.code
         const { radioNoLabel, roomPrice, noOfDays, total } = req.body
 
-        const id = req.session.user._id
+        const id = req.token.index._id
         const ID = req.session.room
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
@@ -196,15 +194,15 @@ const paymentSuccess = (async (req, res) => {
         if (coupenCode) {
             await Coupen.findOneAndUpdate(
                 { couponCode: coupenCode },
-                { $push: { usedBy: req.session.user._id } },
+                { $push: { usedBy: req.token.index._id._id } },
                 { new: true }
             )
         }
 
         const emailData = {
-            email: req.session.user.email,
+            email: req.token.index.email,
             subject: "Booking Confirmation",
-            userName: req.session.user.name,
+            userName: req.token.index.name,
             hotel: hotel.name,
             checkIn,
             checkOut,
@@ -248,14 +246,15 @@ const coupen = async (req, res) => {
     try {
         const currentDate = new Date()
         const { code, total } = req.query
-        const userId = req.session.user._id
+        const userId = req.token.index._id
         const coupen = await Coupen.findOne({ couponCode: code })
-        const amountAfterDiscount = total * (coupen.discount / 100)
 
         if (!coupen) {
             return res.status(404).json({ error: "This coupen code is not valid" })
         }
-        else if (coupen.expireAt < currentDate) {
+
+        const amountAfterDiscount = total * (coupen.discount / 100)
+        if (coupen.expireAt < currentDate) {
             return res.status(400).json({ error: "The coupen dtae has been expired" })
         }
         else if (coupen.isBlock) {

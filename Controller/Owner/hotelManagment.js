@@ -10,7 +10,7 @@ import cloudinary from "../../config/cloudinary.js"
 // For displaying the hotel to the owners
 const viewHotels = (async (req, res) => {
     try {
-        const ownerId = req.session.owner._id
+        const ownerId = req.token.index._id
         const hotel = await propertyFetching.hotel(ownerId, 0, 0, false)
 
         res.render("viewHotels", (err) => {
