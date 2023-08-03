@@ -1,21 +1,56 @@
-import User from "../model/userModel.js"
+import dotenv from "dotenv"
+import jwt from "jsonwebtoken"
 
-
+dotenv.config({ path: "config.env" })
 
 const isLogged = (req, res, next) => {
-    const { token } = req.body
-    try {
-        if (token) {
-            req.token = token
-            next()
-        } else {
-            res.render("/login")
+    const token = req.headers.authorization;
 
+    try {
+        if (token && token.startsWith('Bearer ')) {
+            // Remove the 'Bearer ' prefix from the token
+            const tokenWithoutPrefix = token.replace('Bearer ', '');
+            console.log(`beaer ${tokenWithoutPrefix}`)
+            jwt.verify(tokenWithoutPrefix, process.env.SECRET_TOKEN, (err, decodedToken) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(401).end();
+                } else {
+                    req.decodedToken = decodedToken;
+                    next();
+                }
+            });
+        } else {
+            return res.status(401).end();
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
+};
 
+
+const isValid = (req, res) => {
+    const { token } = req.body;
+
+    try {
+        if (token) {
+            console.log(38);
+            // Verify the token
+            jwt.verify(token, process.env.SECRET_TOKEN, (err, decodedToken) => {
+                console.log(decodedToken);
+                if (err) {
+                    console.log(err);
+                    return res.status(401).end();
+                } else {
+                    return res.status(200).end()
+                }
+            });
+        } else {
+            return res.status(401).end();
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const islogout = ((req, res, next) => {
@@ -58,4 +93,5 @@ export default {
     islogout,
     isLogged,
     isBlocked,
+    isValid,
 }

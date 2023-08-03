@@ -1,4 +1,4 @@
-{{>userHeader}}
+{{!-- {{>userHeader}} --}}
 
 <style>
     .search_container {
@@ -40,7 +40,7 @@
                     <li><a href="/rooms">Rooms</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/findNearestHotel" id="nearestBtn">Nearest Hotel</a></li>
-                    <li><a href="/profile"><i class="fa-solid fa-user"></i></a></li>
+                    <li><button onclick="getProfile()"><i class="fa-solid fa-user"></i></button></li>
                     <li>
                         <form action="/hotel/search" method="post">
                             <div class="search_container">
@@ -75,7 +75,7 @@
         </nav>
     </div>
 </div>
-{{>userFooter}}
+{{!-- {{>userFooter}} --}}
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -105,5 +105,36 @@
             }
         });
     });
+
+</script>
+
+{{!-- GET PROFILE --}}
+<script>
+    async function getProfile() {
+        const token = localStorage.getItem('jwt_token');
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        console.log(config)
+        try {
+            // Use Axios to fetch the profile page HTML from the server
+            const response = await axios.get('/profile', config);
+
+            // If the response is successful, replace the content of the main container with the profile page
+            if (response.status === 200) {
+                const mainContainer = document.getElementById('main_container');
+                mainContainer.innerHTML = response.data;
+            } else {
+                // If the response is not successful, handle the error
+                // For example, redirect to login or show an error message
+                console.log("Error: ", response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
 </script>

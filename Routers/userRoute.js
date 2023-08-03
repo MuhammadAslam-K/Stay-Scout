@@ -20,7 +20,7 @@ import User from "../model/userModel.js"
 
 
 dotenv.config({ path: "config.env" });
-const { isLogged, islogout, isBlocked } = auth
+const { isLogged, islogout, isBlocked, isValid } = auth
 const user_route = express()
 user_route.set("views", "./views/user");
 
@@ -55,10 +55,13 @@ user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 
 //////////USER HOME ROUTES/////////
 
-user_route.get("/", userController.home)
+user_route.get("/", userController.main)
+user_route.post("/", userController.home)
+user_route.post("/authenticate", isValid)
+
 user_route.get("/profile", isLogged, isBlocked, userController.profile)
-user_route.post("/profile/edit", isLogged, isBlocked, userController.profile_edit)
-user_route.get("/wallethistory", isLogged, isBlocked, userController.walletHistory)
+user_route.post("/profile/edit", userController.profile_edit)
+user_route.post("/wallethistory", isLogged, userController.walletHistory)
 
 
 //////// HOTELS /////////////isLogged, isBlocked, 

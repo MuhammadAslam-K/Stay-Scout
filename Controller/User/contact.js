@@ -24,10 +24,8 @@ const contact = ((req, res) => {
 //  Submit the message to the admin
 const submitContact = (async (req, res) => {
     try {
-        const token = req.token
-        const message = req.body.message
-        const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
-        const user = decodedToken.index._id
+        const { message } = req.body
+        const user = req.decodedToken.index._id
         const contact = new Message({ message, user })
 
         await contact.save()
@@ -35,7 +33,7 @@ const submitContact = (async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.render("500")
+        return res.status(401).end()
     }
 })
 
