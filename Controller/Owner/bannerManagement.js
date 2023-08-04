@@ -52,7 +52,6 @@ const addBanner = async (req, res) => {
 
 // To render the add banner page
 const viewAddBanner = (async (req, res) => {
-    console.log(56);
     try {
         const hotels = await Hotel.find({ owner: req.token.index._id })
         res.render("addBanner", { hotels })
@@ -65,7 +64,6 @@ const viewAddBanner = (async (req, res) => {
 
 // For validate and create a new banner
 const saveBanner = async (req, res) => {
-    console.log(69);
     try {
         const { title, subtitle, hotelId, } = req.body
         const validate = propertyValidation.bannerValidate(req.body)
