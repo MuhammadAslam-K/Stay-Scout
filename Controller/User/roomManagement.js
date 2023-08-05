@@ -1,5 +1,6 @@
 import propertyFetching from "../../helper/propertyFetching.js"
 import Category from "../../model/roomCategory.js"
+import Rooms from "../../model/roomsModel.js"
 
 
 // Shows the rooms to the user

@@ -60,7 +60,7 @@ const submitRoom = (async (req, res) => {
                 roomImages.push(image);
             }
 
-            const { price, adults, childrents, amenities, Cancellation, bed, category, newCatgory, description } = req.body
+            const { price, adults, childrents, amenities, Cancellation, bed, category, newCatgory, description, noOfRooms } = req.body
 
             let categoryId
             if (category == "new" && newCatgory) {
@@ -73,6 +73,14 @@ const submitRoom = (async (req, res) => {
             else {
                 categoryId = category
             }
+            let rooms = []
+            for (let i = 1; i <= noOfRooms; i++) {
+                let room = {
+                    roomNo: i
+                }
+                rooms.push(room)
+            }
+            console.log(`rooms${rooms}`);
 
             const room = new Rooms({
                 price,
@@ -86,12 +94,13 @@ const submitRoom = (async (req, res) => {
                 category: categoryId,
                 hotel: req.session.hotelId,
                 owner: req.token.index._id,
+                rooms,
             })
 
-            hotel.rooms += 1
+            hotel.rooms += noOfRooms
 
             await hotel.save()
-            await room.save()
+            const result = await room.save()
             return res.send(200).end()
         }
 

@@ -93,14 +93,14 @@ function roomValidation(data) {
     const { price, adults, childrents, bed, description } = data
 
     const numberPattern = /^[0-9]+$/
-    const parsedstartingPrice = parseInt(startingPrice);
+    const parsedPrice = parseInt(price);
 
 
     // Price Validation //
     if (!price) {
         errors.priceError = "Please enter the startingprice"
     }
-    else if (isNaN(parsedstartingPrice) || parsedstartingPrice < 200 || parsedstartingPrice > 20000) {
+    else if (isNaN(parsedPrice) || parsedPrice < 200 || parsedPrice > 20000) {
         errors.priceError = "Price should be between 200 and 20000."
     }
     else if (!numberPattern.test(price)) {

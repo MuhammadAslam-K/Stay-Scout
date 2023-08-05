@@ -106,16 +106,18 @@ async function userWallet(userId, amout, bookingId) {
             { new: true }
         )
 
-        const room = await Rooms.findByIdAndUpdate(     //Remove the date from the room collection
-            booking.room,
-            {
-                $pull: {
-                    checkIn: booking.checkInDate,
-                    checkOut: booking.checkOutDate,
-                },
-            },
-            { new: true }
-        );
+        const room = await Rooms.findById(booking.room);
+        const roomIndex = room.availableRooms.findIndex((room) => room.roomNo === booking.roomNo);
+
+
+        // Find the index of the check-in and check-out dates to remove
+        const checkInIndex = room.availableRooms[roomIndex].checkIn.indexOf(booking.checkInDate);
+        const checkOutIndex = room.availableRooms[roomIndex].chekout.indexOf(booking.checkOutDate);
+
+        room.availableRooms[roomIndex].checkIn.splice(checkInIndex, 1);
+        room.availableRooms[roomIndex].chekout.splice(checkOutIndex, 1);
+
+        await room.save();
 
         const hotelId = booking.hotel
         const hotel = await Hotel.findByIdAndUpdate(    //Reduce the revenue from the hotel collection
@@ -153,16 +155,22 @@ async function cancelBooking(bookingId, roomId) {
             { new: true }
         )
 
-        const room = await Rooms.findByIdAndUpdate(     //Remove the date from the room collection
-            roomId,
-            {
-                $pull: {
-                    checkIn: booking.checkInDate,
-                    checkOut: booking.checkOutDate,
-                },
-            },
-            { new: true }
-        );
+
+        const room = await Rooms.findById(roomId);
+        const roomIndex = room.availableRooms.findIndex((room) => room.roomNo === booking.roomNo);
+
+
+        // Find the index of the check-in and check-out dates to remove
+        const checkInIndex = room.availableRooms[roomIndex].checkIn.indexOf(booking.checkInDate);
+        const checkOutIndex = room.availableRooms[roomIndex].chekout.indexOf(booking.checkOutDate);
+
+
+        // Remove the check-in and check-out dates from the arrays
+        room.availableRooms[roomIndex].checkIn.splice(checkInIndex, 1);
+        room.availableRooms[roomIndex].chekout.splice(checkOutIndex, 1);
+
+        // Save the updated Room document
+        await room.save();
     } catch (error) {
         console.log(error);
     }
