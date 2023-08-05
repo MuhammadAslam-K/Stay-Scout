@@ -1,6 +1,8 @@
+import dotenv from "dotenv"
 import Message from "../../model/contact.js";
+import jwt from "jsonwebtoken";
 
-
+dotenv.config({ path: "config.env" })
 // Render the contact page
 const contact = ((req, res) => {
     try {
@@ -12,7 +14,7 @@ const contact = ((req, res) => {
                     return res.status(500).render("500");
                 }
             }
-            res.render("contact")
+            return res.status(200).render("contact")
         })
     } catch (error) {
         console.log(error);
@@ -23,12 +25,13 @@ const contact = ((req, res) => {
 //  Submit the message to the admin
 const submitContact = (async (req, res) => {
     try {
-        const message = req.body.message
-        const user = req.session.user._id
+        const { message } = req.body
+        const user = req.token.index._id
         const contact = new Message({ message, user })
 
         await contact.save()
         return res.status(200).end()
+
     } catch (error) {
         console.log(error);
         res.render("500")

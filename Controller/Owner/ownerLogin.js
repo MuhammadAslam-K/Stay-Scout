@@ -47,18 +47,20 @@ const loginVerify = (async (req, res) => {
             }
             else if (passwordMatch) {
 
-                const index = ownerExistes._id
+                const index = ownerExistes
                 const payload = { index: index }
                 const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
                     expiresIn: "1h",
                 })
 
                 req.session.ownertoken = token;
-                req.session.owner = ownerExistes
+                // req.session.owner = ownerExistes
+
                 return res.status(200).end()
             }
         }
         else {
+
             return res.status(401).json({ error: "You dosen't have an Account Please Create one Now!!!" })
         }
 

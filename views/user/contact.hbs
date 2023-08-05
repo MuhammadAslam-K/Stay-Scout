@@ -74,11 +74,10 @@
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData(event.target);
-
+        const message = document.getElementById('messageTextarea').value
 
         try {
-            const response = await axios.post('/contact', formData, {
+            const response = await axios.post('/contact', { message }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -90,6 +89,7 @@
                 });
             }
         } catch (error) {
+            console.log(error)
             alertify.alert("Something went wrong please try later", function () {
                 alertify.message('OK');
             });

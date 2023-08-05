@@ -1,7 +1,6 @@
 import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
-
 import User from "../../model/userModel.js"
 
 import Signup_functions from "../../helper/Signup_functions.js"
@@ -62,16 +61,17 @@ const loginVerify = (async (req, res) => {
             }
             else {
 
-                const index = userExists._id
+                const index = userExists
                 const payload = { index: index };
                 const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
                     expiresIn: "1h",
                 })
 
                 req.session.usertoken = token
-                req.session.user = userExists
+                // req.session.user = userExists
 
-                return res.status(200).end();
+                return res.status(200).end()
+
             }
 
         } else {
@@ -86,7 +86,7 @@ const loginVerify = (async (req, res) => {
 // To destroy the token and session while the user logout
 const logout = ((req, res) => {
     try {
-        delete req.session.user
+        // delete req.session.user
         delete req.session.usertoken
         res.redirect("/login")
 

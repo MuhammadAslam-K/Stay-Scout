@@ -8,6 +8,7 @@ import roomManagement from "../Controller/Owner/roomManagement.js"
 import dashboard from "../Controller/Owner/dashboard.js"
 import bannerManagement from "../Controller/Owner/bannerManagement.js"
 import pdfKit from "../Controller/Owner/pdfKit.js"
+import categoryManagement from "../Controller/Owner/categoryManagement.js"
 const { isLogged, islogout, isBlocked } = Auth
 
 
@@ -43,16 +44,20 @@ owner_route.post("/hotel/block", isLogged, isBlocked, hotelManagment.availabilit
 owner_route.get("/hotel/update", isLogged, isBlocked, hotelManagment.editHotel)
 owner_route.post("/hotel/edit", upload.array('image', 4), isLogged, isBlocked, hotelManagment.updateHotel)
 
-// / / / / / /  ROOM MANAGEMENT / / / / / / / / / / / 
-owner_route.get("/rooms", isLogged, isBlocked, roomManagement.viewRooms)
-owner_route.get("/hotel/addrooms", isLogged, isBlocked, roomManagement.addRoom)
-owner_route.post("/hotel/addrooms", isLogged, isBlocked, upload.array('image', 4), roomManagement.submitRoom)
+// / / / / / /  CATEGORY MANAGEMENT / / / / / / / / / / / 
+owner_route.get("/category", isLogged, isBlocked, categoryManagement.viewCategory)
+owner_route.get("/hotel/addcategory", isLogged, isBlocked, categoryManagement.addCategory)
+owner_route.post("/hotel/addcategory", isLogged, isBlocked, upload.array('image', 4), categoryManagement.submitCategory)
+owner_route.get("/category/edit", isLogged, isBlocked, categoryManagement.editcategory)
+owner_route.post("/category/edit", isLogged, isBlocked, upload.array('image', 4), categoryManagement.updatecategory)
+owner_route.post("/category/block", isLogged, isBlocked, categoryManagement.isAvaillable)
+owner_route.get("/discount/:id/:input", isLogged, isBlocked, categoryManagement.discount)
 
+
+owner_route.get("/category/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 owner_route.post("/room/block", isLogged, isBlocked, roomManagement.isAvaillable)
-owner_route.get("/room/edit", isLogged, isBlocked, roomManagement.editRoom)
-owner_route.get("/room/status", isLogged, isBlocked, roomManagement.roomStatus)
-owner_route.post("/room/edit", isLogged, isBlocked, upload.array('image', 4), roomManagement.updateRoom)
-owner_route.get("/discount/:id/:input", isLogged, isBlocked, roomManagement.discount)
+owner_route.get("/addroom/:input", isLogged, isBlocked, roomManagement.addRoom)
+
 
 
 // / / / / / / / / / BANNER / / / / / / / / / /

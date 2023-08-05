@@ -38,7 +38,7 @@ const hotelHome = (async (req, res) => {
     try {
         const id = req.query.id
         req.session.hotelID = id
-        const userId = req.session.user._id
+        const userId = req.token.index._id
 
         const [hotel, rooms, ratings, reviews, reviewEdit] = await Promise.all([
             propertyFetching.hotel(id),

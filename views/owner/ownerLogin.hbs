@@ -74,7 +74,7 @@
                 window.location.href = '/owner/dashboard'
             }
         } catch (error) {
-
+            console.log(error)
             if (error.response.status == 401) {
                 document.getElementById('emailError').textContent = error.response.data.error;
             } else if (error.response.status == 400) {

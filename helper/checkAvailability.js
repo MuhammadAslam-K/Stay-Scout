@@ -1,37 +1,38 @@
-import Room from "../model/roomsModel.js";
 
-//  To check the room is available or not
-const roomisAvailable = async (id, data) => {
-
-    const { checkIn, checkOut, } = data
-
+// Function to check if a room is available for the given check-in and checkout date range
+function roomisAvailable(room, data) {
+    const { checkIn, checkOut } = data;
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
-    let booking
 
-    booking = await Room.findOne({
-        _id: id,
-        $or: [
-            {
-                checkIn: { $lt: checkOutDate },
-                checkOut: { $gt: checkInDate }
-            },
-            {
-                checkIn: { $gte: checkInDate, $lte: checkOutDate }
-            },
-            {
-                checkOut: { $gte: checkInDate, $lte: checkOutDate }
-            }
-        ]
-    })
+    for (const targetRoom of room.availableRooms) {
 
-    if (!booking) {
-        return true
+        if (!targetRoom.is_Available) {
+            continue;
+        }
+
+        const bookings = targetRoom.checkIn.map((checkIn, index) => ({
+            checkIn: checkIn,
+            checkOut: targetRoom.chekout[index]
+        }));
+
+        const isRoomBooked = bookings.some(booking =>
+            (checkInDate >= booking.checkIn && checkInDate < booking.checkOut) ||
+            (checkOutDate > booking.checkIn && checkOutDate <= booking.checkOut) ||
+            (checkInDate <= booking.checkIn && checkOutDate >= booking.checkOut)
+        );
+
+        if (isRoomBooked) {
+            continue; // Check the next available room
+        }
+
+        return { available: true, roomNo: targetRoom.roomNo };
     }
-    else {
-        return false
-    }
+
+    return { available: false, roomNo: null };
 }
+
+
 
 export default {
     roomisAvailable,

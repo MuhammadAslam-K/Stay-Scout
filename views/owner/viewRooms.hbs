@@ -8,75 +8,44 @@
                 <nav
                     class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
                 </nav>
-
-
                 <div class="container">
-
-
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="/owner/rooms" class="m-0 font-weight-bold text-primary">Rooms</a>
+                            <a class="m-0 font-weight-bold text-primary">Rooms</a>
+                            <a class="ms-4 font-weight-bold text-primary" onclick="addRooms()">Add Room</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
-                                        <tr>
-                                            <th>Hotel Name</th>
-                                            <th>Category</th>
-                                            <th>Approved</th>
-                                            <th>Boosted</th>
-                                            <th>Is Blocked</th>
-                                            <th>Is Available</th>
-                                            <th>Edit</th>
-                                            <th>Price</th>
-                                            <th>After Discount</th>
-                                            <th>Discount</th>
-                                            <th>Booking</th>
-                                        </tr>
+                                        <th>Is Available</th>
+                                        <th>Room No:</th>
+                                        <th>Bookings</th>
+
                                     </thead>
                                     <tbody>
-                                        {{#each rooms}}
+                                        {{#each rooms.availableRooms}}
                                         <tr>
-                                            <td>{{this.hotel.name}}</td>
-                                            <td>{{this.category.name}}</td>
-                                            <td>{{this.adminApproval}}</td>
-                                            <td>{{this.booste}}</td>
-                                            <td>{{this.is_block}}</td>
-
                                             {{#if this.is_Available}}
                                             <td>
-                                                <div id="availabilityButton{{this._id}}">
-                                                    <button class="btn btn-primary btn-block"
-                                                        onclick="toggleAvailability('{{this._id}}', false)">Available</button>
+                                                <div id="availabilityButton{{this.roomNo}}">
+                                                    <button class="btn btn-primary"
+                                                        onclick="toggleAvailability('{{this.roomNo}}', false)">Available</button>
                                                 </div>
                                             </td>
                                             {{else}}
                                             <td>
-                                                <div id="availabilityButton{{this._id}}">
-                                                    <button class="btn btn-warning btn-block"
-                                                        onclick="toggleAvailability('{{this._id}}', true)">Not
+                                                <div id="availabilityButton{{this.roomNo}}">
+                                                    <button class="btn btn-warning"
+                                                        onclick="toggleAvailability('{{this.roomNo}}', true)">Not
                                                         Available</button>
                                                 </div>
                                             </td>
                                             {{/if}}
-                                            <td>
-                                                <a href="/owner/room/edit?id={{this._id}}"><i
-                                                        class="fa-solid fa-pen-to-square"
-                                                        style="color: #2ea3a1;"></i></a>
-                                            </td>
-                                            <td>{{this.price}}</td>
-                                            <td>{{this.discountPrice}}</td>
-                                            <td>
-                                                {{this.discount}}%
-                                                <br>
-                                                <button class="btn btn-primary"
-                                                    onclick="addDiscount('{{this._id}}')">Add</button>
-                                            </td>
-                                            <td>
-                                                <a href="/owner/room/status?id={{this._id}}"
-                                                    class="btn btn-block btn-primary">status</a>
-                                            </td>
+                                            <td>{{this.roomNo}}</td>
+
+                                            <td><a href="/owner/status/rooms?no={{this.roomNo}}"
+                                                    class="btn  btn-primary">status</a></td>
                                         </tr>
                                         {{/each}}
                                     </tbody>
@@ -113,17 +82,18 @@
         });
     }
 
-    function toggleAvailability(roomId, availabilityStatus) {
+    function toggleAvailability(roomNo, availabilityStatus) {
         event.preventDefault();
-        axios.post('/owner/room/block?id=' + roomId, {
+        console.log(roomNo)
+        axios.post('/owner/room/block?no=' + roomNo, {
             availability: availabilityStatus
         })
             .then(function (response) {
-                const availabilityButton = document.getElementById('availabilityButton' + roomId);
+                const availabilityButton = document.getElementById('availabilityButton' + roomNo);
                 if (availabilityStatus) {
-                    availabilityButton.innerHTML = '<button class="btn btn-primary btn-block" onclick="toggleAvailability(\'' + roomId + '\', false)">Available</button>';
+                    availabilityButton.innerHTML = '<button class="btn btn-primary" onclick="toggleAvailability(\'' + roomNo + '\', false)">Available</button>';
                 } else {
-                    availabilityButton.innerHTML = '<button class="btn btn-warning btn-block" onclick="toggleAvailability(\'' + roomId + '\', true)">Not Available</button>';
+                    availabilityButton.innerHTML = '<button class="btn btn-warning" onclick="toggleAvailability(\'' + roomNo + '\', true)">Not Available</button>';
                 }
             })
             .catch(function (error) {
@@ -134,9 +104,9 @@
             });
     }
 
-    function addDiscount(id) {
+    function addRooms() {
         Swal.fire({
-            title: 'Enter the dicount in percentage',
+            title: 'Enter the No of Rooms',
             input: 'tel',
             inputAttributes: {
                 autocapitalize: 'off'
@@ -147,7 +117,7 @@
             preConfirm: async (input) => {
                 if (isValidDiscountInput(input)) {
                     try {
-                        const response = axios.get(`/owner/discount/${id}/${input}`);
+                        const response = axios.get(`/owner/addroom/${input}`);
                         if (response.status == 200) {
                         }
                         return response.data;
@@ -156,7 +126,7 @@
                     }
                 }
                 else {
-                    Swal.showValidationMessage('Invalid discount input. Please enter a number between 1 and 99.');
+                    Swal.showValidationMessage('Invalid input. Please enter a number between 1 and 20.');
                 }
             },
             allowOutsideClick: () => !Swal.isLoading()
@@ -164,7 +134,7 @@
             if (result.isConfirmed) {
                 Swal.fire({
                     icon: "success",
-                    title: 'Discount added successfully',
+                    title: 'Room added successfully',
                     confirmButtonColor: "#00A300",
 
                 });
@@ -174,9 +144,7 @@
 
     }
     function isValidDiscountInput(inputValue) {
-        const regexPattern = /^(?:[0-9]|[0-9][0-9]|99)$/;
+        const regexPattern = /^(?:[1-9]|1[0-9]|20)$/;
         return regexPattern.test(inputValue);
     }
-
-
 </script>

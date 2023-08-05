@@ -3,6 +3,10 @@ import propertyFetching from "../../helper/propertyFetching.js";
 import User from "../../model/userModel.js"
 import Banner from "../../model/banner.js"
 
+import dotenv from "dotenv"
+import jwt from 'jsonwebtoken'
+
+dotenv.config({ path: "config.env" })
 
 // Home page for the user
 const home = (async (req, res) => {
@@ -31,7 +35,8 @@ const home = (async (req, res) => {
 // To show the profile page to the user
 const profile = (async (req, res) => {
     try {
-        const id = req.session.user._id
+        const token = req.token
+        const id = token.index._id
         const user = await User.findById(id)
 
         res.render("profile", (err) => {
@@ -46,6 +51,8 @@ const profile = (async (req, res) => {
         })
 
     } catch (error) {
+        console.log(57);
+        console.log(error);
         return res.status(500).render("500");
 
     }
@@ -56,7 +63,7 @@ const profile = (async (req, res) => {
 const profile_edit = async (req, res) => {
     try {
         const { name, email, phone } = req.body;
-        const id = req.session.user._id;
+        const id = req.token.index._id;
         const valid = Signup_functions.validate(false, req.body)    // For checking the enterd information are valid or not
 
         if (!valid.isValid) {
@@ -80,7 +87,7 @@ const profile_edit = async (req, res) => {
 // Render the wallet History
 const walletHistory = (async (req, res) => {
     try {
-        const id = req.session.user._id
+        const id = req.token.index._id
         const user = await User.findById(id)
 
         res.render("walletHistory", (err) => {

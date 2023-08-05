@@ -99,6 +99,8 @@ user_route.post("/hotel/report", isLogged, isBlocked, review.submitReport)
 ///////////////////CANCELLATION//////////////////
 user_route.post("/cancellation", isLogged, isBlocked, cancellation.cancellation)
 
+user_route.post("/authenticate", isLogged)
+
 
 
 /////// GOOGLE SIGNIN///////
@@ -113,14 +115,14 @@ user_route.get(
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
 
-        const index = userData._id
+        const index = userData
         const payload = { index: index };
         const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
             expiresIn: "1h",
         })
 
         req.session.usertoken = token
-        req.session.user = userData
+        // req.session.user = userData
 
         res.redirect('/');
     }

@@ -7,7 +7,7 @@ async function ownerRevenue(req, res) {
 
     try {
         const { from, to } = req.query;
-        const ownerId = req.session.owner._id
+        const ownerId = req.token.index._id
         const doc = new PDFDocument();
 
         const bookings = await Booking.find({
@@ -86,7 +86,7 @@ async function ownerRevenue(req, res) {
         doc.moveDown(1).font('Helvetica-Bold').fontSize(12);
 
         // Draw total admin and owner revenues
-        const totalRow = ['Total Admin Revenue:', '', '', '', `Rs:${totalOwnerRevenue.toFixed(2)}`, ''];
+        const totalRow = ['Total Owner Revenue:', '', '', '', `Rs:${totalOwnerRevenue.toFixed(2)}`, ''];
         if (rowCount >= rowsPerPage) {
             // Start a new page if necessary before drawing the totalRow
             startNewPage();

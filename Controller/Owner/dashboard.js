@@ -8,8 +8,9 @@ import Owner from "../../model/ownerModel.js"
 
 // Render the dashboard for the owner
 const dashboard = (async (req, res) => {
+    console.log(11);
     try {
-        const ownerId = req.session.owner
+        const ownerId = req.token.index._id
 
         const [hotels, rooms, booking, owner] = await Promise.all([
             Hotel.find({ owner: ownerId }).count(),
@@ -38,7 +39,7 @@ const dashboard = (async (req, res) => {
 //  Render the owner profiel
 const profile = async (req, res) => {
     try {
-        const id = req.session.owner._id
+        const id = req.token.index._id
         const Owner = await owner.findById(id)
 
         res.render("profile", (err) => {
@@ -62,7 +63,7 @@ const profile = async (req, res) => {
 const profileUpdate = (async (req, res) => {
 
     try {
-        const id = req.session.owner._id
+        const id = req.token.index._id
         const Owner = await owner.findById(id)
         const valid = Signup_functions.validate(false, req.body) // Validate the information
 
@@ -70,11 +71,11 @@ const profileUpdate = (async (req, res) => {
             return res.status(409).json({ error: valid.errors })
         }
         else {
-            const { name, email, phone, bankName, accountNo, ifc } = req.body
+            const { name, email, phone, bankName, accountNo } = req.body
 
             const Owner = await owner.findByIdAndUpdate(
                 id,
-                { name, email, phone, bankName, accountNo, ifc },
+                { name, email, phone, bankName, accountNo },
                 { new: true }
             )
 
@@ -91,7 +92,7 @@ const profileUpdate = (async (req, res) => {
 const revenueChart = async (req, res) => {
     try {
         const { view } = req.query;
-        const ownerId = req.session.owner._id;
+        const ownerId = req.token.index._id;
 
         const bookings = await Booking.find({ owner: ownerId, refund: false }).select('bookedAt ownerAmount').sort({ bookedAt: 1 });
 

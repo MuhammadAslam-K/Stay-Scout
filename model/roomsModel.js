@@ -31,14 +31,26 @@ const roomSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    checkIn: [{
-        type: Date,
-        default: [],
-    }],
-    checkOut: [{
-        type: Date,
-        default: [],
-    }],
+    availableRooms: [
+        {
+            roomNo: {
+                type: Number,
+                default: 1,
+            },
+            checkIn: [{
+                type: Date,
+                default: []
+            }],
+            chekout: [{
+                type: Date,
+                default: []
+            }],
+            is_Available: {
+                type: Boolean,
+                default: true
+            },
+        },
+    ],
     booste: {
         type: Number,
         default: 1

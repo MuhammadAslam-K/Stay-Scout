@@ -11,9 +11,10 @@ const hotelValidation = ((data) => {
     const numberPattern = /^[0-9]+$/
     const cityPattern = /^(?:\b\w+\b\s*){0,3}$/
     const pincodePattern = /^\d{6}$/
-    const pricePattern = /^(?:100|[2-9]\d{2,3}|1\d{4}|20000)$/
-    const descriptionPattern = /^\s*(\S+\s+){19,499}\S+$/;
+    const descriptionPattern = /^\s*(\S+\s+){5,499}\S+$/;
     const addressPattern = /^[\w\s,]+$/;
+
+    const parsedstartingPrice = parseInt(startingPrice);
 
     //  Name Validation //
     if (!name) {
@@ -34,14 +35,15 @@ const hotelValidation = ((data) => {
 
 
     // Price Validation //
+
     if (!startingPrice) {
         errors.priceError = "Please enter the startingprice"
     } else if (!numberPattern.test(startingPrice)) {
         errors.priceError = 'Price should contain only numbers'
-    } else if (!pricePattern.test(startingPrice)) {
-        errors.priceError = "Price range (100-20000)"
     }
-
+    else if (isNaN(parsedstartingPrice) || parsedstartingPrice < 200 || parsedstartingPrice > 20000) {
+        errors.priceError = "Price should be between 200 and 20000."
+    }
 
     // City Validation //
 
@@ -67,7 +69,7 @@ const hotelValidation = ((data) => {
     if (description[0] == " " || !description) {
         errors.descriptionError = "Please enter the Description"
     } else if (!descriptionPattern.test(description)) {
-        errors.descriptionError = "words (20-500)"
+        errors.descriptionError = "words (10-500)"
     }
 
 
@@ -91,12 +93,17 @@ function roomValidation(data) {
     const { price, adults, childrents, bed, description } = data
 
     const numberPattern = /^[0-9]+$/
+    const parsedPrice = parseInt(price);
 
 
     // Price Validation //
     if (!price) {
         errors.priceError = "Please enter the startingprice"
-    } else if (!numberPattern.test(price)) {
+    }
+    else if (isNaN(parsedPrice) || parsedPrice < 200 || parsedPrice > 20000) {
+        errors.priceError = "Price should be between 200 and 20000."
+    }
+    else if (!numberPattern.test(price)) {
         errors.priceError = 'Price should contain only numbers'
     }
 
@@ -104,7 +111,8 @@ function roomValidation(data) {
     // Adults Validation //
     if (!adults) {
         errors.adultsError = "Field Should not be empty"
-    } else if (!numberPattern.test(adults)) {
+    }
+    else if (!numberPattern.test(adults)) {
         errors.adultsError = 'should contain only numbers'
     }
 
@@ -112,7 +120,8 @@ function roomValidation(data) {
     // Childrents Validation //
     if (!childrents) {
         errors.childrentsError = "Field Should not be empty"
-    } else if (!numberPattern.test(childrents)) {
+    }
+    else if (!numberPattern.test(childrents)) {
         errors.childrentsError = 'should contain only numbers'
     }
 
@@ -200,10 +209,7 @@ const bannerValidate = (data) => {
     else if (title.length < 3 || title[0] == " ") {
         errors.titleError = "Enter a Valid title"
     }
-    // else if (title.length > 20) {
-    //     console.log(title.length);
-    //     errors.titleError = "Invalid title"
-    // }
+
 
     // valdate the title
     if (!subtitle) {
@@ -212,10 +218,7 @@ const bannerValidate = (data) => {
     else if (subtitle.length < 3 || subtitle[0] == " ") {
         errors.subtitleError = "Enter a Valid sub title"
     }
-    // else if (subtitle.length > 20) {
-    //     console.log(subtitle.length);
-    //     errors.subtitleError = "Invalid sub title"
-    // }
+
 
     return {
         isValid: Object.keys(errors).length === 0,
@@ -238,23 +241,27 @@ const coupenValidate = (data) => {
     const parsedMaxVal = parseInt(maxVal);
     const parsedExpireAt = new Date(expireAt);
 
-
+    // COUPEN validation
     if (!couponCode || couponCode.trim() === '') {
         error.coupenError = "Coupon code is required."
     }
 
+    // Discount validation
     if (isNaN(parsedDiscount) || parsedDiscount < 1 || parsedDiscount > 90) {
         error.discountError = "Discount should be between 1 and 90."
     }
 
+    // Min value validation
     if (isNaN(parsedMinVal) || parsedMinVal < 20 || parsedMinVal > 2000) {
         error.minValError = "Min value should be a number between 20 and 2000.."
     }
 
+    // Max value validation
     if (isNaN(parsedMaxVal) || parsedMaxVal < 20 || parsedMaxVal > 2000) {
         error.maxValError = "Max value should be a number between 20 and 2000.."
     }
 
+    // Expire date validation
     if (parsedExpireAt <= currentDate) {
         error.expireAtError = "Expire date should be at least one day more than the current date."
     }

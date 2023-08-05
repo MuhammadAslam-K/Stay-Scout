@@ -8,7 +8,7 @@ import Booking from "../../model/bokingModel.js"
 // For viewing the banners
 const viewBanners = (async (req, res) => {
     try {
-        const ownerId = req.session.owner._id
+        const ownerId = req.token.index._id
         const banner = await Banner.find({ owner: ownerId }).populate("hotel")
 
         res.render("viewBanner", (err) => {
@@ -31,7 +31,7 @@ const viewBanners = (async (req, res) => {
 // For adding new banner
 const addBanner = async (req, res) => {
     try {
-        const ownerId = req.session.owner._id
+        const ownerId = req.token.index._id
         const hotels = await Hotel.find({ owner: ownerId }).count()
         const banner = await Banner.find({ owner: ownerId }).count()
 
@@ -52,9 +52,8 @@ const addBanner = async (req, res) => {
 
 // To render the add banner page
 const viewAddBanner = (async (req, res) => {
-    console.log(56);
     try {
-        const hotels = await Hotel.find({ owner: req.session.owner._id })
+        const hotels = await Hotel.find({ owner: req.token.index._id })
         res.render("addBanner", { hotels })
     } catch (error) {
         console.log(error);
@@ -65,7 +64,6 @@ const viewAddBanner = (async (req, res) => {
 
 // For validate and create a new banner
 const saveBanner = async (req, res) => {
-    console.log(69);
     try {
         const { title, subtitle, hotelId, } = req.body
         const validate = propertyValidation.bannerValidate(req.body)
@@ -86,7 +84,7 @@ const saveBanner = async (req, res) => {
                 image: { url: result.url },
                 hotel: hotelId,
                 linkTo: `/hotel/home?id=${hotelId}`,
-                owner: req.session.owner._id
+                owner: req.token.index._id
             })
 
             const bannerResult = await banner.save()

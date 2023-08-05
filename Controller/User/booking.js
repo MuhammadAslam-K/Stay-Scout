@@ -8,9 +8,7 @@ import Coupen from "../../model/coupon.js"
 
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
-import Signup_function from "../../helper/Signup_functions.js"
 import sendHtml from "../../helper/sendHtml.js";
-import { ReturnDocument } from "mongodb";
 
 
 
@@ -24,7 +22,10 @@ const book = (async (req, res) => {
         req.session.checkIn = checkIn
         req.session.checkOut = checkOut
         const valid = propertyValidation.bookingValidation(req.body) // To vailidate the form
-        const available = await availability.roomisAvailable(id, req.body) // To check does the room is avaialabel or not
+        const isAvailable = availability.roomisAvailable(room, req.body) // To check does the room is avaialabel or not
+        console.log(isAvailable);
+        const { roomNo, available } = isAvailable
+        req.session.roomNo = roomNo
 
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
@@ -44,7 +45,7 @@ const book = (async (req, res) => {
             return res.status(200).end()
         }
         else if (available === false) {
-            return res.status(404).json({ error: "The room is not available for the given date" })
+            return res.status(404).json({ error: "Rooms are not available for the given period" })
         }
 
     } catch (error) {
@@ -59,7 +60,7 @@ const payment = async (req, res) => {
 
     try {
 
-        const id = req.session.user._id
+        const id = req.token.index._id
         const ID = req.session.room;
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
@@ -107,11 +108,13 @@ const paymentSuccess = (async (req, res) => {
         const coupenCode = req.query.code
         const { radioNoLabel, roomPrice, noOfDays, total } = req.body
 
-        const id = req.session.user._id
+        const id = req.token.index._id
         const ID = req.session.room
+        const roomNo = req.session.roomNo
+
         const checkIn = new Date(req.session.checkIn)
         const checkOut = new Date(req.session.checkOut)
-
+        console.log(checkIn, checkOut);
         const [user, room] = await Promise.all([  // Get the data from the collection
             User.findById(id),
             Room.findById(ID).populate("hotel")
@@ -147,6 +150,7 @@ const paymentSuccess = (async (req, res) => {
         const booking = new Booking({
             user: id,
             room: ID,
+            roomNo,
             hotel: room.hotel._id,
             owner: room.owner,
             checkInDate: checkIn,
@@ -158,11 +162,12 @@ const paymentSuccess = (async (req, res) => {
             totalDays: noOfDays
         })
         await booking.save()
+        const roomIndex = room.availableRooms.findIndex((room) => room.roomNo === roomNo);
 
-        room.checkIn.push(checkIn)
-        room.checkOut.push(checkOut)
+        room.availableRooms[roomIndex].checkIn.push(checkIn);
+        room.availableRooms[roomIndex].chekout.push(checkOut);
+
         await room.save()
-
 
         const hotel = await Hotel.findByIdAndUpdate(  // Update the revenu of hotel
             { _id: room.hotel._id },
@@ -196,15 +201,15 @@ const paymentSuccess = (async (req, res) => {
         if (coupenCode) {
             await Coupen.findOneAndUpdate(
                 { couponCode: coupenCode },
-                { $push: { usedBy: req.session.user._id } },
+                { $push: { usedBy: req.token.index._id } },
                 { new: true }
             )
         }
 
         const emailData = {
-            email: req.session.user.email,
+            email: req.token.index.email,
             subject: "Booking Confirmation",
-            userName: req.session.user.name,
+            userName: req.token.index.name,
             hotel: hotel.name,
             checkIn,
             checkOut,
@@ -248,14 +253,15 @@ const coupen = async (req, res) => {
     try {
         const currentDate = new Date()
         const { code, total } = req.query
-        const userId = req.session.user._id
+        const userId = req.token.index._id
         const coupen = await Coupen.findOne({ couponCode: code })
-        const amountAfterDiscount = total * (coupen.discount / 100)
 
         if (!coupen) {
             return res.status(404).json({ error: "This coupen code is not valid" })
         }
-        else if (coupen.expireAt < currentDate) {
+
+        const amountAfterDiscount = total * (coupen.discount / 100)
+        if (coupen.expireAt < currentDate) {
             return res.status(400).json({ error: "The coupen dtae has been expired" })
         }
         else if (coupen.isBlock) {

@@ -22,6 +22,10 @@ const bookingSchema = new mongoose.Schema({
         ref: 'Owner',
         required: true
     },
+    roomNo: {
+        type: Number,
+        require: true
+    },
     checkInDate: {
         type: Date,
         required: true
