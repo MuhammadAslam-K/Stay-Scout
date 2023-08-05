@@ -6,6 +6,11 @@ function roomisAvailable(room, data) {
     const checkOutDate = new Date(checkOut);
 
     for (const targetRoom of room.availableRooms) {
+
+        if (!targetRoom.is_Available) {
+            continue;
+        }
+
         const bookings = targetRoom.checkIn.map((checkIn, index) => ({
             checkIn: checkIn,
             checkOut: targetRoom.chekout[index]

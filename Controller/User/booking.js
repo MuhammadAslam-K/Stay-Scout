@@ -23,9 +23,10 @@ const book = (async (req, res) => {
         req.session.checkOut = checkOut
         const valid = propertyValidation.bookingValidation(req.body) // To vailidate the form
         const isAvailable = availability.roomisAvailable(room, req.body) // To check does the room is avaialabel or not
-
+        console.log(isAvailable);
         const { roomNo, available } = isAvailable
         req.session.roomNo = roomNo
+
         if (!valid.isValid) {
             return res.status(400).json({ error: valid.errors })
         }
@@ -44,7 +45,7 @@ const book = (async (req, res) => {
             return res.status(200).end()
         }
         else if (available === false) {
-            return res.status(404).json({ error: "The room is not available for the given period" })
+            return res.status(404).json({ error: "Rooms are not available for the given period" })
         }
 
     } catch (error) {
