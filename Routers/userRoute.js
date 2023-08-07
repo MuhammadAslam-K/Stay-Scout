@@ -26,8 +26,7 @@ user_route.set("views", "./views/user");
 
 
 
-/////////////USER AUTHENTICATION ROUTES//////////////
-
+// / / / / / / / / USER AUTHENTICATION / / / / / / / / 
 user_route.get("/login", islogout, loginController.login)
 user_route.post("/login", islogout, loginController.loginVerify)
 user_route.get("/logout", isLogged, loginController.logout)
@@ -43,8 +42,7 @@ user_route.post('/signup', islogout, signupController.signupValidation)
 user_route.get("/otp", islogout, signupController.enterOtp)
 user_route.post("/submitOtp", islogout, signupController.verifyOtp)
 
-/////////////PASSWORD RECOVERY////////
-
+// / / / / / / PASSWORD RECOVERY / / / / / / //
 user_route.get("/passwordRecovery", islogout, passwordUpdation.enterEmail)
 user_route.post("/emailValidate", islogout, passwordUpdation.emailValidation)
 user_route.get("/recoverotp", islogout, passwordUpdation.recoveryotp)
@@ -53,25 +51,23 @@ user_route.get("/updatePassword", islogout, passwordUpdation.updatePassword)
 user_route.post("/updatePassword", islogout, passwordUpdation.passwordUpdation)
 
 
-//////////USER HOME ROUTES/////////
-
+// / / / / / / USER HOME ROUTES / / / / // 
 user_route.get("/", userController.home)
 user_route.get("/profile", isLogged, isBlocked, userController.profile)
 user_route.post("/profile/edit", isLogged, isBlocked, userController.profile_edit)
 user_route.get("/wallethistory", isLogged, isBlocked, userController.walletHistory)
 
 
-//////// HOTELS /////////////isLogged, isBlocked, 
+// / / / / / /  HOTELS  / / / / / / / 
 user_route.get("/hotels", hotelManagement.hotels)
 user_route.get("/hotel/home", isLogged, isBlocked, hotelManagement.hotelHome)
 user_route.post("/hotel/search", hotelManagement.hotelSearch)
-user_route.post("/hotel/checkin", isLogged, isBlocked, hotelManagement.roomAvailability)
 user_route.get("/findNearestHotel/:latitude/:longitude", hotelManagement.nearestHotel)
 user_route.get("/hotel/filter", hotelManagement.hotelFilter)
 user_route.get("/hotel/filter/price", hotelManagement.hotelFilterPrice)
 
 
-//////////Rooms/////////////
+// / / / / / / //Rooms / / / / / / / / / / 
 user_route.get("/rooms", roomManagement.rooms)
 user_route.get("/hotel/room", isLogged, isBlocked, roomManagement.roomDetails)
 user_route.get("/room/filter", roomManagement.roomsFilter)
@@ -79,31 +75,31 @@ user_route.get("/room/filter", roomManagement.roomsFilter)
 user_route.get("/room/checkin", isLogged, isBlocked, booking.roomStatus)
 user_route.post("/room/book", isLogged, isBlocked, booking.book)
 
-/////////////CONTACT////////////
+// / / / / / / / CONTACT / / / / / / / / / / //
 user_route.get("/contact", isLogged, isBlocked, contact.contact)
 user_route.post("/contact", isLogged, isBlocked, contact.submitContact)
 
 
-//////////////PAYMENT/////////
+// / / / / / / / / PAYMENT / / / / / / / / /
 user_route.get("/payment", isLogged, isBlocked, booking.payment)
 user_route.post("/payment", isLogged, isBlocked, booking.paymentSuccess)
 user_route.get("/applycoupen", isLogged, isBlocked, booking.coupen)
 
-////////////////BOOKING AND REVIEW AND REPORT///////////
+// / / / / / / / BOOKING AND REVIEW AND REPORT / / / / / / / / 
 user_route.get("/bookinghistory", isLogged, isBlocked, review.bookingHistory)
 user_route.get("/hotel/review", isLogged, isBlocked, review.Hotelreview)
 user_route.post("/hotel/review", isLogged, isBlocked, review.submitReview)
 user_route.put("/review/edit", isLogged, isBlocked, review.editReview)
 user_route.post("/hotel/report", isLogged, isBlocked, review.submitReport)
 
-///////////////////CANCELLATION//////////////////
+// / / / / / / / / CANCELLATION / / / / / / / / / / / / /  /
 user_route.post("/cancellation", isLogged, isBlocked, cancellation.cancellation)
 
 user_route.post("/authenticate", isLogged)
 
 
 
-/////// GOOGLE SIGNIN///////
+// / / / / / GOOGLE SIGNIN / / / / / //
 var userData
 
 

@@ -214,9 +214,11 @@
                 const formData = new FormData(profileForm);
                 const requestData = Object.fromEntries(formData);
                 resetError()
+                document.getElementById('loader').classList.remove('visually-hidden')
 
                 const response = await axios.post("/profile/edit", requestData);
-                console.log(response.data);
+
+                document.getElementById('loader').classList.add('visually-hidden')
 
                 if (response.status === 200) {
                     Notification()

@@ -51,7 +51,6 @@ const profile = (async (req, res) => {
         })
 
     } catch (error) {
-        console.log(57);
         console.log(error);
         return res.status(500).render("500");
 

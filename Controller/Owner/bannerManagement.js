@@ -88,7 +88,6 @@ const saveBanner = async (req, res) => {
             })
 
             const bannerResult = await banner.save()
-            console.log(bannerResult);
         }
 
         delete req.session.hotelBannerId

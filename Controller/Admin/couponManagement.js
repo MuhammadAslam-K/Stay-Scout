@@ -37,11 +37,9 @@ const addCoupon = async (req, res) => {
             return res.status(400).json({ error: validate.error })
         }
         else if (coopenExist.length != 0) {
-            console.log(34);
             return res.status(400).json({ error: { coupenError: "The coupen already Existes" } })
         }
         else {
-            console.log(37);
             const coopen = new Coopen({
                 couponCode,
                 discount,

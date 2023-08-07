@@ -15,7 +15,7 @@ const dashboard = (async (req, res) => {
         const [hotels, rooms, booking, owner] = await Promise.all([
             Hotel.find({ owner: ownerId }).count(),
             Rooms.find({ owner: ownerId }).count(),
-            Booking.find({ owner: ownerId }).populate("hotel").populate("user"),
+            Booking.find({ owner: ownerId }).populate("hotel").populate("user").populate("room"),
             Owner.findById(ownerId),
         ]);
 

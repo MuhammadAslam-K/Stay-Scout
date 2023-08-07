@@ -1,37 +1,33 @@
-import Hotel from "../../model/hotelModel.js";
 import Rooms from "../../model/roomsModel.js";
-import Category from "../../model/roomCategory.js";
-import roomAmenities from "../../model/roomAmenities.js"
-import Cancellation from "../../model/cancellation.js"
-
-import propertyValidation from "../../helper/propertyValidation.js"
-import propertyFetching from "../../helper/propertyFetching.js";
-import cloudinary from "../../config/cloudinary.js"
-import Booking from "../../model/bokingModel.js";
 
 
 // For showing the room status to the owner
-const roomStatus = (async (req, res) => {
+const roomStatus = async (req, res) => {
     try {
-        const id = req.query.id
-        const room = await Rooms.findById(id)
+        const roomId = req.session.ROOMID;
+        const roomno = parseInt(req.query.no, 10);
+        const room = await Rooms.findById(roomId);
+        const specificRoom = room.availableRooms.find((roomInfo) => roomInfo.roomNo === roomno);
+
+        const checkInDates = specificRoom.checkIn;
+        const checkOutDates = specificRoom.chekout;
 
         res.render("calender", {
-            checkInDates: JSON.stringify(room.checkIn),
-            checkOutDates: JSON.stringify(room.checkOut)
+            checkInDates: JSON.stringify(checkInDates),
+            checkOutDates: JSON.stringify(checkOutDates)
         });
-
     } catch (error) {
-        res.render("500")
+        console.log(error);
+        res.render("500");
     }
+};
 
-})
+
 
 
 
 // To display the rooms
 const viewRooms = async (req, res) => {
-    console.log(281);
     try {
         const roomId = req.query.id
         req.session.ROOMID = roomId
@@ -81,6 +77,7 @@ const addRoom = (async (req, res) => {
             }
             room.availableRooms.push(newRoom)
         }
+        room.noOfRooms += parseInput
         room.save()
 
         return res.status(200).end()

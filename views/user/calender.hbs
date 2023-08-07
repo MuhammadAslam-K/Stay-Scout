@@ -1,6 +1,51 @@
 {{>userHeader}}
 {{>navBar2}}
 
+
+<!-- Add your CSS styles here -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    #calendar {
+        margin-top: 70px;
+    }
+
+    /* Custom style for the FullCalendar event tooltip */
+    .fc-event-tooltip {
+        position: absolute;
+        z-index: 9999;
+        padding: 8px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Custom style for the FullCalendar event animation */
+    .fc-event-enter {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .fc-event-enter-active {
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 300ms, transform 300ms;
+    }
+
+    .fc-event-leave {
+        opacity: 1;
+    }
+
+    .fc-event-leave-active {
+        opacity: 0;
+        transition: opacity 300ms;
+    }
+</style>
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -8,38 +53,49 @@
 </head>
 
 <body>
-    <div id="calendar" style="margin-top: 70px;"></div>
+    <div id="calendar" style="margin-top: 70px;" data-roomdata="{{roomDataJSON}}"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            var checkInDates = JSON.parse('{{#unescape}}{{checkInDates}}{{/unescape}}');
-            var checkOutDates = JSON.parse('{{#unescape}}{{checkOutDates}}{{/unescape}}');
+        try {
+            // Extract the roomDataJSON from the data attribute of the calendar div
+            var roomDataJSON = document.getElementById('calendar').dataset.roomdata;
+
+            // Convert the roomDataJSON back to a JavaScript array of objects
+            var roomData = JSON.parse(roomDataJSON);
 
             var eventData = [];
 
-            for (var i = 0; i < checkInDates.length; i++) {
-                var checkInDate = new Date(checkInDates[i]);
-                var checkOutDate = moment(checkOutDates[i]).add(1, 'day').toDate(); // Add one day to checkout date
+            // Loop through the roomData to create event objects for FullCalendar
+            roomData.forEach(function (room) {
+                room.checkIn.forEach(function (checkInDate, index) {
+                    var checkOutDate = new Date(room.checkout[index]);
+                    // Add one day to checkout date
+                    checkOutDate.setDate(checkOutDate.getDate() + 1);
 
+                    // Create the event title with room number
+                    var eventTitle = 'Room ' + room.roomNo + ': Checked-in';
 
-                var event = {
-                    title: 'Checked-in',
-                    start: checkInDate,
-                    end: checkOutDate
-                };
+                    var event = {
+                        title: eventTitle,
+                        start: checkInDate,
+                        end: checkOutDate
+                    };
 
-                eventData.push(event);
-            }
+                    eventData.push(event);
+                });
+            });
 
             // Generate the calendar
             $('#calendar').fullCalendar({
                 defaultView: 'month',
                 events: eventData
             });
-        });
+        } catch (error) {
+            console.log(error)
+        }
     </script>
 </body>

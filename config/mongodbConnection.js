@@ -21,17 +21,17 @@ async function removeOutdatedDates() {
     try {
         const result = await Rooms.updateMany(
             {
-                checkOut: { $lt: currentDate },
+                "availableRooms.checkOut": { $lt: currentDate },
             },
             {
                 $pull: {
-                    checkIn: { $lt: currentDate },
-                    checkOut: { $lt: currentDate },
+                    "availableRooms.$[].checkIn": { $lt: currentDate },
+                    "availableRooms.$[].checkOut": { $lt: currentDate },
                 },
             }
         );
 
-        console.log(`${result} documents updated.`);
+        console.log(`${result.nModified} documents updated.`);
     } catch (error) {
         console.error('Error removing outdated dates:', error);
     }

@@ -44,7 +44,6 @@ const isBlocked = (async (req, res, next) => {
         const user = await Owner.findById(id)
         if (user.is_block) {
 
-            // delete req.session.owner
             delete req.session.ownertoken
 
             res.redirect("/owner")

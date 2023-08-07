@@ -41,7 +41,6 @@ app.use("/img", express.static(path.join(__dirname, "public/img")))
 app.use("/js", express.static(path.join(__dirname, "public/js")))
 app.use("/plugins", express.static(path.join(__dirname, "public/plugins")))
 app.use("/styles", express.static(path.join(__dirname, "public/styles")))
-app.use("/images", express.static(path.join(__dirname, "public/images")))
 
 
 app.use(session({
@@ -96,9 +95,9 @@ app.use("/", user_route)
 app.use("/owner", owner_route)
 app.use("/admin", admin_route)
 
-// app.get('*', (req, res) => {
-//     res.render("404")
-// })
+app.get('*', (req, res) => {
+    res.render("404")
+})
 
 
 

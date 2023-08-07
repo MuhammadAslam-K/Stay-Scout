@@ -114,52 +114,6 @@ const hotelSearch = (async (req, res) => {
     }
 })
 
-// To check the rooms are available in the hotel for the particular date
-const roomAvailability = (async (req, res) => {
-    try {
-        const id = req.session.hotelID
-        const valid = propertyValidation.hotelHomeForm(req.body)    //.To validate the form
-        const { checkIn, checkOut } = req.body
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
-        const category = await Category.find()
-
-        if (!valid.isValid) {
-            return res.status(400).json({ error: valid.errors })
-
-        }
-
-        const rooms = await Rooms.find({
-            hotel: id,
-            $nor: [
-                {
-                    $and: [
-                        { checkIn: { $gte: checkInDate, $lte: checkOutDate } },
-                        { checkOut: { $gte: checkInDate, $lte: checkOutDate } }
-                    ]
-                },
-                {
-                    $and: [
-                        { checkIn: { $lt: checkInDate } },
-                        { checkOut: { $gt: checkOutDate } }
-                    ]
-                }
-            ]
-        })
-
-        if (rooms.length === 0) {
-            return res.status(404).end()
-        }
-        else {
-
-            return res.status(200).render('rooms', { rooms, category });
-
-        }
-    } catch (error) {
-        console.log(error);
-        res.render("500")
-    }
-})
 
 // To find the nearest hotel
 const nearestHotel = async (req, res) => {
@@ -199,7 +153,6 @@ const nearestHotel = async (req, res) => {
 // To filter the hotel based on its type
 const hotelFilter = async (req, res) => {
     try {
-        console.log(189);
         const [hotel, type] = await Promise.all([
             propertyFetching.filterHotel(req.query.id),
             Type.find(),
@@ -254,7 +207,6 @@ export default {
     hotelHome,
     hotelSearch,
 
-    roomAvailability,
     nearestHotel,
     hotelFilter,
     hotelFilterPrice,

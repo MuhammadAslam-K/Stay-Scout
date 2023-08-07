@@ -1,6 +1,7 @@
 import Booking from "../../model/bokingModel.js";
 import Review from "../../model/review.js";
 import Report from "../../model/reports.js";
+import User from "../../model/userModel.js";
 
 
 // To show the booking history 

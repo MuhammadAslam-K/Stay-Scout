@@ -117,7 +117,7 @@ const paymentSuccess = (async (req, res) => {
         console.log(checkIn, checkOut);
         const [user, room] = await Promise.all([  // Get the data from the collection
             User.findById(id),
-            Room.findById(ID).populate("hotel")
+            Room.findById(ID).populate("hotel").populate("category")
         ]);
 
         const totalPrice = parseInt(total, 10)
@@ -147,6 +147,7 @@ const paymentSuccess = (async (req, res) => {
             );
         }
 
+        // const category = await 
         const booking = new Booking({
             user: id,
             room: ID,
@@ -159,7 +160,8 @@ const paymentSuccess = (async (req, res) => {
             paymentAmount: total,
             adminAmount,
             ownerAmount,
-            totalDays: noOfDays
+            totalDays: noOfDays,
+            roomCategory: room.category.name,
         })
         await booking.save()
         const roomIndex = room.availableRooms.findIndex((room) => room.roomNo === roomNo);
@@ -206,13 +208,16 @@ const paymentSuccess = (async (req, res) => {
             )
         }
 
+        const checkInDate = checkIn.toDateString();
+        const checkOutDate = checkOut.toDateString();
+
         const emailData = {
             email: req.token.index.email,
             subject: "Booking Confirmation",
             userName: req.token.index.name,
             hotel: hotel.name,
-            checkIn,
-            checkOut,
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
             hotelLocation: hotel.address,
             amount: total,
             method: radioNoLabel
@@ -231,20 +236,29 @@ const paymentSuccess = (async (req, res) => {
 
 // To show the room status to the user
 const roomStatus = async (req, res) => {
-
     try {
-        const id = req.session.room
-        const room = await Room.findById(id)
+        const id = req.session.room;
+        const room = await Room.findById(id, 'availableRooms').exec();
 
-        res.render("calender", {
-            checkInDates: JSON.stringify(room.checkIn),
-            checkOutDates: JSON.stringify(room.checkOut)
+        const roomData = room.availableRooms.map((roomInfo) => {
+            return {
+                roomNo: roomInfo.roomNo,
+                checkIn: roomInfo.checkIn,
+                checkout: roomInfo.chekout,
+            };
         });
 
+        const roomDataJSON = JSON.stringify(roomData);
+
+        res.render('calender', { roomDataJSON });
     } catch (error) {
-        res.render("500")
+        console.log(error);
+        res.render("500");
     }
-}
+};
+
+
+
 
 
 // Validate the coupen

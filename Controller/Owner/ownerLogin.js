@@ -54,7 +54,6 @@ const loginVerify = (async (req, res) => {
                 })
 
                 req.session.ownertoken = token;
-                // req.session.owner = ownerExistes
 
                 return res.status(200).end()
             }
@@ -73,7 +72,6 @@ const loginVerify = (async (req, res) => {
 // delete the sesions
 const logout = ((req, res) => {
     try {
-        delete req.session.owner
         delete req.session.ownertoken
         res.redirect("/owner")
 
