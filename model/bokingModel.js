@@ -51,6 +51,10 @@ const bookingSchema = new mongoose.Schema({
         type: Number,
         require: true,
     },
+    roomCategory: {
+        type: String,
+        require: true,
+    },
     review: {
         type: Boolean,
         default: false,

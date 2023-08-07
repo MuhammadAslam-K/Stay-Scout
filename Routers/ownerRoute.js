@@ -53,10 +53,11 @@ owner_route.post("/category/edit", isLogged, isBlocked, upload.array('image', 4)
 owner_route.post("/category/block", isLogged, isBlocked, categoryManagement.isAvaillable)
 owner_route.get("/discount/:id/:input", isLogged, isBlocked, categoryManagement.discount)
 
-
+// / / / / / /  Rooom MANAGEMENT / / / / / / / 
 owner_route.get("/category/rooms", isLogged, isBlocked, roomManagement.viewRooms)
 owner_route.post("/room/block", isLogged, isBlocked, roomManagement.isAvaillable)
 owner_route.get("/addroom/:input", isLogged, isBlocked, roomManagement.addRoom)
+owner_route.get("/status/rooms", isLogged, isBlocked, roomManagement.roomStatus)
 
 
 

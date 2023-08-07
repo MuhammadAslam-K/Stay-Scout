@@ -48,7 +48,7 @@ const blockRoom = (async (req, res) => {
                 }
             }
 
-            res.send(200).end()
+            return res.status(200).end()
         })
 
     } catch (error) {

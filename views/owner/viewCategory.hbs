@@ -10,12 +10,12 @@
                 </nav>
 
 
-                <div class="container">
+                <div class="container-fluid">
 
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a class="m-0 font-weight-bold text-primary">Category</a>
+                            <a class="m-0 font-weight-bold text-primary">Types of Rooms</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -32,6 +32,7 @@
                                             <th>Price</th>
                                             <th>After Discount</th>
                                             <th>Discount</th>
+                                            <th>No of Rooms</th>
                                             <th>Rooms</th>
                                         </tr>
                                     </thead>
@@ -74,6 +75,7 @@
                                                             onclick="addDiscount('{{this._id}}')">Add</a></span>
                                                 </div>
                                             </td>
+                                            <td>{{this.noOfRooms}}</td>
                                             <td>
                                                 <a href="/owner/category/rooms?id={{this._id}}"
                                                     class="btn btn-block btn-primary">Rooms</a>

@@ -28,7 +28,6 @@ const addAmenities = (async (req, res) => {
         const amenitiesName = req.body.amenitiesName
         const existingAmenities = await roomAmenities.find({ amenities: amenitiesName })
         if (amenitiesName == "") {
-            console.log(32);
             return res.status(400).json({ error: "Invalid input" })
         }
         else if (existingAmenities.length != 0) {
@@ -71,7 +70,6 @@ const editAmenities = (async (req, res) => {
 const deleteAmenities = (async (req, res) => {
     try {
         const id = req.query.id
-        console.log(id);
         await roomAmenities.findByIdAndDelete(id)
         return res.status(200).end()
     } catch (error) {

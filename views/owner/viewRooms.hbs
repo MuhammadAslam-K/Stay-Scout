@@ -21,7 +21,6 @@
                                         <th>Is Available</th>
                                         <th>Room No:</th>
                                         <th>Bookings</th>
-
                                     </thead>
                                     <tbody>
                                         {{#each rooms.availableRooms}}
@@ -43,9 +42,10 @@
                                             </td>
                                             {{/if}}
                                             <td>{{this.roomNo}}</td>
-
-                                            <td><a href="/owner/status/rooms?no={{this.roomNo}}"
-                                                    class="btn  btn-primary">status</a></td>
+                                            <td>
+                                                <a href="/owner/status/rooms?no={{this.roomNo}}"
+                                                    class="btn  btn-primary">status</a>
+                                            </td>
                                         </tr>
                                         {{/each}}
                                     </tbody>

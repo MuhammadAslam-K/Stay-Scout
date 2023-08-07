@@ -98,7 +98,7 @@
 
         const formData = new FormData(event.target);
 
-
+        document.getElementById('loader').classList.remove('visually-hidden')
         try {
             const response = await axios.post('/room/book', formData, {
                 headers: {
@@ -106,6 +106,7 @@
                 }
             });
 
+            document.getElementById('loader').classList.add('visually-hidden')
             if (response.status === 200) {
                 window.location.href = "/payment"
             }

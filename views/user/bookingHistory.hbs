@@ -121,6 +121,7 @@
 
     async function handleCancellation(bookingId, roomCancellation) {
         try {
+
             const response = await axios.post('/cancellation', {
                 bookingId, roomCancellation
             });

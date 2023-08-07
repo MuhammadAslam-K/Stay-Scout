@@ -97,7 +97,6 @@ const verifyOtp = async (req, res) => {
         const enteredOtp = req.body.otp;
         let i
         let otpMatched = false
-        console.log(enteredOtp)
         for (i = 0; i < ownerOtp.length; i++) {
 
             if (ownerOtp[i] == enteredOtp) {

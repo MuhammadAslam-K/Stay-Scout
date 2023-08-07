@@ -87,7 +87,7 @@
                     <nav
                         class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow justify-content-between">
                         <h1 class="h3 mb-0 text-primary font-weight-bold p-3">Dashboard</h1>
-                        <a href="/owner/logout" class="btn btn-primary">Logout</a>
+                        <a href="/owner/logout" class="btn btn-primary me-5">Logout</a>
                     </nav>
 
                     <div class="row">
@@ -161,6 +161,8 @@
                                     <tr>
                                         <th>User name</th>
                                         <th>Hotel name</th>
+                                        <th>Room Type</th>
+                                        <th>Room No</th>
                                         <th>Date</th>
                                         <th>Amount</th>
                                         <th>Action</th>
@@ -171,6 +173,8 @@
                                     <tr>
                                         <td>{{this.user.name}}</td>
                                         <td>{{this.hotel.name}}</td>
+                                        <td>{{this.roomCategory}}</td>
+                                        <td>{{this.roomNo}}</td>
                                         <td>
                                             <p>checkIn: {{dateFormat this.checkInDate}}</p>
                                             <p>checkOut: {{dateFormat this.checkOutDate}}</p>

@@ -77,16 +77,20 @@
         const message = document.getElementById('messageTextarea').value
 
         try {
+            document.getElementById('loader').classList.remove('visually-hidden')
+
             const response = await axios.post('/contact', { message }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
+            document.getElementById('loader').classList.add('visually-hidden')
 
             if (response.status === 200) {
                 alertify.alert("Submited successfully", function () {
                     alertify.message('OK');
                 });
+                window.location.reload()
             }
         } catch (error) {
             console.log(error)

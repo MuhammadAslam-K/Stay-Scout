@@ -9,6 +9,15 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<style>
+    input {
+        border: none;
+        /* Removes the default border */
+        outline: none;
+        /* Removes the outline when focused */
+    }
+</style>
+
 <section style="background-color: #eee;margin-top: 10vh;">
     <div class="container py-5">
         <div class="card">
@@ -60,38 +69,35 @@
                             </div>
                             <div class="p-2 d-flex">
                                 <div class="col-8">Price per Day</div>
-                                <input class="ms-auto " value="{{room.price}}" name="roomPrice" readonly></input>
+                                <input class="ms-auto" name="roomPrice" value="{{room.price}}" readonly>
                             </div>
                             <div class="p-2 d-flex">
                                 <div class="col-8">No of Days</div>
-                                <input class="ms-auto" name="noOfDays" value="{{days}}" readonly></input>
+                                <input class="ms-auto" name="noOfDays" value="{{days}}" readonly>
                             </div>
                             {{#if discount}}
                             <div class="p-2 d-flex">
                                 <div class="col-8">Total</div>
-                                <input class="ms-auto" name="total1" value="{{total}}" readonly></input>
+                                <input class="ms-auto" name="total1" value="{{total}}" readonly>
                             </div>
                             <div class="p-2 d-flex">
                                 <div class="col-8">Discount</div>
-                                <input class="ms-auto" value="{{discount}}%" readonly></input>
+                                <input class="ms-auto" value="{{discount}}%" readonly>
                             </div>
 
                             <div class="border-top px-2 mx-2"></div>
                             <div class="p-2 d-flex pt-3">
                                 <div class="col-8"><b>Payable Amount</b></div>
                                 <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
-                                        value="{{amountAfterDiscount}}" readonly></input></div>
+                                        value="{{amountAfterDiscount}}" readonly></div>
                             </div>
-                            <span>save:
-                                <span class="text-success">Rs:{{discountPrice}}</span>
-                            </span>
                             {{/if}}
                             {{#unless discount}}
                             <div class="border-top px-2 mx-2"></div>
                             <div class="p-2 d-flex pt-3">
                                 <div class="col-8"><b>Total</b></div>
                                 <div class="ms-auto"><input class="text-success" id="subTotalValue" name="total"
-                                        value="{{total}}" readonly></input></div>
+                                        value="{{total}}" readonly></div>
                             </div>
                             {{/unless}}
                             <button id="applyCouponButton" class="btn btn-success mt-3" onclick="applyCoupen()"
@@ -142,7 +148,6 @@
                 "currency": "INR",
                 "name": "Stay Scout",
                 "description": "Booking payment",
-                "image": "/public/img/login.jpg",
                 "order_id": undefined, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                 "handler": function (response) {
 
@@ -196,13 +201,14 @@
         const formData = new FormData(formElement);
 
         try {
-
+            document.getElementById('loader').classList.remove('visually-hidden')
             const response = await axios.post(`/payment?code=${coopenCode}`, formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
 
+            document.getElementById('loader').classList.add('visually-hidden')
             if (response.status === 200) {
                 window.location.href = '/bookinghistory'
             }

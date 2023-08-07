@@ -70,20 +70,6 @@
         <div class="col-lg-5 order-lg-2">
             <!-- Check-in form -->
             <div class="col-md-8 offset-md-2" data-aos="fade-up">
-                <form id="checkin" class="align-form-elements mb-5">
-                    <!-- Form inputs -->
-                    <div class="form-group">
-                        <label for="checkin">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkin" name="checkIn" required>
-                        <span class="text-danger error-msg" id="checkInError"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="checkout">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkout" name="checkOut" required>
-                        <span class="text-danger error-msg" id="checkOutError"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-                </form>
                 {{#each hotel.amenities}}
                 <p>{{this}}</p>
                 {{/each}}
@@ -178,8 +164,8 @@
             <div class="slider1">
                 <div class="owl-carousel owl-theme home_slider">
                     {{#each this.images}}
-                    <div class="slide"
-                        style="height: 30vh; background-image: url({{this.url}}); background-size: cover;"></div>
+                    <div class="slide" style="height: 30vh; background-image: url({{this.url}}); background-size:100%;">
+                    </div>
                     {{/each}}
                 </div>
             </div>
@@ -187,8 +173,8 @@
 
         <div class="description-container1">
             <h5 class="bed-type">Bed Type: {{this.bed}}</h5>
+            <p class="cancellation mt-4 mb-3 h5">Cancellation: {{this.Cancellation}}</p>
             <p class="amenities">Amenities: {{this.amenities}}</p>
-            <p class="cancellation">Cancellation: {{this.Cancellation}}</p>
         </div>
 
         <div class="booking-container1 d-flex align-items-center">
@@ -503,41 +489,6 @@
             navigator.geolocation.getCurrentPosition(resolve, reject);
         });
     }
-
-    // Handle form submission
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-
-        try {
-            const response = await axios.post('/hotel/checkin', Object.fromEntries(formData));
-            resetError()
-            if (response.status === 200) {
-                document.body.innerHTML = response.data;
-            }
-
-        } catch (error) {
-            if (error.response.status == 400) {
-
-                const errors = error.response.data.error;
-                Object.keys(errors).forEach((key) => {
-                    let element = document.getElementById(key).textContent = errors[key];
-                })
-            }
-            else if (error.response.status === 404) {
-                alertify.alert("The rooms are not available for the given date", function () {
-                    alertify.message('OK');
-                });
-            } else {
-                alertify.alert("Something went wrong, please try again later", function () {
-                    alertify.message('OK');
-                });
-            }
-        }
-    };
-
-    // Add event listener to the form
-    document.getElementById('checkin').addEventListener('submit', handleSubmit);
 
     // Mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGs1ZHZqejYwZ3RhM2RudDQ0cmE1NDJuIn0.8MByk6wQU2kWJ60t4K0zIg';

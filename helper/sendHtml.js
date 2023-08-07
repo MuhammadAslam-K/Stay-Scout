@@ -754,7 +754,6 @@ async function sendConfirmationMail(data) {
 //  For sending the coupen as a mail
 const sendCoupen = async (email, data) => {
     try {
-        console.log(data);
         const { subject, discount, coupenCode, expireAt } = data
         const transporter = nodemailer.createTransport({
             service: "gmail",

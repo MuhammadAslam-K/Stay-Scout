@@ -19,7 +19,6 @@ async function ownerRevenue(req, res) {
         }).populate("user").populate('hotel')
 
         if (bookings.length == 0) {
-            console.log("ther is no bookingd");
             return res.status(400).end()
         }
 
@@ -137,7 +136,6 @@ function drawTableRow(doc, row, x, y, colWidth, rowHeight, align, isHeader) {
         // Draw horizontal line for the row
         doc.moveTo(x, y + rowHeight).lineTo(startX, y + rowHeight).stroke();
     } catch (error) {
-        console.log(129);
         console.log(error);
     }
 }
