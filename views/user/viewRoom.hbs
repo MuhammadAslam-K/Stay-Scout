@@ -111,7 +111,7 @@
                 window.location.href = "/payment"
             }
         } catch (error) {
-            console.log(error)
+            document.getElementById('loader').classList.add('visually-hidden')
             if (error.response.status == 400) {
 
                 const errors = error.response.data.error;
