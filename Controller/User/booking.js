@@ -4,7 +4,7 @@ import User from "../../model/userModel.js"
 import Hotel from "../../model/hotelModel.js";
 import Room from "../../model/roomsModel.js"
 import Booking from "../../model/bokingModel.js";
-import Coupen from "../../model/coupon.js"
+import Coupon from "../../model/coupon.js"
 
 import propertyValidation from "../../helper/propertyValidation.js";
 import availability from "../../helper/checkAvailability.js";
@@ -201,7 +201,7 @@ const paymentSuccess = (async (req, res) => {
         }
 
         if (coupenCode) {
-            await Coupen.findOneAndUpdate(
+            await Coupon.findOneAndUpdate(
                 { couponCode: coupenCode },
                 { $push: { usedBy: req.token.index._id } },
                 { new: true }
@@ -268,7 +268,7 @@ const coupen = async (req, res) => {
         const currentDate = new Date()
         const { code, total } = req.query
         const userId = req.token.index._id
-        const coupen = await Coupen.findOne({ couponCode: code })
+        const coupen = await Coupon.findOne({ couponCode: code })
 
         if (!coupen) {
             return res.status(404).json({ error: "This coupen code is not valid" })

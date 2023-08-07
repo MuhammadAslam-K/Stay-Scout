@@ -1,4 +1,4 @@
-import Coopen from "../../model/coupon.js";
+import Coupon from "../../model/coupon.js";
 import propertyValidation from "../../helper/propertyValidation.js";
 import sendHtml from "../../helper/sendHtml.js";
 import User from "../../model/userModel.js";
@@ -8,7 +8,7 @@ import User from "../../model/userModel.js";
 // To render the coupen table
 const coupons = async (req, res) => {
     try {
-        const coupon = await Coopen.find()
+        const coupon = await Coupon.find()
         res.render("coupon", (err) => {
             if (err) {
                 if (err.message.includes("Failed to lookup view")) {
@@ -30,7 +30,7 @@ const coupons = async (req, res) => {
 const addCoupon = async (req, res) => {
     try {
         const { couponCode, discount, minVal, maxVal, expireAt } = req.body
-        const coopenExist = await Coopen.find({ couponCode })
+        const coopenExist = await Coupon.find({ couponCode })
         const validate = propertyValidation.coupenValidate(req.body)
 
         if (!validate.isValid) {
@@ -40,7 +40,7 @@ const addCoupon = async (req, res) => {
             return res.status(400).json({ error: { coupenError: "The coupen already Existes" } })
         }
         else {
-            const coopen = new Coopen({
+            const coopen = new Coupon({
                 couponCode,
                 discount,
                 minVal,
@@ -60,7 +60,7 @@ const addCoupon = async (req, res) => {
 // For blocking and unblocking the coupen
 const blockCoupon = async (req, res) => {
     try {
-        const coupen = await Coopen.findById(req.query.id)
+        const coupen = await Coupon.findById(req.query.id)
         coupen.isBlock = !coupen.isBlock
         await coupen.save()
         return res.status(200).end()
@@ -73,7 +73,7 @@ const blockCoupon = async (req, res) => {
 // For editing the coupen
 const getCoupon = async (req, res) => {
     try {
-        const coupen = await Coopen.findById(req.query.id)
+        const coupen = await Coupon.findById(req.query.id)
         res.json(coupen);
 
     } catch (error) {
@@ -93,7 +93,7 @@ const updateCoupon = async (req, res) => {
         }
         else {
 
-            await Coopen.findByIdAndUpdate(
+            await Coupon.findByIdAndUpdate(
                 req.body.couponId,
                 { couponCode, discount, minVal, maxVal, expireAt },
                 { new: true }
@@ -111,7 +111,7 @@ const updateCoupon = async (req, res) => {
 const deleteCoupen = (async (req, res) => {
     try {
         const id = req.query.id
-        await Coopen.findByIdAndDelete(id)
+        await Coupon.findByIdAndDelete(id)
         return res.status(200).end()
 
     } catch (error) {
@@ -126,7 +126,7 @@ const sendmail = async (req, res) => {
         const { id } = req.body
 
         const [coopen, user] = await Promise.all([
-            Coopen.findById(id),
+            Coupon.findById(id),
             User.find()
         ])
 
