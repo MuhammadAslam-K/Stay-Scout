@@ -1,5 +1,4 @@
 import express from "express"
-import morgan from "morgan"
 import dotenv from "dotenv"
 import session from "express-session"
 import cookieParser from "cookie-parser"
@@ -28,7 +27,6 @@ const __dirname = path.dirname(__filename)
 /** Middleware */
 
 app.set("view engine", "hbs")
-// app.use(morgan("tiny"))
 app.use(nocache());
 app.use(express.json())
 app.use(cookieParser());

@@ -31,7 +31,6 @@
 <header class="header">
     <div class="header_content d-flex flex-row align-items-center justify-content-start">
         <div class="logo"><a href="/">Stay Scout</a></div>
-
         <div class="ml-auto d-flex flex-row align-items-center justify-content-start">
             <nav class="main_nav">
                 <ul class="d-flex flex-row align-items-start justify-content-start">
@@ -49,9 +48,10 @@
                             </div>
                         </form>
                     </li>
+
                 </ul>
             </nav>
-            {{!-- href="/contact" --}}
+
             <!-- Hamburger Menu -->
             <div class="hamburger"><i class="fa fa-bars" aria-hidden="true"></i></div>
         </div>
@@ -75,16 +75,43 @@
         </nav>
     </div>
 </div>
-{{>userFooter}}
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-{{!-- To Find the Nearest Hotel --}}
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const nearestBtn = document.getElementById("nearestBtn");
 
         nearestBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        const url = `/findNearestHotel/${latitude}/${longitude}`;
+                        window.location.href = url;
+                    },
+                    function (error) {
+                        console.error("Error getting user's location:", error);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+    });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const neare = document.getElementById("neare");
+
+        neare.addEventListener("click", function (event) {
             event.preventDefault();
 
             if (navigator.geolocation) {
