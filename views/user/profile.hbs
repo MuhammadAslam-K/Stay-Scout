@@ -235,6 +235,7 @@
 
             } catch (error) {
                 console.log(error)
+                document.getElementById('loader').classList.add('visually-hidden')
                 if (error.response && error.response.status == 400) {
                     const errors = error.response.data.error;
                     Object.keys(errors).forEach((key) => {

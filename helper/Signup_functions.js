@@ -79,12 +79,15 @@ function validate(signUp, data) {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phonePattern = /^(\+91)?[6-9]\d{9}$/;
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[\w\s@$!%*?&#]{8,}$/;
-
+    const namePattern = /^(?! )[A-Za-z ]{1,15}$/;
 
     // /Name validation //
     if (!name) {
         errors.nameError = "Please Enter Your Name"
-    } else if (name.length < 3 || name[0] == " ") {
+    } else if (!namePattern.test(name)) {
+        errors.nameError = "Enter a Valid Name"
+    }
+    else if (name.length < 3 || name[0] == " ") {
         errors.nameError = "Enter a Valid Name"
     }
 
