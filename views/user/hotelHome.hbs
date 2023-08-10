@@ -62,6 +62,21 @@
     .tooltip-trigger {
         cursor: pointer;
     }
+
+    .info-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* Style for distance and duration text */
+    #distance,
+    #duration {
+        font-size: 16px;
+        margin: 5px;
+    }
 </style>
 
 <!-- HOTEL -->
@@ -258,6 +273,11 @@
 {{!-- END OF EDIT REVIEW POPUP --}}
 
 <!-- Mapbox map container -->
+<div class="info-container">
+    <p id="distance">Distance: 0 km</p>
+    <p id="duration">Duration: 0 hours</p>
+</div>
+
 <div id="map"></div>
 
 {{>userSiteFooter}}
@@ -482,6 +502,7 @@
 
 
 {{!-- MAP --}}
+
 <script>
     // Function to get user's current location
     function getUserLocation() {
@@ -491,7 +512,7 @@
     }
 
     // Mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGs1ZHZqejYwZ3RhM2RudDQ0cmE1NDJuIn0.8MByk6wQU2kWJ60t4K0zIg';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYXNsYW0yMiIsImEiOiJjbGw0bnZwdDQwOGp0M2Nsb3FiZzU0NjNsIn0.1dtudEChoi_wtZin_v2Wzg';
 
     // Initialize the map
     const map = new mapboxgl.Map({
@@ -597,6 +618,22 @@
                         'line-width': 3,
                     },
                 });
+
+                // Extract distance and duration from the response
+                const distance = route.distance; // in meters
+                const duration = route.duration; // in seconds
+
+                // Convert distance to kilometers
+                const distanceInKm = (distance / 1000).toFixed(2);
+
+                const durationInHours = (duration / 3600).toFixed(2);
+
+                // Display the distance and duration to the user
+                const distanceElement = document.getElementById('distance');
+                const durationElement = document.getElementById('duration');
+                distanceElement.textContent = `Distance: ${distanceInKm} km`;
+                durationElement.textContent = `Duration: ${durationInHours} hours`;
+
 
                 // Fit the map to display the entire navigation path
                 const bounds = new mapboxgl.LngLatBounds();
