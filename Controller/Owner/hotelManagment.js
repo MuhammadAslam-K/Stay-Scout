@@ -103,7 +103,7 @@ const submitHotel = (async (req, res) => {
                 address,
                 latitude: latitudeData,
                 longitude: longitudeData,
-                owner: req.session.owner._id,
+                owner: req.token.index._id,
                 images: hotelImages
             })
             const result = await hotel.save()

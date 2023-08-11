@@ -81,15 +81,15 @@ function validate(signUp, data) {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[\w\s@$!%*?&#]{8,}$/;
     const namePattern = /^(?! )[A-Za-z ]{1,15}$/;
 
-    // /Name validation //
+    // Name validation
     if (!name) {
-        errors.nameError = "Please Enter Your Name"
+        errors.nameError = "Please Enter Your Name";
     } else if (!namePattern.test(name)) {
-        errors.nameError = "Enter a Valid Name"
+        errors.nameError = "Enter a Valid Name";
+    } else if (name.trim().length < 3) {
+        errors.nameError = "Enter a Valid Name";
     }
-    else if (name.length < 3 || name[0] == " ") {
-        errors.nameError = "Enter a Valid Name"
-    }
+
 
     // email validation //
     if (!email) {
