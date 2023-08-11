@@ -496,7 +496,7 @@ async function sendConfirmationMail(data) {
                                                                     <tr>
                                                                         <td align="center"
                                                                             style="padding:0;Margin:0;font-size:0px"><a
-                                                                                target="_blank" href="https://localhost:8000"
+                                                                                target="_blank" href="https://stayscout.shop/"
                                                                                 style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FFFFFF;font-size:14px"><img
                                                                                     class="adapt-img"
                                                                                     src="https://slxlia.stripocdn.email/content/guids/CABINET_2e79c273a96bb056b73cae7b029b803ad629a2aedf350efa42ca348fe2403c2c/images/stayscoutlowresolutionlogowhiteontransparentbackground_1.png"
@@ -846,7 +846,7 @@ const sendCoupen = async (email, data) => {
                     <p>Get <strong>${discount}% off</strong> your next Booking!</p>
                     <div class="code">${coupenCode}</div>
                     <p class="valid-until">Valid until ${expireAt}.</p>
-                    <a href="http://localhost:8000" class="cta">Book now</a>
+                    <a href="https://stayscout.shop/" class="cta">Book now</a>
                 </div>
             </body>
             
