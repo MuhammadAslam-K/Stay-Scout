@@ -5,7 +5,7 @@ const hotelValidation = ((data) => {
     const errors = {}
 
     const { name, title, startingPrice, city, pincode, description, address } = data
-
+    console.log(data);
     const titlePattern = /^(?:\w+\s+){2,9}\w+$/
     const alphanumericPattern = /^[A-Za-z0-9]+$/
     const numberPattern = /^[0-9]+$/
