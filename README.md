@@ -68,7 +68,7 @@ npm Install
   API_KEY
   API_SECRET
     
-## Screenshots
+- Screenshots
 
 ![App Screenshot](https://res.cloudinary.com/ddd7uapl6/image/upload/v1691816405/documentationPics/Screenshot_2023-08-12_102725_cywvrg.png)
 
