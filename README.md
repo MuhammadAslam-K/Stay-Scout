@@ -67,9 +67,8 @@ npm Install
   CLOUD_NAME
   API_KEY
   API_SECRET
-
-![App Screenshot](https://res.cloudinary.com/ddd7uapl6/image/upload/v1691816912/documentationPics/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f646d627078616c306f2f696d6167652f75706c6f61642f76313638373835383538342f6769742f796172612f556e7469746c65642d315f646f347a70752e706e67_luotfl.png)
-- Screenshots
+```
+## Screenshots
 
 ![App Screenshot](https://res.cloudinary.com/ddd7uapl6/image/upload/v1691816405/documentationPics/Screenshot_2023-08-12_102725_cywvrg.png)
 
