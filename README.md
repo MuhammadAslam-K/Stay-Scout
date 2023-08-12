@@ -24,7 +24,7 @@ Welcome to StayScout, an online platform that offers a wide range of hotels and 
     - owners
     - Hotels
     - Rooms
-    - Coupens
+    - Coupons
     - Banner
     - Report
 
